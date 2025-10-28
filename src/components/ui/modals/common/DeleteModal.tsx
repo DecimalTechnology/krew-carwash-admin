@@ -51,7 +51,7 @@ function DeleteModal({isOpen,handleDelete,type}:IProps) {
                 d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
               />
             </svg>
-            <h3 className="mb-5 text-lg font-medium text-gray-700 dark:text-gray-300">
+            <h3 className="mb-5 text-lg font-medium text-gray-900 dark:text-white">
               Are you sure you want to delete this {type}?
             </h3>
   

@@ -47,7 +47,7 @@ const navItems: NavItem[] = [
     {
         icon: < Package />,
         name: "Packages",
-        path: "/vehicles",
+        path: "/packages",
     },
     {
         icon: < Tag />,
@@ -147,7 +147,7 @@ const AppSidebar: React.FC = () => {
                             {(isExpanded || isHovered || isMobileOpen) && (
                                 <ChevronDownIcon
                                     className={`ml-auto w-5 h-5 transition-transform duration-200 ${
-                                        openSubmenu?.type === menuType && openSubmenu?.index === index ? "rotate-180 text-brand-500" : ""
+                                        openSubmenu?.type === menuType && openSubmenu?.index === index ? "rotate-180 text-brand-600" : ""
                                     }`}
                                 />
                             )}
@@ -230,14 +230,14 @@ const AppSidebar: React.FC = () => {
                     {isExpanded || isHovered || isMobileOpen ? (
                         <div className="flex  items-center gap-2 justify-center">
                             {/* Light Mode Logo */}
-                            <img className="block dark:hidden w-10 h-auto" src="logo.png" alt="Krew Carwash Logo" />
+                            <img className="block dark:hidden w-10 h-auto" src="/logo.png" alt="Krew Carwash Logo" />
 
                             {/* Dark Mode Logo */}
-                            <img className="hidden dark:block w-10 h-auto" src="/images/logo/logo-dark.svg" alt="Krew Carwash Dark Logo" />
+                            <img className="hidden dark:block w-10 h-auto" src="/new-logo.png" alt="Krew Carwash Dark Logo" />
 
                         </div>
                     ) : (
-                        <img src="/images/logo/logo-icon.svg" alt="Krew Carwash Icon" className="w-8 h-auto mx-auto" />
+                        <img src="/images/logo/logo-icon.svg" alt="Krew Carwash Icon" className="w-8 h-auto mx-auto dark:invert" />
                     )}
                 </Link>
                                                                                                                                                                                                                                                                                                                         

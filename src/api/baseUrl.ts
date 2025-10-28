@@ -9,6 +9,35 @@ export const baseUrl = axios.create({
     },
 });
 
+// Request interceptor to add auth token
+baseUrl.interceptors.request.use(
+    (config) => {
+        // Get token from localStorage
+        const token = localStorage.getItem("adminToken");
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
+// Response interceptor for handling unauthorized errors
+baseUrl.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            // Unauthorized - clear token and redirect to login
+            localStorage.removeItem("adminToken");
+            // You can redirect to login page here if needed
+            // window.location.href = '/login';
+        }
+        return Promise.reject(error);
+    }
+);
+
 export const erroHandler = (error: any) => {
     if (axios.isAxiosError(error)) {
         const axiosError = error;
@@ -17,5 +46,5 @@ export const erroHandler = (error: any) => {
         }
     }
 
-    return "An enexpected error occured"
+    return "An unexpected error occurred"
 };

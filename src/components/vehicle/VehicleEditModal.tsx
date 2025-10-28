@@ -53,42 +53,42 @@ const VehicleEditModal: React.FC<VehicleEditModalProps> = ({ isOpen, vehicle, on
 
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-md p-6 shadow-lg">
-        <h2 className="text-xl font-semibold mb-4">Edit Vehicle</h2>
+      <div className="bg-white dark:bg-gray-900 rounded-lg w-full max-w-md p-6 shadow-lg">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Edit Vehicle</h2>
 
         <div className="mb-4">
-          <label className="block text-gray-700 mb-1">Name</label>
+          <label className="block text-gray-700 dark:text-gray-300 mb-1">Name</label>
           <input
             type="text"
-            className="w-full border rounded px-3 py-2"
+            className="w-full border dark:border-gray-700 rounded px-3 py-2 dark:bg-gray-800 dark:text-white"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 mb-1">Description</label>
+          <label className="block text-gray-700 dark:text-gray-300 mb-1">Description</label>
           <textarea
-            className="w-full border rounded px-3 py-2"
+            className="w-full border dark:border-gray-700 rounded px-3 py-2 dark:bg-gray-800 dark:text-white"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
 
         <div className="mb-4">
-          <label className="block text-gray-700 mb-1">Image</label>
+          <label className="block text-gray-700 dark:text-gray-300 mb-1">Image</label>
           {imagePreview && <img src={imagePreview} alt="preview" className="w-full h-32 object-cover mb-2 rounded" />}
           <input type="file" accept="image/*" onChange={handleImageChange} />
         </div>
 
         <div className="mb-4 flex items-center gap-2">
-          <label className="text-gray-700">Active Status</label>
+          <label className="text-gray-700 dark:text-gray-300">Active Status</label>
           <Switch checked={isActive} onChange={(checked) => setIsActive(checked)} />
         </div>
 
         <div className="flex justify-end gap-3">
           <button
-            className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+            className="px-4 py-2 bg-gray-300 dark:bg-gray-700 dark:text-gray-300 rounded hover:bg-gray-400 dark:hover:bg-gray-600"
             onClick={onClose}
           >
             Cancel
