@@ -10,46 +10,23 @@ interface IProps {
 
 function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
   const [formData, setFormData] = useState({
-    name: "",
+    buildingName: "",
     address: "",
-    latitude: "",
-    longitude: "",
+    city: "",
+    area: "",
     isActive: true,
-    images: [] as string[], // for previews
-    email: "",
     contactNumbers: [""],
-    buildingDetails: "",
   });
-
-  const [imageFiles, setImageFiles] = useState<File[]>([]); // actual files for backend
 
   if (!isOpen) return null;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleToggleActive = () => {
     setFormData((prev) => ({ ...prev, isActive: !prev.isActive }));
-  };
-
-  const handleImageChange = (files: FileList | null) => {
-    if (!files) return;
-
-    const validImages = Array.from(files).filter((file) => file.type.startsWith("image/"));
-    const urls = validImages.map((file) => URL.createObjectURL(file));
-
-    setFormData((prev) => ({ ...prev, images: [...prev.images, ...urls] }));
-    setImageFiles((prev) => [...prev, ...validImages]);
-  };
-
-  const removeImage = (index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      images: prev.images.filter((_, i) => i !== index),
-    }));
-    setImageFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleContactChange = (index: number, value: string) => {
@@ -70,26 +47,30 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const data = new FormData();
-    data.append("name", formData.name);
-    data.append("address", formData.address);
-    data.append("latitude", formData.latitude);
-    data.append("longitude", formData.longitude);
-    data.append("isActive", String(formData.isActive));
-    data.append("email", formData.email);
-    data.append("buildingDetails", formData.buildingDetails);
+    const payload = {
+      buildingName: formData.buildingName.trim(),
+      address: formData.address.trim(),
+      city: formData.city.trim(),
+      area: formData.area.trim(),
+      isActive: formData.isActive,
+      contactNumbers: formData.contactNumbers.filter((num) => num.trim() !== ""),
+    };
 
-    formData.contactNumbers.forEach((num, i) => data.append(`contactNumbers[${i}]`, num));
-    imageFiles.forEach((file) => data.append("images", file)); // append actual files
-
-     const res = await createBuilding(data)
+    const res = await createBuilding(payload);
+    if (res?.success) {
+      setBuildings((prev: any) => [...prev, res.data]);
+      onClose();
+    }
   };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-2xl shadow-2xl w-[95%] max-w-4xl p-8 relative overflow-y-auto max-h-[90vh]">
+      <div className="bg-white rounded-2xl shadow-2xl w-[95%] max-w-2xl p-8 relative overflow-y-auto max-h-[90vh]">
         {/* Close button */}
-        <button onClick={onClose} className="absolute top-3 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold">
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold"
+        >
           ×
         </button>
 
@@ -103,9 +84,9 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
             <label className="block font-medium text-gray-700">Building Name</label>
             <input
               type="text"
-              name="name"
+              name="buildingName"
               placeholder="Enter building name"
-              value={formData.name}
+              value={formData.buildingName}
               onChange={handleChange}
               required
               className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
@@ -121,19 +102,32 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
               placeholder="Enter building address"
               value={formData.address}
               onChange={handleChange}
+              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#4B164C] outline-none"
+            />
+          </div>
+
+          {/* City */}
+          <div>
+            <label className="block font-medium text-gray-700">City</label>
+            <input
+              type="text"
+              name="city"
+              placeholder="Enter city"
+              value={formData.city}
+              onChange={handleChange}
               required
               className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
             />
           </div>
 
-          {/* Email */}
+          {/* Area */}
           <div>
-            <label className="block font-medium text-gray-700">Email</label>
+            <label className="block font-medium text-gray-700">Area</label>
             <input
-              type="email"
-              name="email"
-              placeholder="Enter email"
-              value={formData.email}
+              type="text"
+              name="area"
+              placeholder="Enter area"
+              value={formData.area}
               onChange={handleChange}
               className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
             />
@@ -162,7 +156,11 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
                 )}
               </div>
             ))}
-            <button type="button" onClick={addContact} className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
+            <button
+              type="button"
+              onClick={addContact}
+              className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+            >
               Add Contact
             </button>
           </div>
@@ -257,7 +255,11 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
 
           {/* Buttons */}
           <div className="flex justify-end gap-4 pt-4 border-t">
-            <button type="button" onClick={onClose} className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition"
+            >
               Cancel
             </button>
             <button type="submit" className="px-6 py-2 bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] hover:from-[#3a7d74] hover:to-[#5DB7AE] text-white rounded-lg transition">
