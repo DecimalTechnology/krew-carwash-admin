@@ -94,7 +94,7 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
         </button>
 
         {/* Header */}
-        <h2 className="text-2xl font-bold mb-6 text-center text-[#4B164C]">Add New Building</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-[#5DB7AE]">Add New Building</h2>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -108,7 +108,7 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#4B164C] outline-none"
+              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
             />
           </div>
 
@@ -122,7 +122,7 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
               value={formData.address}
               onChange={handleChange}
               required
-              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#4B164C] outline-none"
+              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
             />
           </div>
 
@@ -135,7 +135,7 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
               placeholder="Enter email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#4B164C] outline-none"
+              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
             />
           </div>
 
@@ -149,7 +149,7 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
                   placeholder="Enter contact number"
                   value={num}
                   onChange={(e) => handleContactChange(index, e.target.value)}
-                  className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#4B164C] outline-none"
+                  className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
                 />
                 {formData.contactNumbers.length > 1 && (
                   <button
@@ -177,7 +177,7 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
                 placeholder="Enter latitude"
                 value={formData.latitude}
                 onChange={handleChange}
-                className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#4B164C] outline-none"
+                className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
               />
             </div>
             <div>
@@ -188,7 +188,7 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
                 placeholder="Enter longitude"
                 value={formData.longitude}
                 onChange={handleChange}
-                className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#4B164C] outline-none"
+                className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
               />
             </div>
           </div>
@@ -209,7 +209,7 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
               value={formData.buildingDetails}
               onChange={handleChange}
               rows={4}
-              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#4B164C] outline-none"
+              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
             />
           </div>
 
@@ -222,7 +222,7 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
                 handleImageChange(e.dataTransfer.files);
               }}
               onDragOver={(e) => e.preventDefault()}
-              className="w-full min-h-[120px] border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center p-4 cursor-pointer hover:border-[#4B164C] transition"
+              className="w-full min-h-[120px] border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center p-4 cursor-pointer hover:border-[#5DB7AE] transition"
               onClick={() => document.getElementById("imageInput")?.click()}
             >
               <p className="text-gray-500">Drag & drop images here, or click to select</p>
@@ -260,7 +260,7 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
             <button type="button" onClick={onClose} className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition">
               Cancel
             </button>
-            <button type="submit" className="px-6 py-2 bg-[#4B164C] hover:bg-[#5e1b60] text-white rounded-lg transition">
+            <button type="submit" className="px-6 py-2 bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] hover:from-[#3a7d74] hover:to-[#5DB7AE] text-white rounded-lg transition">
               Save Building
             </button>
           </div>
