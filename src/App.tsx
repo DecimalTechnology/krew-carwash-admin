@@ -5,6 +5,7 @@ import Users from "./pages/admin/Users";
 import Dashoard from "./pages/admin/Dashoard";
 import Building from "./pages/admin/Building";
 import Cars from "./pages/admin/Cars";
+import AddBuildingPage from "./pages/admin/AddBuilding";
 
 export default function App() {
     return (
@@ -16,6 +17,8 @@ export default function App() {
                     <Route path="users" element={<Users />} />
                     <Route path="building" element={<Building />} />
                     <Route path="cars" element={<Cars />} />
+                    <Route path="add-building" element={<AddBuildingPage />} />
+
 
                 </Route>
             </Routes>
