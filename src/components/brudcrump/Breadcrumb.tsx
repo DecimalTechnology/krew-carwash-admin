@@ -15,7 +15,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ elements,pageName }) => {
     const navigate = useNavigate();
     return (
         <div className="flex justify-between">
-            <h1 className="text-2xl">{pageName}</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{pageName}</h1>
             <nav className="mb-4" aria-label="Breadcrumb">
                 <ol className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
                     {elements?.map((obj: BreadcrumbElement, idx: number) => (

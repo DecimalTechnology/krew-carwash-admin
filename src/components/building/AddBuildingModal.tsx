@@ -63,25 +63,25 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
     }
   };
 
-  return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-2xl shadow-2xl w-[95%] max-w-2xl p-8 relative overflow-y-auto max-h-[90vh]">
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold"
-        >
-          ×
-        </button>
+    return (
+      <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-[95%] max-w-2xl p-8 relative overflow-y-auto max-h-[90vh]">
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className="absolute top-3 right-4 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold"
+          >
+            ×
+          </button>
 
-        {/* Header */}
-        <h2 className="text-2xl font-bold mb-6 text-center text-[#5DB7AE]">Add New Building</h2>
+          {/* Header */}
+          <h2 className="text-2xl font-bold mb-6 text-center text-[#5DB7AE] dark:text-[#6ECFC3]">Add New Building</h2>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Building Name */}
-          <div>
-            <label className="block font-medium text-gray-700">Building Name</label>
+            {/* Building Name */}
+            <div>
+              <label className="block font-medium text-gray-700 dark:text-gray-300">Building Name</label>
             <input
               type="text"
               name="buildingName"
@@ -93,9 +93,9 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
             />
           </div>
 
-          {/* Address */}
-          <div>
-            <label className="block font-medium text-gray-700">Address</label>
+            {/* Address */}
+            <div>
+              <label className="block font-medium text-gray-700 dark:text-gray-300">Address</label>
             <input
               type="text"
               name="address"
@@ -106,9 +106,9 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
             />
           </div>
 
-          {/* City */}
-          <div>
-            <label className="block font-medium text-gray-700">City</label>
+            {/* City */}
+            <div>
+              <label className="block font-medium text-gray-700 dark:text-gray-300">City</label>
             <input
               type="text"
               name="city"
@@ -120,9 +120,9 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
             />
           </div>
 
-          {/* Area */}
-          <div>
-            <label className="block font-medium text-gray-700">Area</label>
+            {/* Area */}
+            <div>
+              <label className="block font-medium text-gray-700 dark:text-gray-300">Area</label>
             <input
               type="text"
               name="area"
@@ -133,9 +133,9 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
             />
           </div>
 
-          {/* Contact Numbers */}
-          <div>
-            <label className="block font-medium text-gray-700 mb-2">Contact Numbers</label>
+            {/* Contact Numbers */}
+            <div>
+              <label className="block font-medium text-gray-700 dark:text-gray-300 mb-2">Contact Numbers</label>
             {formData.contactNumbers.map((num, index) => (
               <div key={index} className="flex gap-2 items-center mb-2">
                 <input
@@ -143,7 +143,7 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
                   placeholder="Enter contact number"
                   value={num}
                   onChange={(e) => handleContactChange(index, e.target.value)}
-                  className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
+                  className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#5DB7AE] outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white"
                 />
                 {formData.contactNumbers.length > 1 && (
                   <button
@@ -175,7 +175,7 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
                 placeholder="Enter latitude"
                 value={formData.latitude}
                 onChange={handleChange}
-                className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
+                className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white"
               />
             </div>
             <div>
@@ -186,17 +186,17 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
                 placeholder="Enter longitude"
                 value={formData.longitude}
                 onChange={handleChange}
-                className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
+                className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white"
               />
             </div>
           </div>
 
-          {/* Active Status Switch */}
-          <div className="flex items-center gap-3">
-            <label className="font-medium text-gray-700">Status</label>
-            <Switch checked={formData.isActive} onChange={handleToggleActive} />
-            <span className="text-gray-700">{formData.isActive ? "Active" : "Inactive"}</span>
-          </div>
+            {/* Active Status Switch */}
+            <div className="flex items-center gap-3">
+              <label className="font-medium text-gray-700 dark:text-gray-300">Status</label>
+              <Switch checked={formData.isActive} onChange={handleToggleActive} />
+              <span className="text-gray-700 dark:text-gray-300">{formData.isActive ? "Active" : "Inactive"}</span>
+            </div>
 
           {/* Building Details */}
           <div>
@@ -253,15 +253,15 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
             )}
           </div>
 
-          {/* Buttons */}
-          <div className="flex justify-end gap-4 pt-4 border-t">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition"
-            >
-              Cancel
-            </button>
+            {/* Buttons */}
+            <div className="flex justify-end gap-4 pt-4 border-t dark:border-gray-700">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+              >
+                Cancel
+              </button>
             <button type="submit" className="px-6 py-2 bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] hover:from-[#3a7d74] hover:to-[#5DB7AE] text-white rounded-lg transition">
               Save Building
             </button>

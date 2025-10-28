@@ -190,24 +190,28 @@ export default function Users() {
                                         </TableCell>
 
                                         <TableCell>
-                                            <button
-                                                onClick={() => {
-                                                    setSelectedUserId(data?._id);
-                                                    setDeleteModalOpen(true);
-                                                }}
-                                                className="text-red-500 hover:text-red-700"
-                                            >
-                                                <Trash size={18} className="ml-4" />
-                                            </button>
-                                            <button
-                                                onClick={() => {
-                                                    setSelectedUser(data)
-                                                    setUserViewModalOpen(true);
-                                                }}
-                                                className="text-blue-500 hover:text-red-700"
-                                            >
-                                                <Eye size={18} className="ml-4" />
-                                            </button>
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={() => {
+                                                        setSelectedUser(data)
+                                                        setUserViewModalOpen(true);
+                                                    }}
+                                                    className="p-2 text-[#5DB7AE] hover:text-[#4a9d91] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+                                                    title="View Details"
+                                                >
+                                                    <Eye size={18} />
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        setSelectedUserId(data?._id);
+                                                        setDeleteModalOpen(true);
+                                                    }}
+                                                    className="p-2 text-red-500 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+                                                    title="Delete"
+                                                >
+                                                    <Trash size={18} />
+                                                </button>
+                                            </div>
                                         </TableCell>
                                     </TableRow>
                                 ))}
