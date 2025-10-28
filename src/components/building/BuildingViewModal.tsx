@@ -20,7 +20,7 @@ const BuildingViewModal: React.FC<IProps> = ({ building, onClose }) => {
           ×
         </button>
 
-        <h2 className="text-2xl font-bold mb-6 text-center text-[#4B164C]">
+        <h2 className="text-2xl font-bold mb-6 text-center text-[#5DB7AE]">
           Building Details
         </h2>
 
@@ -102,7 +102,7 @@ const BuildingViewModal: React.FC<IProps> = ({ building, onClose }) => {
           <div className="flex justify-end mt-6">
             <button
               onClick={onClose}
-              className="px-6 py-2 bg-[#4B164C] hover:bg-[#5e1b60] text-white rounded-lg transition"
+              className="px-6 py-2 bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] hover:from-[#3a7d74] hover:to-[#5DB7AE] text-white rounded-lg transition"
             >
               Close
             </button>

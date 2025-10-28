@@ -87,7 +87,7 @@ export default function Buildings() {
                             onClick={() => setStatusFilter(tab.toLowerCase())}
                             className={`px-4 py-2 rounded-lg font-medium ${
                                 statusFilter === tab.toLowerCase()
-                                    ? "bg-blue-600 text-white"
+                                    ? "bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] text-white"
                                     : "bg-gray-100 text-gray-700"
                             }`}
                         >
@@ -104,7 +104,7 @@ export default function Buildings() {
 
                 <button
                     onClick={() => setAddModalOpen(true)}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                    className="bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] hover:from-[#3a7d74] hover:to-[#5DB7AE] text-white px-4 py-2 rounded-lg transition"
                 >
                     Add New Building
                 </button>
