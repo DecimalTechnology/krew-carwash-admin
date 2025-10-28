@@ -75,7 +75,7 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
         </button>
 
         {/* Header */}
-        <h2 className="text-2xl font-bold mb-6 text-center text-[#4B164C]">Add New Building</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-[#5DB7AE]">Add New Building</h2>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -89,7 +89,7 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
               value={formData.buildingName}
               onChange={handleChange}
               required
-              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#4B164C] outline-none"
+              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
             />
           </div>
 
@@ -116,7 +116,7 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
               value={formData.city}
               onChange={handleChange}
               required
-              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#4B164C] outline-none"
+              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
             />
           </div>
 
@@ -129,8 +129,7 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
               placeholder="Enter area"
               value={formData.area}
               onChange={handleChange}
-              required
-              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#4B164C] outline-none"
+              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
             />
           </div>
 
@@ -144,7 +143,7 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
                   placeholder="Enter contact number"
                   value={num}
                   onChange={(e) => handleContactChange(index, e.target.value)}
-                  className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#4B164C] outline-none"
+                  className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
                 />
                 {formData.contactNumbers.length > 1 && (
                   <button
@@ -166,11 +165,92 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
             </button>
           </div>
 
-          {/* Active Status */}
+          {/* Coordinates */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+              <label className="block font-medium text-gray-700">Latitude</label>
+              <input
+                type="number"
+                name="latitude"
+                placeholder="Enter latitude"
+                value={formData.latitude}
+                onChange={handleChange}
+                className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
+              />
+            </div>
+            <div>
+              <label className="block font-medium text-gray-700">Longitude</label>
+              <input
+                type="number"
+                name="longitude"
+                placeholder="Enter longitude"
+                value={formData.longitude}
+                onChange={handleChange}
+                className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
+              />
+            </div>
+          </div>
+
+          {/* Active Status Switch */}
           <div className="flex items-center gap-3">
             <label className="font-medium text-gray-700">Status</label>
             <Switch checked={formData.isActive} onChange={handleToggleActive} />
             <span className="text-gray-700">{formData.isActive ? "Active" : "Inactive"}</span>
+          </div>
+
+          {/* Building Details */}
+          <div>
+            <label className="block font-medium text-gray-700 mb-1">Building Details</label>
+            <textarea
+              name="buildingDetails"
+              placeholder="Enter building details"
+              value={formData.buildingDetails}
+              onChange={handleChange}
+              rows={4}
+              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none"
+            />
+          </div>
+
+          {/* Image Upload */}
+          <div>
+            <label className="block font-medium text-gray-700 mb-2">Upload Images</label>
+            <div
+              onDrop={(e) => {
+                e.preventDefault();
+                handleImageChange(e.dataTransfer.files);
+              }}
+              onDragOver={(e) => e.preventDefault()}
+              className="w-full min-h-[120px] border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center p-4 cursor-pointer hover:border-[#5DB7AE] transition"
+              onClick={() => document.getElementById("imageInput")?.click()}
+            >
+              <p className="text-gray-500">Drag & drop images here, or click to select</p>
+            </div>
+
+            <input
+              type="file"
+              id="imageInput"
+              multiple
+              accept="image/*"
+              onChange={(e) => handleImageChange(e.target.files)}
+              className="hidden"
+            />
+
+            {formData.images.length > 0 && (
+              <div className="flex gap-3 flex-wrap mt-3">
+                {formData.images.map((img, i) => (
+                  <div key={i} className="relative">
+                    <img src={img} alt={`preview-${i}`} className="w-24 h-24 rounded-lg object-cover border" />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(i)}
+                      className="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm hover:bg-red-600"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Buttons */}
@@ -182,10 +262,7 @@ function AddBuildingModal({ isOpen, onClose, setBuildings }: IProps) {
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="px-6 py-2 bg-[#4B164C] hover:bg-[#5e1b60] text-white rounded-lg transition"
-            >
+            <button type="submit" className="px-6 py-2 bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] hover:from-[#3a7d74] hover:to-[#5DB7AE] text-white rounded-lg transition">
               Save Building
             </button>
           </div>

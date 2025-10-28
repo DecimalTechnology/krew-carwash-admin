@@ -86,7 +86,7 @@ export default function Buildings() {
                             onClick={() => setStatusFilter(tab.toLowerCase())}
                             className={`px-4 py-2 rounded-lg font-medium ${
                                 statusFilter === tab.toLowerCase()
-                                    ? "bg-blue-600 text-white"
+                                    ? "bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] text-white"
                                     : "bg-gray-100 text-gray-700"
                             }`}
                         >
