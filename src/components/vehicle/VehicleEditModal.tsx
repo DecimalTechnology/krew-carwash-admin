@@ -94,7 +94,7 @@ const VehicleEditModal: React.FC<VehicleEditModalProps> = ({ isOpen, vehicle, on
             Cancel
           </button>
           <button
-            className="px-4 py-2 bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] hover:from-[#3a7d74] hover:to-[#5DB7AE] text-white rounded"
+            className="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded"
             onClick={handleSave}
           >
             Save

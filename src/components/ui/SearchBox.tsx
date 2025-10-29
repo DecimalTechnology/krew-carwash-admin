@@ -35,7 +35,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ search, setSearch, placeholder = 
             value={localValue}
             onChange={(e) => setLocalValue(e.target.value)}
             placeholder={placeholder}
-            className={`border rounded px-3 py-2 w-full md:w-64 bg-white text-gray-900 dark:bg-gray-900 dark:text-white dark:border-gray-700 ${
+            className={`border border-gray-300 rounded px-3 py-2 w-full md:w-64 bg-white text-gray-900 dark:bg-gray-900 dark:text-white dark:border-gray-700 focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500 transition-all ${
                 className || ""
             }`}
         />

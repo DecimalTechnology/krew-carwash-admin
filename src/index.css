@@ -582,7 +582,7 @@ span.flatpickr-weekday,
   @apply hidden;
 }
 .fc-addEventButton-button {
-  @apply rounded-lg! border-0! bg-gradient-to-r! from-[#4a9d91]! to-[#6ECFC3]! px-4! py-2.5! text-sm! font-medium! hover:from-[#3a7d74]! hover:to-[#5DB7AE]! focus:shadow-none!;
+  @apply rounded-lg! border-0! bg-brand-500! px-4! py-2.5! text-sm! font-medium! hover:bg-brand-600! focus:shadow-none!;
 }
 .fc-toolbar-title {
   @apply text-lg! font-medium! text-gray-800 dark:text-white/90;

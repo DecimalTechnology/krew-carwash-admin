@@ -24,7 +24,6 @@ const stats = [
     change: "+12.5%",
     trend: "up",
     icon: Calendar,
-    gradient: "from-[#4a9d91] to-[#6ECFC3]",
   },
   {
     title: "Revenue (AED)",
@@ -32,7 +31,6 @@ const stats = [
     change: "+8.2%",
     trend: "up",
     icon: DollarSign,
-    gradient: "from-[#4a9d91] to-[#6ECFC3]",
   },
   {
     title: "Active Cleaners",
@@ -40,7 +38,6 @@ const stats = [
     change: "+5.1%",
     trend: "up",
     icon: Users,
-    gradient: "from-[#4a9d91] to-[#6ECFC3]",
   },
   {
     title: "Completed Today",
@@ -48,7 +45,6 @@ const stats = [
     change: "-2.4%",
     trend: "down",
     icon: CheckCircle,
-    gradient: "from-[#4a9d91] to-[#6ECFC3]",
   },
 ];
 
@@ -160,7 +156,7 @@ function Dashboard() {
           <button className="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
             Last 7 Days
           </button>
-          <button className="px-4 py-2 bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] hover:from-[#3a7d74] hover:to-[#5DB7AE] text-white rounded-lg transition">
+          <button className="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg transition">
             Export Report
           </button>
         </div>
@@ -197,13 +193,13 @@ function Dashboard() {
                     </div>
                   </div>
                   <div
-                    className={`p-3 bg-gradient-to-br ${stat.gradient} rounded-lg group-hover:scale-110 transition-transform`}
+                    className="p-3 bg-brand-500 rounded-lg group-hover:scale-110 transition-transform"
                   >
                     <Icon className="w-6 h-6 text-white" />
                   </div>
                 </div>
               </div>
-              <div className={`h-1 bg-gradient-to-r ${stat.gradient}`}></div>
+              <div className="h-1 bg-brand-500"></div>
             </div>
           );
         })}
@@ -298,7 +294,7 @@ function Dashboard() {
                 key={index}
                 className="flex items-center gap-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
               >
-                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-[#4a9d91] to-[#6ECFC3] text-white font-bold">
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-brand-500 text-white font-bold">
                   {index + 1}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -334,7 +330,7 @@ function Dashboard() {
               <div key={index} className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-[#4a9d91] to-[#6ECFC3] text-white text-xs font-bold">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-brand-500 text-white text-xs font-bold">
                       {index + 1}
                     </div>
                     <div>
@@ -349,7 +345,7 @@ function Dashboard() {
                 </div>
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                   <div
-                    className="bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] h-2 rounded-full transition-all duration-500"
+                    className="bg-brand-500 h-2 rounded-full transition-all duration-500"
                     style={{ width: `${(location.bookings / 500) * 100}%` }}
                   ></div>
                 </div>
@@ -372,7 +368,7 @@ function Dashboard() {
               <div key={index} className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 rounded-full bg-gradient-to-br from-[#4a9d91] to-[#6ECFC3]"></div>
+                    <div className="w-3 h-3 rounded-full bg-brand-500"></div>
                     <h4 className="text-sm font-medium text-gray-900 dark:text-white">{service.service}</h4>
                   </div>
                   <div className="flex items-center gap-2">
@@ -382,7 +378,7 @@ function Dashboard() {
                 </div>
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                   <div
-                    className="bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] h-2 rounded-full transition-all duration-500"
+                    className="bg-brand-500 h-2 rounded-full transition-all duration-500"
                     style={{ width: `${service.percentage}%` }}
                   ></div>
                 </div>
@@ -394,7 +390,7 @@ function Dashboard() {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-gradient-to-br from-[#4a9d91] to-[#6ECFC3] rounded-xl shadow-lg p-6 text-white hover:shadow-xl transition-shadow">
+        <div className="bg-brand-500 rounded-xl shadow-lg p-6 text-white hover:shadow-xl transition-shadow">
           <Calendar className="w-8 h-8 mb-3" />
           <h3 className="text-xl font-semibold mb-2">Schedule Booking</h3>
           <p className="text-white/90 text-sm mb-4">Create a new booking for your customers</p>
@@ -403,7 +399,7 @@ function Dashboard() {
           </button>
         </div>
 
-        <div className="bg-gradient-to-br from-[#4a9d91] to-[#6ECFC3] rounded-xl shadow-lg p-6 text-white hover:shadow-xl transition-shadow">
+        <div className="bg-brand-500 rounded-xl shadow-lg p-6 text-white hover:shadow-xl transition-shadow">
           <Users className="w-8 h-8 mb-3" />
           <h3 className="text-xl font-semibold mb-2">Manage Cleaners</h3>
           <p className="text-white/90 text-sm mb-4">View and assign cleaners to jobs</p>
@@ -412,7 +408,7 @@ function Dashboard() {
           </button>
         </div>
 
-        <div className="bg-gradient-to-br from-[#4a9d91] to-[#6ECFC3] rounded-xl shadow-lg p-6 text-white hover:shadow-xl transition-shadow">
+        <div className="bg-brand-500 rounded-xl shadow-lg p-6 text-white hover:shadow-xl transition-shadow">
           <TrendingUp className="w-8 h-8 mb-3" />
           <h3 className="text-xl font-semibold mb-2">Analytics</h3>
           <p className="text-white/90 text-sm mb-4">View detailed reports and insights</p>

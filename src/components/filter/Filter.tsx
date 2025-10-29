@@ -45,7 +45,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ filter, setFilter, statusV
                             }))
                         }
                         className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-150 
-              ${filter.status === status.toLowerCase() ? "bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
+              ${filter.status === status.toLowerCase() ? "bg-brand-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
                     >
                         {status}
                     </button>

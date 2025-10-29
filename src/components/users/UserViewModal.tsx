@@ -56,7 +56,7 @@ export default function UserViewModal({ user, onClose }: UserViewModalProps) {
                 <div className="flex justify-end mt-4">
                     <button
                         onClick={onClose}
-                        className="bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] hover:from-[#3a7d74] hover:to-[#5DB7AE] text-white px-4 py-2 rounded-lg"
+                        className="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg"
                     >
                         Close
                     </button>

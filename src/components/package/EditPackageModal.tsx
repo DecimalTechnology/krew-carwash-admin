@@ -20,7 +20,7 @@ interface IVehicleType {
 
 interface IBasePrice {
   vehicleType: string;
-  price: number;
+  price: number | string;
 }
 
 function EditPackageModal({ isOpen, package: pkg, onClose, onUpdate }: IProps) {
@@ -32,7 +32,7 @@ function EditPackageModal({ isOpen, package: pkg, onClose, onUpdate }: IProps) {
   });
 
   const [basePrices, setBasePrices] = useState<IBasePrice[]>([
-    { vehicleType: "", price: 0 },
+    { vehicleType: "", price: "" },
   ]);
 
   const [vehicleTypes, setVehicleTypes] = useState<IVehicleType[]>([]);
@@ -69,7 +69,7 @@ function EditPackageModal({ isOpen, package: pkg, onClose, onUpdate }: IProps) {
           }))
         );
       } else {
-        setBasePrices([{ vehicleType: "", price: 0 }]);
+        setBasePrices([{ vehicleType: "", price: "" }]);
       }
     }
   }, [pkg]);
@@ -92,7 +92,7 @@ function EditPackageModal({ isOpen, package: pkg, onClose, onUpdate }: IProps) {
   };
 
   const addBasePrice = () => {
-    setBasePrices([...basePrices, { vehicleType: "", price: 0 }]);
+    setBasePrices([...basePrices, { vehicleType: "", price: "" }]);
   };
 
   const removeBasePrice = (index: number) => {
@@ -108,7 +108,12 @@ function EditPackageModal({ isOpen, package: pkg, onClose, onUpdate }: IProps) {
     try {
       const payload = {
         ...formData,
-        basePrices: basePrices.filter((bp) => bp.vehicleType && bp.price > 0),
+        basePrices: basePrices
+          .filter((bp) => bp.vehicleType && bp.price)
+          .map((bp) => ({
+            vehicleType: bp.vehicleType,
+            price: typeof bp.price === 'string' ? parseFloat(bp.price) : bp.price,
+          })),
       };
 
       const res = await updatePackage(pkg._id, payload);
@@ -231,7 +236,7 @@ function EditPackageModal({ isOpen, package: pkg, onClose, onUpdate }: IProps) {
                       min="0"
                       step="0.01"
                       value={basePrice.price}
-                      onChange={(e) => handleBasePriceChange(index, "price", parseFloat(e.target.value) || 0)}
+                      onChange={(e) => handleBasePriceChange(index, "price", e.target.value)}
                       required
                       placeholder="0.00"
                       className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#5DB7AE] outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -275,7 +280,7 @@ function EditPackageModal({ isOpen, package: pkg, onClose, onUpdate }: IProps) {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] hover:from-[#3a7d74] hover:to-[#5DB7AE] text-white rounded-lg transition disabled:opacity-50"
+              className="px-6 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg transition disabled:opacity-50"
             >
               {loading ? "Updating..." : "Update Package"}
             </button>
