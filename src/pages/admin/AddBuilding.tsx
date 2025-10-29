@@ -99,7 +99,7 @@ function AddBuildingPage() {
                                         value={formData.buildingName}
                                         onChange={handleChange}
                                         required
-                                        className="w-full border rounded-lg p-3 text-base focus:ring-2 focus:ring-[#4B164C] outline-none"
+                                        className="w-full border rounded-lg p-3 text-base focus:ring-2 focus:ring-brand-500 outline-none"
                                     />
                                 </div>
 
@@ -112,7 +112,7 @@ function AddBuildingPage() {
                                         placeholder="Enter building address"
                                         value={formData.address}
                                         onChange={handleChange}
-                                        className="w-full border rounded-lg p-3 text-base focus:ring-2 focus:ring-[#4B164C] outline-none"
+                                        className="w-full border rounded-lg p-3 text-base focus:ring-2 focus:ring-brand-500 outline-none"
                                     />
                                 </div>
 
@@ -129,7 +129,7 @@ function AddBuildingPage() {
                                             value={formData.city}
                                             onChange={handleChange}
                                             required
-                                            className="w-full border rounded-lg p-3 text-base focus:ring-2 focus:ring-[#4B164C] outline-none"
+                                            className="w-full border rounded-lg p-3 text-base focus:ring-2 focus:ring-brand-500 outline-none"
                                         />
                                     </div>
 
@@ -144,7 +144,7 @@ function AddBuildingPage() {
                                             value={formData.area}
                                             onChange={handleChange}
                                             required
-                                            className="w-full border rounded-lg p-3 text-base focus:ring-2 focus:ring-[#4B164C] outline-none"
+                                            className="w-full border rounded-lg p-3 text-base focus:ring-2 focus:ring-brand-500 outline-none"
                                         />
                                     </div>
                                 </div>
@@ -180,7 +180,7 @@ function AddBuildingPage() {
                                     <button
                                         type="button"
                                         onClick={addContact}
-                                        className="mt-3 px-5 py-2 bg-[#67C6BA] text-white rounded-md hover:bg-[#67C6BA] text-sm font-medium"
+                                        className="mt-3 px-5 py-2 bg-brand-500 text-white rounded-md hover:bg-brand-600 text-sm font-medium"
                                     >
                                         + Add Contact
                                     </button>

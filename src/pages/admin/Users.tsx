@@ -74,7 +74,7 @@ export default function Users() {
                                     onClick={() => setStatusFilter(tab.toLowerCase())}
                                     className={`px-4 py-2 rounded-lg font-medium ${
                                         statusFilter === tab.toLowerCase()
-                                            ? "bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] text-white"
+                                            ? "bg-brand-500 text-white"
                                             : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                                     }`}
                                 >

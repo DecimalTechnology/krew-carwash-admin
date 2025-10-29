@@ -103,7 +103,7 @@ export default function Packages() {
               onClick={() => setStatusFilter(tab.toLowerCase())}
               className={`px-4 py-2 rounded-lg font-medium ${
                 statusFilter === tab.toLowerCase()
-                  ? "bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] text-white"
+                  ? "bg-brand-500 text-white"
                   : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
               }`}
             >
@@ -116,7 +116,7 @@ export default function Packages() {
 
         <button
           onClick={() => setAddModalOpen(true)}
-          className="bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] hover:from-[#3a7d74] hover:to-[#5DB7AE] text-white px-4 py-2 rounded-lg transition"
+          className="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg transition"
         >
           Add New Package
         </button>
@@ -174,9 +174,25 @@ export default function Packages() {
                       <div className="max-w-xs truncate">{pkg.description || "-"}</div>
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
-                      <span className="text-[#5DB7AE] font-medium">
-                        {pkg.basePrices?.length || 0} vehicle types
-                      </span>
+                      {pkg.basePrices && pkg.basePrices.length > 0 ? (
+                        <div className="space-y-1">
+                          {pkg.basePrices.map((bp, idx) => (
+                            <div 
+                              key={idx} 
+                              className="flex items-center justify-between gap-2 px-2 py-1 bg-brand-50 dark:bg-brand-500/10 rounded border border-brand-100 dark:border-brand-500/20 hover:border-brand-300 dark:hover:border-brand-500/40 transition-all"
+                            >
+                              <span className="text-xs text-gray-700 dark:text-gray-300 truncate">
+                                {typeof bp.vehicleType === 'object' ? bp.vehicleType.name : 'N/A'}
+                              </span>
+                              <span className="text-xs font-semibold text-brand-600 dark:text-brand-400 whitespace-nowrap">
+                                {bp.price.toFixed(0)} AED
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-gray-400 text-xs">-</span>
+                      )}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
                       <Switch
@@ -235,7 +251,7 @@ export default function Packages() {
         <AddPackageModal
           onClose={() => setAddModalOpen(false)}
           isOpen={addModalOpen}
-          setPackages={setPackages}
+          onSuccess={() => setFetch(!fetch)}
         />
       )}
 
