@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Switch from "../ui/switch/Switch";
 import { createPackage } from "../../api/admin/packageService";
-import { getAllVehicles } from "../../api/admin/vehicleService";
+import { getAllVehicles } from "../../api/admin/vehicleTypeServices";
 import toast from "react-hot-toast";
 import { Plus, X } from "lucide-react";
 

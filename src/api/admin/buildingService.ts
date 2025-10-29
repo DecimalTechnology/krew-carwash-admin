@@ -3,7 +3,7 @@ import { baseUrl, erroHandler } from "../baseUrl";
 
 export const createBuilding = async (formData: any) => {
     try {
-        const result = await baseUrl.post("/admin/building", formData,{headers:{"Content-Type":"multipart/form-data"}});
+        const result = await baseUrl.post("/admin/buildings",formData);
         return result?.data;
     } catch (error) {
         const message = erroHandler(error);

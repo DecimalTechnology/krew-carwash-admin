@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Breadcrumb from "../../components/brudcrump/Breadcrumb";
-import { changeStatus, getAllVehicles, updateVehicle } from "../../api/admin/vehicleService";
+import { changeStatus, getAllVehicles, updateVehicle } from "../../api/admin/vehicleTypeServices";
 import { IVehicle } from "../../interface/IVehicle";
 import Switch from "../../components/ui/switch/Switch";
 import { Edit } from "lucide-react";
