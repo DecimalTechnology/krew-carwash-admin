@@ -104,7 +104,7 @@ export default function Buildings() {
                 <button
                   
                     onClick={() => navigate("/add-building")}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                    className="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg transition"
                 >
                     Add New Building
                 </button>
