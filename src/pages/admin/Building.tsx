@@ -8,13 +8,11 @@ import Switch from "../../components/ui/switch/Switch";
 import DeleteModal from "../../components/ui/modals/common/DeleteModal";
 import toast from "react-hot-toast";
 import Pagination from "../../components/ui/pagination/Pagination";
-
-import AddBuildingModal from "../../components/building/AddBuildingModal";
+import BuildingViewModal from "../../components/building/BuildingViewModal";
+import { useNavigate } from "react-router-dom";
 
 import { getAllBuildings, updateBuilding } from "../../api/admin/buildingService";
 import { IBuilding } from "../../interface/IBuilding";
-import BuildingViewModal from "../../components/building/BuildingViewModal";
-
 
 export default function Buildings() {
     const [search, setSearch] = useState("");
@@ -25,13 +23,14 @@ export default function Buildings() {
     const [limit, setLimit] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
-    const [addModalOpen, setAddModalOpen] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [viewModalOpen, setViewModalOpen] = useState(false);
     const [selectedBuilding, setSelectedBuilding] = useState<IBuilding | null>(null);
     const [buildings, setBuildings] = useState<IBuilding[]>([]);
     const [fetch, setFetch] = useState(false);
     const [selectedBuildingId, setSelectedBuildingId] = useState("");
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -103,8 +102,9 @@ export default function Buildings() {
                 />
 
                 <button
-                    onClick={() => setAddModalOpen(true)}
-                    className="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg transition"
+                  
+                    onClick={() => navigate("/add-building")}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
                 >
                     Add New Building
                 </button>
@@ -140,12 +140,12 @@ export default function Buildings() {
                                             {b.coordinates
                                                 ? `${b.coordinates.latitude}, ${b.coordinates.longitude}`
                                                 : "-"}
-                                        </TableCell  >
+                                        </TableCell>
                                         <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
                                             <Switch
                                                 checked={b.isActive}
                                                 onChange={() =>
-                                                    handleUpdate({isActive:!b?.isActive},b?._id)
+                                                    handleUpdate({ isActive: !b?.isActive }, b?._id)
                                                 }
                                             />
                                         </TableCell>
@@ -192,10 +192,6 @@ export default function Buildings() {
                 totalPages={totalPages}
                 onPageChange={(p) => setPage(p)}
             />
-
-            {addModalOpen && (
-                <AddBuildingModal onClose={() => setAddModalOpen(false)} isOpen={addModalOpen} setBuildings={setBuildings} />
-            )}
 
             {viewModalOpen && selectedBuilding && (
                 <BuildingViewModal
