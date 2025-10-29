@@ -87,7 +87,7 @@ export default function Buildings() {
                             className={`px-4 py-2 rounded-lg font-medium ${
                                 statusFilter === tab.toLowerCase()
                                     ? "bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] text-white"
-                                    : "bg-gray-100 text-gray-700"
+                                    : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                             }`}
                         >
                             {tab}
@@ -109,7 +109,7 @@ export default function Buildings() {
                 </button>
             </div>
 
-            <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+            <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
                 <div className="max-w-full overflow-x-auto">
                     {loading ? (
                         <TableLoading />
@@ -155,24 +155,28 @@ export default function Buildings() {
                                             {new Date(b.updatedAt).toLocaleDateString()}
                                         </TableCell>
                                         <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
-                                            <button
-                                                onClick={() => {
-                                                    setSelectedBuilding(b);
-                                                    setViewModalOpen(true);
-                                                }}
-                                                className="text-blue-500"
-                                            >
-                                                <Eye size={18} />
-                                            </button>
-                                            <button
-                                                onClick={() => {
-                                                    setSelectedBuildingId(b._id);
-                                                    setDeleteModalOpen(true);
-                                                }}
-                                                className="text-red-500"
-                                            >
-                                                <Trash size={18} />
-                                            </button>
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={() => {
+                                                        setSelectedBuilding(b);
+                                                        setViewModalOpen(true);
+                                                    }}
+                                                    className="p-2 text-[#5DB7AE] hover:text-[#4a9d91] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+                                                    title="View Details"
+                                                >
+                                                    <Eye size={18} />
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        setSelectedBuildingId(b._id);
+                                                        setDeleteModalOpen(true);
+                                                    }}
+                                                    className="p-2 text-red-500 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+                                                    title="Delete"
+                                                >
+                                                    <Trash size={18} />
+                                                </button>
+                                            </div>
                                         </TableCell>
                                     </TableRow>
                                 ))}
