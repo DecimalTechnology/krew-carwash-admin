@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 
 export const BASE_URL = `http://localhost:5000/api/v1`;
@@ -38,7 +39,7 @@ baseUrl.interceptors.response.use(
     }
 );
 
-export const erroHandler = (error: any) => {
+export const errorHandler = (error: any) => {
     if (axios.isAxiosError(error)) {
         const axiosError = error;
         if (axiosError?.response?.data?.message) {

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import toast from "react-hot-toast";
-import { baseUrl, erroHandler } from "../baseUrl";
+import { baseUrl, errorHandler } from "../baseUrl";
 
 // GET /admin/packages - Get all packages with query params
 export const getAllPackages = async (params?: {
@@ -16,7 +16,7 @@ export const getAllPackages = async (params?: {
     console.log("Packages API Response:", result?.data);
     return result?.data;
   } catch (error: any) {
-    const message = erroHandler(error);
+    const message = errorHandler(error);
     console.error("Packages API Error:", error?.response?.status, message);
     
     // Check if it's a 404 error
@@ -36,7 +36,7 @@ export const createPackage = async (data: any) => {
     console.log("Create Package Response:", result?.data);
     return result?.data;
   } catch (error: any) {
-    const message = erroHandler(error);
+    const message = errorHandler(error);
     console.error("Create Package Error:", error?.response?.status, message);
     
     // Check if it's a 404 error
@@ -56,7 +56,7 @@ export const updatePackage = async (packageId: string, data: any) => {
     console.log("Update Package Response:", result?.data);
     return result?.data;
   } catch (error: any) {
-    const message = erroHandler(error);
+    const message = errorHandler(error);
     console.error("Update Package Error:", error?.response?.status, message);
     
     // Check if it's a 404 error
@@ -76,7 +76,7 @@ export const deletePackage = async (packageId: string) => {
     console.log("Delete Package Response:", result?.data);
     return result?.data;
   } catch (error: any) {
-    const message = erroHandler(error);
+    const message = errorHandler(error);
     console.error("Delete Package Error:", error?.response?.status, message);
     
     // Check if it's a 404 error

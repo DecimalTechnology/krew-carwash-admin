@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import { IPackage } from "../../interface/IPackage";
-import { getPackages } from "../../api/admin/packageService";
+import { getAllPackages } from "../../api/admin/packageService";
 import PackageList from "./PackageList";
 
 function PackageSelector() {
@@ -13,7 +14,7 @@ function PackageSelector() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await getPackages();
+        const res = await getAllPackages();
         setPackages(res?.data || []);
       } catch (err) {
         console.error("Error fetching packages:", err);
