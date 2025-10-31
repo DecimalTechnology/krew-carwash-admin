@@ -14,7 +14,7 @@ import AddPackageModal from "../../components/package/AddPackageModal";
 import EditPackageModal from "../../components/package/EditPackageModal";
 import ViewPackageModal from "../../components/package/ViewPackageModal";
 
-import { getAllPackages, updatePackage } from "../../api/admin/packageService";
+import { getAllPackages, updatePackage, getPackageById } from "../../api/admin/packageService";
 import { IPackage } from "../../interface/IPackage";
 
 export default function Packages() {
@@ -34,6 +34,7 @@ export default function Packages() {
   const [packages, setPackages] = useState<IPackage[]>([]);
   const [fetch, setFetch] = useState(false);
   const [selectedPackageId, setSelectedPackageId] = useState("");
+  const [loadingPackage, setLoadingPackage] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -206,12 +207,23 @@ export default function Packages() {
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => {
-                            setSelectedPackage(pkg);
-                            setViewModalOpen(true);
+                          onClick={async () => {
+                            setLoadingPackage(true);
+                            try {
+                              const res = await getPackageById(pkg._id);
+                              setSelectedPackage(res?.data || pkg);
+                              setViewModalOpen(true);
+                            } catch (error) {
+                              console.error("Error fetching package:", error);
+                              setSelectedPackage(pkg);
+                              setViewModalOpen(true);
+                            } finally {
+                              setLoadingPackage(false);
+                            }
                           }}
-                          className="p-2 text-[#5DB7AE] hover:text-[#4a9d91] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+                          className="p-2 text-brand-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
                           title="View Details"
+                          disabled={loadingPackage}
                         >
                           <Eye size={18} />
                         </button>
@@ -220,7 +232,7 @@ export default function Packages() {
                             setSelectedPackage(pkg);
                             setEditModalOpen(true);
                           }}
-                          className="p-2 text-blue-500 hover:text-blue-600 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+                          className="p-2 text-brand-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
                           title="Edit"
                         >
                           <Edit size={18} />

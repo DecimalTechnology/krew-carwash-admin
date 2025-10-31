@@ -14,7 +14,10 @@ export const createBuilding = async (formData: any) => {
 };
 export const getAllBuildings = async (params: any) => {
     try {
-        const result = await baseUrl.get("/admin/buildings", { params: params });
+        // Add populate=true to get populated vehicle types and package names
+        const result = await baseUrl.get("/admin/buildings", { 
+            params: { ...params, populate: true } 
+        });
         return result?.data;
     } catch (error) {
         const message = errorHandler(error);
