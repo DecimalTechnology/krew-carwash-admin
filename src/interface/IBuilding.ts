@@ -1,17 +1,19 @@
 export interface IBuilding  {
-    name: string;
-    address?: any;
+    buildingName: string;
+    address?: string;
+    city: string;
+    area: string;
     isActive: boolean;
     isDeleted: boolean;
-    images: string[];
-    coordinates?: {
-      latitude?: number;
-      longitude?: number;
-    };
     contactNumbers: string[];
-    email?: string;
-    buildingDetails?: string;
+    packages?: Array<{
+      packageId: any;
+      prices: Array<{
+        vehicleType: any;
+        price: number;
+      }>;
+    }>;
     createdAt: Date;
     updatedAt: Date;
-    _id:string
+    _id: string;
   }

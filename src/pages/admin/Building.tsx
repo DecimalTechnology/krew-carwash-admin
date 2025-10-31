@@ -44,8 +44,9 @@ export default function Buildings() {
                     page,
                     limit
                 });
-                setBuildings(res?.data);
-                setTotalPages(res?.data?.pagination?.totalPages || 1);
+                console.log(res)
+                setBuildings(res?.data?.data || res?.data || []);
+                setTotalPages(res?.data?.pagination?.totalPages || res?.pagination?.totalPages || 1);
                 setLoading(false);
             } catch (error) {
                 setLoading(false);
@@ -120,10 +121,10 @@ export default function Buildings() {
                                 <TableRow>
                                     <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">No</TableCell>
                                     <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Name</TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Email</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">City</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Area</TableCell>
                                     <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Phone</TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Coordinates</TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none"> Active</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Active</TableCell>
                                     <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Created At</TableCell>
                                     <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Updated At</TableCell>
                                     <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Actions</TableCell>
@@ -133,14 +134,10 @@ export default function Buildings() {
                                 {buildings.map((b, index) => (
                                     <TableRow key={b._id}>
                                         <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{index + 1}</TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{b.name}</TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{b.email || "-"}</TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{b.contactNumbers.join(", ") || "-"}</TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
-                                            {b.coordinates
-                                                ? `${b.coordinates.latitude}, ${b.coordinates.longitude}`
-                                                : "-"}
-                                        </TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{b.buildingName}</TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{b.city}</TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{b.area}</TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{b.contactNumbers?.join(", ") || "-"}</TableCell>
                                         <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
                                             <Switch
                                                 checked={b.isActive}
@@ -162,7 +159,7 @@ export default function Buildings() {
                                                         setSelectedBuilding(b);
                                                         setViewModalOpen(true);
                                                     }}
-                                                    className="p-2 text-[#5DB7AE] hover:text-[#4a9d91] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+                                                    className="p-2 text-brand-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
                                                     title="View Details"
                                                 >
                                                     <Eye size={18} />

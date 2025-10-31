@@ -69,6 +69,25 @@ export const updatePackage = async (packageId: string, data: any) => {
   }
 };
 
+// GET /admin/packages/:packageId - Get single package with populated data
+export const getPackageById = async (packageId: string) => {
+  try {
+    const result = await baseUrl.get(`/admin/packages/${packageId}`);
+    console.log("Get Package Response:", result?.data);
+    return result?.data;
+  } catch (error: any) {
+    const message = errorHandler(error);
+    console.error("Get Package Error:", error?.response?.status, message);
+    
+    if (error?.response?.status === 404) {
+      toast.error("Package not found.");
+    } else {
+      toast.error(message);
+    }
+    throw new Error(message);
+  }
+};
+
 // DELETE /admin/packages/:packageId - Delete a package
 export const deletePackage = async (packageId: string) => {
   try {
