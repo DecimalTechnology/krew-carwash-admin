@@ -60,7 +60,7 @@ const VehicleEditModal: React.FC<VehicleEditModalProps> = ({ isOpen, vehicle, on
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="relative bg-gradient-to-r from-brand-500 to-brand-600 dark:from-brand-600 dark:to-brand-700 px-6 py-5">
+        <div className="relative bg-brand-500 dark:bg-brand-600 px-6 py-5">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
               <Car className="w-6 h-6 text-white" />
@@ -177,7 +177,7 @@ const VehicleEditModal: React.FC<VehicleEditModalProps> = ({ isOpen, vehicle, on
             Cancel
           </button>
           <button
-            className="px-5 py-2.5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 dark:bg-brand-600 dark:hover:bg-brand-700 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleSave}
             disabled={!name.trim()}
           >

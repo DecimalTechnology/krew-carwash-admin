@@ -106,7 +106,7 @@ function Cars() {
                                             className="w-full h-full object-cover" 
                                         />
                                     ) : (
-                                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-brand-500 to-brand-600">
+                                        <div className="w-full h-full flex items-center justify-center bg-brand-500 dark:bg-brand-600">
                                             <span className="text-6xl font-bold text-white uppercase">
                                                 {vehicle.name.charAt(0)}
                                             </span>

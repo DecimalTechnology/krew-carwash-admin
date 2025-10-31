@@ -53,7 +53,7 @@ function DeleteModal({ isOpen, handleDelete, type }: IProps) {
             </button>
             <button
               onClick={() => handleDelete(true)}
-              className="flex-1 px-5 py-2.5 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+              className="flex-1 px-5 py-2.5 bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
             >
               Delete
             </button>
