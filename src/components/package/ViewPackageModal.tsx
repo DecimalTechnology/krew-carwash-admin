@@ -20,7 +20,7 @@ const ViewPackageModal: React.FC<IProps> = ({ package: pkg, onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="relative bg-gradient-to-r from-brand-500 to-brand-600 dark:from-brand-600 dark:to-brand-700 px-6 py-5 flex-shrink-0">
+        <div className="relative bg-brand-500 dark:bg-brand-600 px-6 py-5 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
               <PackageIcon className="w-6 h-6 text-white" />
@@ -105,10 +105,10 @@ const ViewPackageModal: React.FC<IProps> = ({ package: pkg, onClose }) => {
                   pkg.basePrices.map((bp, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-700/30 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-brand-500 dark:hover:border-brand-400 transition-all duration-200 group"
+                      className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-brand-500 dark:hover:border-brand-400 transition-all duration-200 group"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-brand-500 to-brand-600 rounded-lg flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-200">
+                        <div className="w-10 h-10 bg-brand-500 dark:bg-brand-600 rounded-lg flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-200">
                           <Car className="w-5 h-5 text-white" />
                         </div>
                         <div>
@@ -177,7 +177,7 @@ const ViewPackageModal: React.FC<IProps> = ({ package: pkg, onClose }) => {
         <div className="px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-700 flex justify-end flex-shrink-0">
           <button
             onClick={onClose}
-            className="px-5 py-2.5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+            className="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 dark:bg-brand-600 dark:hover:bg-brand-700 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
           >
             Close
           </button>

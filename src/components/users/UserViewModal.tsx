@@ -18,8 +18,8 @@ export default function UserViewModal({ user, onClose }: UserViewModalProps) {
                 className="bg-white dark:bg-gray-800 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 my-auto max-h-[95vh] sm:max-h-[90vh] flex flex-col"
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* Gradient Header */}
-                <div className="relative bg-gradient-to-r from-brand-500 to-brand-600 dark:from-brand-600 dark:to-brand-700 h-24 sm:h-32 flex-shrink-0">
+                {/* Header */}
+                <div className="relative bg-brand-500 dark:bg-brand-600 h-24 sm:h-32 flex-shrink-0">
                     <button 
                         onClick={onClose} 
                         className="absolute top-3 right-3 sm:top-4 sm:right-4 text-white/90 hover:text-white hover:bg-white/20 rounded-full p-1.5 sm:p-2 transition-all duration-200 hover:rotate-90"
@@ -35,7 +35,7 @@ export default function UserViewModal({ user, onClose }: UserViewModalProps) {
                                     className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white dark:border-gray-800 shadow-lg object-cover"
                                 />
                             ) : (
-                                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white dark:border-gray-800 shadow-lg bg-gradient-to-br from-brand-500 to-brand-600 dark:from-brand-600 dark:to-brand-700 flex items-center justify-center">
+                                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white dark:border-gray-800 shadow-lg bg-brand-500 dark:bg-brand-600 flex items-center justify-center">
                                     <span className="text-3xl sm:text-5xl font-bold text-white uppercase">
                                         {user.name.charAt(0)}
                                     </span>
@@ -170,7 +170,7 @@ export default function UserViewModal({ user, onClose }: UserViewModalProps) {
                     <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
                         <button
                             onClick={onClose}
-                            className="w-full bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-200 hover:shadow-lg active:scale-[0.98]"
+                            className="w-full bg-brand-500 hover:bg-brand-600 dark:bg-brand-600 dark:hover:bg-brand-700 text-white font-semibold px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg transition-all duration-200 hover:shadow-lg active:scale-[0.98]"
                         >
                             Close
                         </button>

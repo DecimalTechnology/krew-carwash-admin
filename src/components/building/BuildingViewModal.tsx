@@ -20,7 +20,7 @@ const BuildingViewModal: React.FC<IProps> = ({ building, onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="relative bg-gradient-to-r from-brand-500 to-brand-600 dark:from-brand-600 dark:to-brand-700 px-6 py-5 flex-shrink-0">
+        <div className="relative bg-brand-500 dark:bg-brand-600 px-6 py-5 flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
               <Building2 className="w-6 h-6 text-white" />
@@ -140,10 +140,10 @@ const BuildingViewModal: React.FC<IProps> = ({ building, onClose }) => {
                   {building.packages.map((pkg, index) => (
                     <div
                       key={index}
-                      className="p-4 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-700/30 border border-gray-200 dark:border-gray-600"
+                      className="p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600"
                     >
                       <div className="flex items-center gap-2 mb-2">
-                        <div className="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                        <div className="w-8 h-8 bg-brand-500 dark:bg-brand-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
                           {index + 1}
                         </div>
                         <p className="text-base font-semibold text-gray-900 dark:text-white">
@@ -216,7 +216,7 @@ const BuildingViewModal: React.FC<IProps> = ({ building, onClose }) => {
         <div className="px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-700 flex justify-end flex-shrink-0">
           <button
             onClick={onClose}
-            className="px-5 py-2.5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+            className="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 dark:bg-brand-600 dark:hover:bg-brand-700 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
           >
             Close
           </button>
