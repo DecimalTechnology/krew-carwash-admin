@@ -66,7 +66,7 @@ const ViewPackageModal: React.FC<IProps> = ({ package: pkg, onClose }) => {
                     className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-[#4a9d91] to-[#6ECFC3] rounded-lg flex items-center justify-center text-white font-bold">
+                      <div className="w-10 h-10 bg-brand-500 rounded-lg flex items-center justify-center text-white font-bold">
                         {index + 1}
                       </div>
                       <span className="text-gray-800 dark:text-white font-medium">
@@ -104,7 +104,7 @@ const ViewPackageModal: React.FC<IProps> = ({ package: pkg, onClose }) => {
           <div className="flex justify-end pt-4">
             <button
               onClick={onClose}
-              className="px-6 py-2 bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] hover:from-[#3a7d74] hover:to-[#5DB7AE] text-white rounded-lg transition"
+              className="px-6 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg transition"
             >
               Close
             </button>

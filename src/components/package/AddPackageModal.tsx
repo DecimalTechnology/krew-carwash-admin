@@ -8,7 +8,7 @@ import { Plus, X } from "lucide-react";
 interface IProps {
   isOpen: boolean;
   onClose: () => void;
-  setPackages: any;
+  onSuccess: () => void;
 }
 
 interface IVehicleType {
@@ -18,10 +18,10 @@ interface IVehicleType {
 
 interface IBasePrice {
   vehicleType: string;
-  price: number;
+  price: number | string;
 }
 
-function AddPackageModal({ isOpen, onClose, setPackages }: IProps) {
+function AddPackageModal({ isOpen, onClose, onSuccess }: IProps) {
   const [formData, setFormData] = useState({
     name: "",
     frequency: "1 Time" as "1 Time" | "8 Times" | "12 Times",
@@ -30,7 +30,7 @@ function AddPackageModal({ isOpen, onClose, setPackages }: IProps) {
   });
 
   const [basePrices, setBasePrices] = useState<IBasePrice[]>([
-    { vehicleType: "", price: 0 },
+    { vehicleType: "", price: "" },
   ]);
 
   const [vehicleTypes, setVehicleTypes] = useState<IVehicleType[]>([]);
@@ -68,7 +68,7 @@ function AddPackageModal({ isOpen, onClose, setPackages }: IProps) {
   };
 
   const addBasePrice = () => {
-    setBasePrices([...basePrices, { vehicleType: "", price: 0 }]);
+    setBasePrices([...basePrices, { vehicleType: "", price: "" }]);
   };
 
   const removeBasePrice = (index: number) => {
@@ -84,14 +84,17 @@ function AddPackageModal({ isOpen, onClose, setPackages }: IProps) {
     try {
       const payload = {
         ...formData,
-        basePrices: basePrices.filter((bp) => bp.vehicleType && bp.price > 0),
+        basePrices: basePrices
+          .filter((bp) => bp.vehicleType && bp.price)
+          .map((bp) => ({
+            vehicleType: bp.vehicleType,
+            price: typeof bp.price === 'string' ? parseFloat(bp.price) : bp.price,
+          })),
       };
 
       const res = await createPackage(payload);
       if (res?.success) {
-        setPackages((prev: any) => [...prev, res.data]);
         toast.success("Package created successfully");
-        onClose();
         // Reset form
         setFormData({
           name: "",
@@ -99,7 +102,9 @@ function AddPackageModal({ isOpen, onClose, setPackages }: IProps) {
           description: "",
           isActive: true,
         });
-        setBasePrices([{ vehicleType: "", price: 0 }]);
+        setBasePrices([{ vehicleType: "", price: "" }]);
+        onSuccess(); // Trigger refetch in parent
+        onClose();
       }
     } catch (error: any) {
       console.error("Error creating package:", error);
@@ -215,7 +220,7 @@ function AddPackageModal({ isOpen, onClose, setPackages }: IProps) {
                       min="0"
                       step="0.01"
                       value={basePrice.price}
-                      onChange={(e) => handleBasePriceChange(index, "price", parseFloat(e.target.value) || 0)}
+                      onChange={(e) => handleBasePriceChange(index, "price", e.target.value)}
                       required
                       placeholder="0.00"
                       className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#5DB7AE] outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"
@@ -259,7 +264,7 @@ function AddPackageModal({ isOpen, onClose, setPackages }: IProps) {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 bg-gradient-to-r from-[#4a9d91] to-[#6ECFC3] hover:from-[#3a7d74] hover:to-[#5DB7AE] text-white rounded-lg transition disabled:opacity-50"
+              className="px-6 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg transition disabled:opacity-50"
             >
               {loading ? "Creating..." : "Create Package"}
             </button>
