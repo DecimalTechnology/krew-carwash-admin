@@ -33,7 +33,7 @@ export const updateVehicle = async (vehicleId:string,data:any) => {
 
 export const deleteVehicle = async (vehicleId:string) => {
     try {
-        const result = await baseUrl.delete(`/admin/vehicles/${vehicleId}`);
+        const result = await baseUrl.delete(`/admin/vehicle-types/${vehicleId}`);
         toast.success("Vehicle deleted successfully");
         return result?.data;
     } catch (error) {
