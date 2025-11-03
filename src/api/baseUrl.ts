@@ -47,5 +47,5 @@ export const errorHandler = (error: any) => {
         }
     }
 
-    return "An unexpected error occurred"
+    return "Internal Server Error"
 };

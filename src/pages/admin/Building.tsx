@@ -44,13 +44,13 @@ export default function Buildings() {
                     page,
                     limit,
                 });
-                console.log(res)
+                
                 setBuildings(res?.data?.data || res?.data || []);
                 setTotalPages(res?.data?.pagination?.totalPages || res?.pagination?.totalPages || 1);
                 setLoading(false);
             } catch (error) {
                 setLoading(false);
-                toast.error("Failed to fetch buildings");
+                
             }
         };
         fetchData();
