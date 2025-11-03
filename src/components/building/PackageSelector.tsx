@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import { IPackage } from "../../interface/IPackage";
-
 import PackageList from "./PackageList";
 import { getAllPackages } from "../../api/admin/packageService";
 

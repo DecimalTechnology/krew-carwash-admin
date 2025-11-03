@@ -44,9 +44,9 @@ export default function Buildings() {
                     page,
                     limit,
                 });
-                setBuildings(res?.data);
-        
-                setTotalPages(res?.pagination?.totalPages || 1);
+                console.log(res)
+                setBuildings(res?.data?.data || res?.data || []);
+                setTotalPages(res?.data?.pagination?.totalPages || res?.pagination?.totalPages || 1);
                 setLoading(false);
             } catch (error) {
                 setLoading(false);
@@ -190,7 +190,7 @@ export default function Buildings() {
                                                         setSelectedBuilding(b);
                                                         setViewModalOpen(true);
                                                     }}
-                                                    className="p-2 text-[#5DB7AE] hover:text-[#4a9d91] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+                                                    className="p-2 text-brand-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
                                                     title="View Details"
                                                 >
                                                     <Eye size={18} />

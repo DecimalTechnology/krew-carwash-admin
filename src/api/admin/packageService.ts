@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import toast from "react-hot-toast";
-import { baseUrl, erroHandler } from "../baseUrl";
+import { baseUrl, errorHandler } from "../baseUrl";
 
 // GET /admin/packages - Get all packages with query params
 export const getAllPackages = async (params?: {
@@ -12,11 +12,16 @@ export const getAllPackages = async (params?: {
     limit?: number;
 }) => {
     try {
-        const result = await baseUrl.get("/admin/packages", { params });
+        // Add populate=true to get populated vehicle types
+        const result = await baseUrl.get("/admin/packages", {
+            params: { ...params, populate: true },
+        });
         console.log("Packages API Response:", result?.data);
         return result?.data;
     } catch (error: any) {
-        const message = erroHandler(error);
+        const message = errorHandler(error);
+        console.error("Packages API Error:", error?.response?.status, message);
+
         toast.error(message);
         throw new Error(message);
     }
@@ -29,15 +34,10 @@ export const createPackage = async (data: any) => {
         console.log("Create Package Response:", result?.data);
         return result?.data;
     } catch (error: any) {
-        const message = erroHandler(error);
+        const message = errorHandler(error);
         console.error("Create Package Error:", error?.response?.status, message);
 
-        // Check if it's a 404 error
-        if (error?.response?.status === 404) {
-            toast.error("Packages API endpoint not found. Please check your backend routes.");
-        } else {
-            toast.error(message);
-        }
+        toast.error(message);
         throw new Error(message);
     }
 };
@@ -49,15 +49,10 @@ export const updatePackage = async (packageId: string, data: any) => {
         console.log("Update Package Response:", result?.data);
         return result?.data;
     } catch (error: any) {
-        const message = erroHandler(error);
+        const message = errorHandler(error);
         console.error("Update Package Error:", error?.response?.status, message);
 
-        // Check if it's a 404 error
-        if (error?.response?.status === 404) {
-            toast.error("Package not found or API endpoint not available.");
-        } else {
-            toast.error(message);
-        }
+        toast.error(message);
         throw new Error(message);
     }
 };
@@ -68,16 +63,5 @@ export const deletePackage = async (packageId: string) => {
         const result = await baseUrl.delete(`/admin/packages/${packageId}`);
         console.log("Delete Package Response:", result?.data);
         return result?.data;
-    } catch (error: any) {
-        const message = erroHandler(error);
-        console.error("Delete Package Error:", error?.response?.status, message);
-
-        // Check if it's a 404 error
-        if (error?.response?.status === 404) {
-            toast.error("Package not found or API endpoint not available.");
-        } else {
-            toast.error(message);
-        }
-        throw new Error(message);
-    }
+    } catch (error: any) {}
 };

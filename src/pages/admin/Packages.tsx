@@ -210,7 +210,7 @@ export default function Packages() {
                             setSelectedPackage(pkg);
                             setViewModalOpen(true);
                           }}
-                          className="p-2 text-[#5DB7AE] hover:text-[#4a9d91] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+                          className="p-2 text-brand-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
                           title="View Details"
                         >
                           <Eye size={18} />
@@ -220,7 +220,7 @@ export default function Packages() {
                             setSelectedPackage(pkg);
                             setEditModalOpen(true);
                           }}
-                          className="p-2 text-blue-500 hover:text-blue-600 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+                          className="p-2 text-brand-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
                           title="Edit"
                         >
                           <Edit size={18} />

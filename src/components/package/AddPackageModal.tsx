@@ -3,7 +3,7 @@ import Switch from "../ui/switch/Switch";
 import { createPackage } from "../../api/admin/packageService";
 import { getAllVehicles } from "../../api/admin/vehicleTypeServices";
 import toast from "react-hot-toast";
-import { Plus, X } from "lucide-react";
+import { Plus, X, Package } from "lucide-react";
 
 interface IProps {
   isOpen: boolean;
@@ -103,177 +103,201 @@ function AddPackageModal({ isOpen, onClose, onSuccess }: IProps) {
           isActive: true,
         });
         setBasePrices([{ vehicleType: "", price: "" }]);
-        onSuccess(); // Trigger refetch in parent
+        onSuccess();
         onClose();
       }
     } catch (error: any) {
       console.error("Error creating package:", error);
-      // Error toast is already shown by the service
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-[95%] max-w-3xl p-8 relative overflow-y-auto max-h-[90vh]">
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-4 text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold"
-        >
-          ×
-        </button>
-
+    <div 
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-2 sm:p-4 animate-in fade-in duration-200"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-3xl overflow-hidden animate-in zoom-in-95 duration-200 my-auto max-h-[95vh] flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
-        <h2 className="text-2xl font-bold mb-6 text-center text-[#5DB7AE] dark:text-[#6ECFC3]">
-          Add New Package
-        </h2>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Package Name */}
-          <div>
-            <label className="block font-medium text-gray-700 dark:text-gray-300">Package Name</label>
-            <input
-              type="text"
-              name="name"
-              placeholder="Enter package name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-            />
-          </div>
-
-          {/* Frequency */}
-          <div>
-            <label className="block font-medium text-gray-700 dark:text-gray-300">Frequency</label>
-            <select
-              name="frequency"
-              value={formData.frequency}
-              onChange={handleChange}
-              required
-              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-            >
-              <option value="1 Time">1 Time</option>
-              <option value="8 Times">8 Times</option>
-              <option value="12 Times">12 Times</option>
-            </select>
-          </div>
-
-          {/* Description */}
-          <div>
-            <label className="block font-medium text-gray-700 dark:text-gray-300">Description</label>
-            <textarea
-              name="description"
-              placeholder="Enter package description"
-              value={formData.description}
-              onChange={handleChange}
-              rows={3}
-              className="w-full border rounded-lg p-3 mt-1 focus:ring-2 focus:ring-[#5DB7AE] outline-none dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-            />
-          </div>
-
-          {/* Base Prices */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="block font-medium text-gray-700 dark:text-gray-300">Base Prices</label>
-              <button
-                type="button"
-                onClick={addBasePrice}
-                className="flex items-center gap-1 px-3 py-1 bg-[#5DB7AE] text-white rounded-lg hover:bg-[#4a9d91] transition text-sm"
-              >
-                <Plus size={16} />
-                Add Price
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              {basePrices.map((basePrice, index) => (
-                <div key={index} className="flex gap-3 items-start p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-                      Vehicle Type
-                    </label>
-                    <select
-                      value={basePrice.vehicleType}
-                      onChange={(e) => handleBasePriceChange(index, "vehicleType", e.target.value)}
-                      required
-                      className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#5DB7AE] outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    >
-                      <option value="">Select Vehicle Type</option>
-                      {vehicleTypes.map((vt) => (
-                        <option key={vt._id} value={vt._id}>
-                          {vt.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-                      Price (AED)
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={basePrice.price}
-                      onChange={(e) => handleBasePriceChange(index, "price", e.target.value)}
-                      required
-                      placeholder="0.00"
-                      className="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#5DB7AE] outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    />
-                  </div>
-
-                  {basePrices.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeBasePrice(index)}
-                      className="mt-6 p-2 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition"
-                      title="Remove"
-                    >
-                      <X size={20} />
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Active Status Switch */}
+        <div className="relative bg-brand-500 dark:bg-brand-600 px-6 py-5 flex-shrink-0">
           <div className="flex items-center gap-3">
-            <label className="font-medium text-gray-700 dark:text-gray-300">Status</label>
-            <Switch checked={formData.isActive} onChange={handleToggleActive} />
-            <span className="text-gray-700 dark:text-gray-300">
-              {formData.isActive ? "Active" : "Inactive"}
-            </span>
+            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+              <Package className="w-6 h-6 text-white" />
+            </div>
+            <h2 className="text-2xl font-bold text-white">Add New Package</h2>
           </div>
+          <button 
+            onClick={onClose} 
+            className="absolute top-4 right-4 text-white/90 hover:text-white hover:bg-white/20 rounded-full p-2 transition-all duration-200 hover:rotate-90"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
-          {/* Buttons */}
-          <div className="flex justify-end gap-4 pt-4 border-t dark:border-gray-700">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-              disabled={loading}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-6 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg transition disabled:opacity-50"
-            >
-              {loading ? "Creating..." : "Create Package"}
-            </button>
+        {/* Form Content */}
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6">
+          <div className="space-y-5">
+            {/* Package Name */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Package Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="name"
+                placeholder="e.g., Premium Wash, Basic Service..."
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200"
+              />
+            </div>
+
+            {/* Frequency */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Frequency <span className="text-red-500">*</span>
+              </label>
+              <select
+                name="frequency"
+                value={formData.frequency}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200"
+              >
+                <option value="1 Time">1 Time</option>
+                <option value="8 Times">8 Times</option>
+                <option value="12 Times">12 Times</option>
+              </select>
+            </div>
+
+            {/* Description */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Description
+              </label>
+              <textarea
+                name="description"
+                placeholder="Brief description of the package..."
+                value={formData.description}
+                onChange={handleChange}
+                rows={3}
+                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200 resize-none"
+              />
+            </div>
+
+            {/* Base Prices */}
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  Vehicle Pricing <span className="text-red-500">*</span>
+                </label>
+                <button
+                  type="button"
+                  onClick={addBasePrice}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-500 hover:bg-brand-600 text-white rounded-lg transition-all duration-200 text-sm font-medium hover:shadow-md"
+                >
+                  <Plus size={16} />
+                  Add Price
+                </button>
+              </div>
+
+              <div className="space-y-3">
+                {basePrices.map((basePrice, index) => (
+                  <div key={index} className="flex gap-3 items-start p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+                    <div className="flex-1">
+                      <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2 uppercase tracking-wider">
+                        Vehicle Type
+                      </label>
+                      <select
+                        value={basePrice.vehicleType}
+                        onChange={(e) => handleBasePriceChange(index, "vehicleType", e.target.value)}
+                        required
+                        className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200"
+                      >
+                        <option value="">Select Vehicle Type</option>
+                        {vehicleTypes.map((vt) => (
+                          <option key={vt._id} value={vt._id}>
+                            {vt.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="flex-1">
+                      <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2 uppercase tracking-wider">
+                        Price (AED)
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={basePrice.price}
+                        onChange={(e) => handleBasePriceChange(index, "price", e.target.value)}
+                        required
+                        placeholder="0.00"
+                        className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200"
+                      />
+                    </div>
+
+                    {basePrices.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeBasePrice(index)}
+                        className="mt-7 p-2 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
+                        title="Remove"
+                      >
+                        <X size={20} />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Active Status Toggle */}
+            <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+              <div className="flex items-center justify-between">
+                <div>
+                  <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 block mb-1">
+                    Active Status
+                  </label>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {formData.isActive ? "This package will be active" : "This package will be inactive"}
+                  </p>
+                </div>
+                <Switch checked={formData.isActive} onChange={handleToggleActive} />
+              </div>
+            </div>
           </div>
         </form>
+
+        {/* Footer */}
+        <div className="px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3 flex-shrink-0">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-5 py-2.5 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-600 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+            disabled={loading}
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            disabled={loading}
+            className="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 dark:bg-brand-600 dark:hover:bg-brand-700 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? "Creating..." : "Create Package"}
+          </button>
+        </div>
       </div>
     </div>
   );
 }
 
 export default AddPackageModal;
-
