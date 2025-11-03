@@ -46,8 +46,8 @@ function AddBuildingPage() {
         setFormData((prev) => ({ ...prev, contactNumbers: newContacts }));
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
+
 
         const payload = {
             buildingName: formData.buildingName.trim(),
@@ -56,6 +56,7 @@ function AddBuildingPage() {
             area: formData.area.trim(),
             isActive: formData.isActive,
             contactNumbers: formData.contactNumbers.filter((num) => num.trim() !== ""),
+            packages: formData?.packages,
         };
 
         const res = await createBuilding(payload);
@@ -64,10 +65,7 @@ function AddBuildingPage() {
         }
     };
 
-    const handleCancel = () => {
-        navigate("/building");
-    };
-
+   
     return (
         <div className="min-h-screen bg-gray-50 py-10">
             <div className="max-w-6xl mx-auto px-4">
@@ -83,7 +81,7 @@ function AddBuildingPage() {
 
                 {/* Form Section */}
                 <div className="bg-white shadow-lg rounded-2xl mt-8">
-                    <form onSubmit={handleSubmit} className="p-8">
+                    <form className="p-8">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                             {/* Left Column */}
                             <div className="space-y-6">
@@ -206,7 +204,8 @@ function AddBuildingPage() {
 
                         {/* Action Buttons */}
                     </form>
-                    <PackageSelector />
+                    <PackageSelector handleSubmit={handleSubmit} setFormData={setFormData} />
+                  
                 </div>
             </div>
         </div>

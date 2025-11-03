@@ -29,7 +29,7 @@ export default function Buildings() {
     const [buildings, setBuildings] = useState<IBuilding[]>([]);
     const [fetch, setFetch] = useState(false);
     const [selectedBuildingId, setSelectedBuildingId] = useState("");
-
+    console.log(totalPages,'page')
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -42,7 +42,7 @@ export default function Buildings() {
                     sortedBy: sortKey,
                     sortOrder,
                     page,
-                    limit
+                    limit,
                 });
                 console.log(res)
                 setBuildings(res?.data?.data || res?.data || []);
@@ -60,9 +60,7 @@ export default function Buildings() {
         try {
             const res = await updateBuilding(payload, buildingId);
             const updatedBuilding = res?.data;
-            setBuildings((prev) =>
-                prev.map((b) => (b._id === buildingId ? updatedBuilding : b))
-            );
+            setBuildings((prev) => prev.map((b) => (b._id === buildingId ? updatedBuilding : b)));
             toast.success("Building updated successfully");
         } catch (err) {
             toast.error("Failed to update building");
@@ -96,11 +94,7 @@ export default function Buildings() {
                     ))}
                 </div>
 
-                <SearchBox
-                    search={search}
-                    setSearch={setSearch}
-                    className="h-10 w-48"
-                />
+                <SearchBox search={search} setSearch={setSearch} className="h-10 w-48" />
 
                 <button
                   
@@ -119,32 +113,69 @@ export default function Buildings() {
                         <Table>
                             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                                 <TableRow>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">No</TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Name</TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">City</TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Area</TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Phone</TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Active</TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Created At</TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Updated At</TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Actions</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
+                                        No
+                                    </TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
+                                        Name
+                                    </TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
+                                        City
+                                    </TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
+                                        Area
+                                    </TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
+                                        Packages
+                                    </TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
+                                        Contact Numbers
+                                    </TableCell>
+                                    
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
+                                        {" "}
+                                        Active
+                                    </TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
+                                        Created At
+                                    </TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
+                                        Updated At
+                                    </TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
+                                        Actions
+                                    </TableCell>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {buildings.map((b, index) => (
+                                {buildings.map((b: any, index) => (
                                     <TableRow key={b._id}>
-                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{index + 1}</TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{b.buildingName}</TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{b.city}</TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{b.area}</TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{b.contactNumbers?.join(", ") || "-"}</TableCell>
                                         <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
-                                            <Switch
-                                                checked={b.isActive}
-                                                onChange={() =>
-                                                    handleUpdate({ isActive: !b?.isActive }, b?._id)
-                                                }
-                                            />
+                                            {index + 1}
+                                        </TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
+                                            {b?.buildingName}
+                                        </TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
+                                            {b?.city}
+                                        </TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
+                                            {b?.area}
+                                        </TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
+                                            {b?.packages?.length} Packages
+                                        </TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
+                                           <div className="flex flex-col">
+                                               {b?.contactNumbers.map((obj:any)=>{
+                                                return <span>{obj}</span>
+                                               })}
+                                           </div>
+                                        </TableCell>
+                                     
+
+                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
+                                            <Switch checked={b.isActive} onChange={() => handleUpdate({ isActive: !b?.isActive }, b?._id)} />
                                         </TableCell>
                                         <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
                                             {new Date(b.createdAt).toLocaleDateString()}
@@ -184,18 +215,9 @@ export default function Buildings() {
                 </div>
             </div>
 
-            <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                onPageChange={(p) => setPage(p)}
-            />
+            <Pagination currentPage={page} totalPages={Math.ceil(Number(totalPages)/10)} onPageChange={(p) => setPage(p)} />
 
-            {viewModalOpen && selectedBuilding && (
-                <BuildingViewModal
-                    building={selectedBuilding}
-                    onClose={() => setViewModalOpen(false)}
-                />
-            )}
+            {viewModalOpen && selectedBuilding && <BuildingViewModal building={selectedBuilding} onClose={() => setViewModalOpen(false)} />}
 
             {deleteModalOpen && (
                 <DeleteModal
