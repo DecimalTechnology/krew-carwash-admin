@@ -25,19 +25,16 @@ export interface LoginResponse {
     message: string;
 }
 
-// POST /admin/login - Admin login
 export const adminLogin = async (credentials: LoginCredentials): Promise<LoginResponse> => {
     try {
         const result = await baseUrl.post("/admin/login", credentials);
         
-        // Store tokens in localStorage
         if (result?.data?.accessToken) {
             localStorage.setItem("adminToken", result.data.accessToken);
         }
         if (result?.data?.refreshToken) {
             localStorage.setItem("adminRefreshToken", result.data.refreshToken);
         }
-        // Store admin data
         if (result?.data?.data) {
             localStorage.setItem("adminData", JSON.stringify(result.data.data));
         }
@@ -51,7 +48,6 @@ export const adminLogin = async (credentials: LoginCredentials): Promise<LoginRe
     }
 };
 
-// POST /admin/logout - Admin logout
 export const adminLogout = () => {
     localStorage.removeItem("adminToken");
     localStorage.removeItem("adminRefreshToken");
@@ -59,12 +55,10 @@ export const adminLogout = () => {
     toast.success("Logged out successfully");
 };
 
-// Check if user is authenticated
 export const isAuthenticated = (): boolean => {
     return !!localStorage.getItem("adminToken");
 };
 
-// Get admin data from localStorage
 export const getAdminData = () => {
     const adminDataString = localStorage.getItem("adminData");
     if (adminDataString) {
