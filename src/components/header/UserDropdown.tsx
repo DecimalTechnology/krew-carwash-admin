@@ -1,11 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { Dropdown } from "../ui/dropdown/Dropdown";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { User } from "lucide-react";
+import { adminLogout, getAdminData } from "../../api/admin/authService";
 
 export default function UserDropdown() {
     const [isOpen, setIsOpen] = useState(false);
+    const [adminData, setAdminData] = useState<any>(null);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const data = getAdminData();
+        setAdminData(data);
+    }, []);
 
     function toggleDropdown() {
         setIsOpen(!isOpen);
@@ -13,6 +21,11 @@ export default function UserDropdown() {
 
     function closeDropdown() {
         setIsOpen(false);
+    }
+
+    function handleLogout() {
+        adminLogout();
+        navigate("/login");
     }
     return ( 
         <div className="relative">
@@ -26,8 +39,12 @@ export default function UserDropdown() {
                 className="absolute right-0 mt-[17px] flex w-[260px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark"
             >
                 <div>
-                    <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">Adarsh</span>
-                    <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">Adarshjithu10@gmail.com</span>
+                    <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
+                        {adminData?.name || "Admin"}
+                    </span>
+                    <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
+                        {adminData?.email || "admin@krew.com"}
+                    </span>
                 </div>
 
                 <ul className="flex flex-col gap-1 pt-4 pb-3 border-b border-gray-200 dark:border-gray-800">
@@ -107,9 +124,9 @@ export default function UserDropdown() {
                         </DropdownItem>
                     </li>
                 </ul>
-                <Link
-                    to="/signin"
-                    className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+                <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300 w-full"
                 >
                     <svg
                         className="fill-gray-500 group-hover:fill-gray-700 dark:group-hover:fill-gray-300"
@@ -127,7 +144,7 @@ export default function UserDropdown() {
                         />
                     </svg>
                     Sign out
-                </Link>
+                </button>
             </Dropdown>
         </div>
     );
