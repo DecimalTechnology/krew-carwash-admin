@@ -27,7 +27,6 @@ export default function Login() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-brand-50 via-white to-brand-100 flex items-center justify-center px-4 py-8">
             <div className="w-full max-w-md">
-                {/* Logo Section */}
                 <div className="mb-8 text-center">
                     <div className="flex items-center justify-center gap-4 mb-3">
                         <img 
@@ -44,10 +43,8 @@ export default function Login() {
                     </p>
                 </div>
 
-                {/* Login Card */}
                 <div className="bg-white rounded-2xl shadow-theme-xl p-8 border border-gray-100">
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Email Input */}
                         <div>
                             <label
                                 htmlFor="email"
@@ -83,7 +80,6 @@ export default function Login() {
                             </div>
                         </div>
 
-                        {/* Password Input */}
                         <div>
                             <label
                                 htmlFor="password"
@@ -160,7 +156,6 @@ export default function Login() {
                             </div>
                         </div>
 
-                        {/* Remember Me & Forgot Password */}
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
                                 <input
@@ -187,7 +182,6 @@ export default function Login() {
                             </div>
                         </div>
 
-                        {/* Submit Button */}
                         <button
                             type="submit"
                             disabled={isLoading}
@@ -238,7 +232,6 @@ export default function Login() {
                         </button>
                     </form>
 
-                    {/* Divider */}
                     <div className="mt-6">
                         <div className="relative">
                             <div className="absolute inset-0 flex items-center">
@@ -253,7 +246,6 @@ export default function Login() {
                     </div>
                 </div>
 
-                {/* Bottom Text */}
                 <div className="mt-8 text-center">
                     <p className="text-sm text-gray-600">
                         Need help?{" "}

@@ -54,10 +54,8 @@ export default function App() {
                 }}
             />
             <Routes>
-                {/* Public Routes */}
                 <Route path="/login" element={<Login />} />
 
-                {/* Protected Routes */}
                 <Route
                     path="/"
                     element={
@@ -74,7 +72,6 @@ export default function App() {
                     <Route path="add-building" element={<AddBuildingPage />} />
                 </Route>
 
-                {/* Catch all - redirect to home */}
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </Router>
