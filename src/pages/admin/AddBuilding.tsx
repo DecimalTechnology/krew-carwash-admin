@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { createBuilding } from "../../api/admin/buildingService";
 import Switch from "../../components/ui/switch/Switch";
-import Breadcrumb from "../../components/brudcrump/Breadcrumb";
+import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 import PackageSelector from "../../components/building/PackageSelector";
 
 function AddBuildingPage() {

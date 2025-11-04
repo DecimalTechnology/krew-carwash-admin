@@ -4,7 +4,6 @@ import "./index.css";
 import "swiper/swiper-bundle.css";
 import "flatpickr/dist/flatpickr.css";
 import App from "./App.tsx";
-import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "./context/ThemeContext.tsx";
 import { Provider } from "react-redux";
 import { store } from "./app/store.ts";
@@ -16,7 +15,6 @@ createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <ThemeProvider>
             <Provider store={store}>
-                <Toaster />
                 <QueryClientProvider client={queryClient}>
                     <App />
                 </QueryClientProvider>

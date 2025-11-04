@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
 import { Eye, Trash, Edit } from "lucide-react";
-import Breadcrumb from "../../components/brudcrump/Breadcrumb";
+import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 import SearchBox from "../../components/ui/SearchBox";
 import TableLoading from "../../components/ui/table/TableLoading";
 import Switch from "../../components/ui/switch/Switch";
