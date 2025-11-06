@@ -1,19 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { Dropdown } from "../ui/dropdown/Dropdown";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { User } from "lucide-react";
-import { adminLogout, getAdminData } from "../../api/admin/authService";
+import { adminLogout } from "../../api/admin/authService";
+import { useSelector } from "react-redux";
+import { IRootState } from "../../app/store";
 
 export default function UserDropdown() {
     const [isOpen, setIsOpen] = useState(false);
-    const [adminData, setAdminData] = useState<any>(null);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const data = getAdminData();
-        setAdminData(data);
-    }, []);
+    
+    // Get admin data from Redux store
+    const adminData = useSelector((state: IRootState) => state.admin.adminData);
 
     function toggleDropdown() {
         setIsOpen(!isOpen);
@@ -29,8 +28,23 @@ export default function UserDropdown() {
     }
     return ( 
         <div className="relative">
-            <button onClick={toggleDropdown} className="flex items-center text-gray-700 dropdown-toggle dark:text-gray-400">
-                <User />
+            <button 
+                onClick={toggleDropdown} 
+                className="flex items-center text-gray-700 dropdown-toggle dark:text-gray-400 hover:opacity-80 transition-opacity"
+            >
+                {adminData?.image ? (
+                    <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-700 shadow-sm">
+                        <img
+                            src={adminData.image}
+                            alt={adminData.name || "Admin"}
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                ) : (
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center shadow-sm">
+                        <User size={20} className="text-white" />
+                    </div>
+                )}
             </button>
 
             <Dropdown
@@ -38,13 +52,28 @@ export default function UserDropdown() {
                 onClose={closeDropdown}
                 className="absolute right-0 mt-[17px] flex w-[260px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark"
             >
-                <div>
-                    <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
-                        {adminData?.name || "Admin"}
-                    </span>
-                    <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
-                        {adminData?.email || "admin@krew.com"}
-                    </span>
+                <div className="flex items-center gap-3 pb-3 border-b border-gray-200 dark:border-gray-800">
+                    {adminData?.image ? (
+                        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+                            <img
+                                src={adminData.image}
+                                alt={adminData.name || "Admin"}
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                    ) : (
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center">
+                            <User size={24} className="text-white" />
+                        </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                        <span className="block font-semibold text-gray-900 text-theme-sm dark:text-white truncate">
+                            {adminData?.name || "Admin"}
+                        </span>
+                        <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400 truncate">
+                            {adminData?.email || "admin@krew.com"}
+                        </span>
+                    </div>
                 </div>
 
                 <ul className="flex flex-col gap-1 pt-4 pb-3 border-b border-gray-200 dark:border-gray-800">
@@ -70,7 +99,7 @@ export default function UserDropdown() {
                                     fill=""
                                 />
                             </svg>
-                            Edit profile
+                            View Profile
                         </DropdownItem>
                     </li>
                     <li>

@@ -9,6 +9,7 @@ import Cars from "./pages/admin/Cars";
 import Packages from "./pages/admin/Packages";
 import AddBuildingPage from "./pages/admin/AddBuilding";
 import Login from "./pages/admin/Login";
+import Profile from "./pages/admin/Profile";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
 export default function App() {
@@ -70,6 +71,7 @@ export default function App() {
                     <Route path="cars" element={<Cars />} />
                     <Route path="packages" element={<Packages />} />
                     <Route path="add-building" element={<AddBuildingPage />} />
+                    <Route path="profile" element={<Profile />} />
                 </Route>
 
                 <Route path="*" element={<Navigate to="/" replace />} />

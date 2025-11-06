@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import toast from "react-hot-toast";
 import { baseUrl, errorHandler } from "../baseUrl";
+import { store } from "../../app/store";
+import { setAdminData, clearAdminData } from "../../features/adminSlice";
 
 export interface LoginCredentials {
     email: string;
@@ -29,14 +31,17 @@ export const adminLogin = async (credentials: LoginCredentials): Promise<LoginRe
     try {
         const result = await baseUrl.post("/admin/login", credentials);
         
+        // Store tokens in localStorage (tokens only)
         if (result?.data?.accessToken) {
             localStorage.setItem("adminToken", result.data.accessToken);
         }
         if (result?.data?.refreshToken) {
             localStorage.setItem("adminRefreshToken", result.data.refreshToken);
         }
+        
+        // Store admin data in Redux instead of localStorage
         if (result?.data?.data) {
-            localStorage.setItem("adminData", JSON.stringify(result.data.data));
+            store.dispatch(setAdminData(result.data.data));
         }
         
         toast.success(result?.data?.message || "Login successful!");
@@ -49,26 +54,17 @@ export const adminLogin = async (credentials: LoginCredentials): Promise<LoginRe
 };
 
 export const adminLogout = () => {
+    // Remove tokens from localStorage
     localStorage.removeItem("adminToken");
     localStorage.removeItem("adminRefreshToken");
-    localStorage.removeItem("adminData");
+    
+    // Clear admin data from Redux
+    store.dispatch(clearAdminData());
+    
     toast.success("Logged out successfully");
 };
 
 export const isAuthenticated = (): boolean => {
     return !!localStorage.getItem("adminToken");
-};
-
-export const getAdminData = () => {
-    const adminDataString = localStorage.getItem("adminData");
-    if (adminDataString) {
-        try {
-            return JSON.parse(adminDataString);
-        } catch (error) {
-            console.error("Error parsing admin data:", error);
-            return null;
-        }
-    }
-    return null;
 };
 
