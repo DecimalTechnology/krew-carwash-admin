@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
-import { Eye, Trash } from "lucide-react";
+import { Eye, Trash, Edit } from "lucide-react";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 import SearchBox from "../../components/ui/SearchBox";
 import TableLoading from "../../components/ui/table/TableLoading";
@@ -9,6 +11,7 @@ import DeleteModal from "../../components/ui/modals/common/DeleteModal";
 import toast from "react-hot-toast";
 import Pagination from "../../components/ui/pagination/Pagination";
 import BuildingViewModal from "../../components/building/BuildingViewModal";
+import BuildingEditModal from "../../components/building/BuildingEditModal";
 import { useNavigate } from "react-router-dom";
 
 import { getAllBuildings, updateBuilding } from "../../api/admin/buildingService";
@@ -25,6 +28,7 @@ export default function Buildings() {
     const [loading, setLoading] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [viewModalOpen, setViewModalOpen] = useState(false);
+    const [editModalOpen, setEditModalOpen] = useState(false);
     const [selectedBuilding, setSelectedBuilding] = useState<IBuilding | null>(null);
     const [buildings, setBuildings] = useState<IBuilding[]>([]);
     const [fetch, setFetch] = useState(false);
@@ -62,7 +66,7 @@ export default function Buildings() {
             const updatedBuilding = res?.data;
             setBuildings((prev) => prev.map((b) => (b._id === buildingId ? updatedBuilding : b)));
             toast.success("Building updated successfully");
-        } catch (err) {
+        } catch (err:any) {
             toast.error("Failed to update building");
         }
     };
@@ -197,6 +201,16 @@ export default function Buildings() {
                                                 </button>
                                                 <button
                                                     onClick={() => {
+                                                        setSelectedBuilding(b);
+                                                        setEditModalOpen(true);
+                                                    }}
+                                                    className="p-2 text-brand-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+                                                    title="Edit"
+                                                >
+                                                    <Edit size={18} />
+                                                </button>
+                                                <button
+                                                    onClick={() => {
                                                         setSelectedBuildingId(b._id);
                                                         setDeleteModalOpen(true);
                                                     }}
@@ -218,6 +232,18 @@ export default function Buildings() {
             <Pagination currentPage={page} totalPages={Math.ceil(Number(totalPages)/10)} onPageChange={(p) => setPage(p)} />
 
             {viewModalOpen && selectedBuilding && <BuildingViewModal building={selectedBuilding} onClose={() => setViewModalOpen(false)} />}
+
+            {editModalOpen && selectedBuilding && (
+                <BuildingEditModal 
+                    isOpen={editModalOpen}
+                    building={selectedBuilding}
+                    onClose={() => setEditModalOpen(false)}
+                    onUpdate={(updatedBuilding) => {
+                        setBuildings((prev) => prev.map((b) => (b._id === updatedBuilding._id ? updatedBuilding : b)));
+                        setEditModalOpen(false);
+                    }}
+                />
+            )}
 
             {deleteModalOpen && (
                 <DeleteModal
