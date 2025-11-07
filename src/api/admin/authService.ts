@@ -33,10 +33,10 @@ export const adminLogin = async (credentials: LoginCredentials): Promise<LoginRe
         
         // Store tokens in localStorage (tokens only)
         if (result?.data?.accessToken) {
-            localStorage.setItem("adminToken", result.data.accessToken);
+            localStorage.setItem("krew_adminAccessToken", result.data.accessToken);
         }
         if (result?.data?.refreshToken) {
-            localStorage.setItem("adminRefreshToken", result.data.refreshToken);
+            localStorage.setItem("krew_adminRefreshToken", result.data.refreshToken);
         }
         
         // Store admin data in Redux instead of localStorage
@@ -55,8 +55,8 @@ export const adminLogin = async (credentials: LoginCredentials): Promise<LoginRe
 
 export const adminLogout = () => {
     // Remove tokens from localStorage
-    localStorage.removeItem("adminToken");
-    localStorage.removeItem("adminRefreshToken");
+    localStorage.removeItem("krew_adminAccessToken");
+    localStorage.removeItem("krew_adminRefreshToken");
     
     // Clear admin data from Redux
     store.dispatch(clearAdminData());
@@ -65,6 +65,10 @@ export const adminLogout = () => {
 };
 
 export const isAuthenticated = (): boolean => {
-    return !!localStorage.getItem("adminToken");
+    // Check if either access token or refresh token exists
+    // If refresh token exists, we can get a new access token
+    const accessToken = localStorage.getItem("krew_adminAccessToken");
+    const refreshToken = localStorage.getItem("krew_adminRefreshToken");
+    return !!(accessToken || refreshToken);
 };
 

@@ -10,11 +10,26 @@ export const baseUrl = axios.create({
     },
 });
 
+// Flag to prevent multiple refresh token requests
+let isRefreshing = false;
+let failedQueue: any[] = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+    failedQueue.forEach((prom) => {
+        if (error) {
+            prom.reject(error);
+        } else {
+            prom.resolve(token);
+        }
+    });
+    failedQueue = [];
+};
+
 // Request interceptor to add auth token
 baseUrl.interceptors.request.use(
     (config) => {
         // Get token from localStorage
-        const token = localStorage.getItem("adminToken");
+        const token = localStorage.getItem("krew_adminAccessToken");
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -25,16 +40,75 @@ baseUrl.interceptors.request.use(
     }
 );
 
-// Response interceptor for handling unauthorized errors
+// Response interceptor for handling unauthorized errors and token refresh
 baseUrl.interceptors.response.use(
     (response) => response,
-    (error) => {
-        if (error.response?.status === 401) {
-            // Unauthorized - clear token and redirect to login
-            localStorage.removeItem("adminToken");
-            // You can redirect to login page here if needed
-            // window.location.href = '/login';
+    async (error) => {
+        const originalRequest = error.config;
+
+        // If error is 401 and we haven't retried yet
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            if (isRefreshing) {
+                // If already refreshing, queue this request
+                return new Promise((resolve, reject) => {
+                    failedQueue.push({ resolve, reject });
+                })
+                    .then((token) => {
+                        originalRequest.headers.Authorization = `Bearer ${token}`;
+                        return baseUrl(originalRequest);
+                    })
+                    .catch((err) => {
+                        return Promise.reject(err);
+                    });
+            }
+
+            originalRequest._retry = true;
+            isRefreshing = true;
+
+            const refreshToken = localStorage.getItem("krew_adminRefreshToken");
+
+            if (!refreshToken) {
+                // No refresh token available - redirect to login
+                localStorage.removeItem("krew_adminAccessToken");
+                localStorage.removeItem("krew_adminRefreshToken");
+                window.location.href = "/login";
+                return Promise.reject(error);
+            }
+
+            try {
+                // Call refresh token endpoint
+                const { data } = await axios.post(
+                    `${BASE_URL}/admin/refresh-token`,
+                    { refreshToken }
+                );
+
+                // Store new access token
+                const newAccessToken = data.accessToken;
+                localStorage.setItem("krew_adminAccessToken", newAccessToken);
+
+                // Update authorization header
+                baseUrl.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
+                originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
+                // Process queued requests
+                processQueue(null, newAccessToken);
+                isRefreshing = false;
+
+                // Retry original request with new token
+                return baseUrl(originalRequest);
+            } catch (refreshError) {
+                // Refresh token failed - clear tokens and redirect to login
+                processQueue(refreshError, null);
+                isRefreshing = false;
+                
+                localStorage.removeItem("krew_adminAccessToken");
+                localStorage.removeItem("krew_adminRefreshToken");
+                window.location.href = "/login";
+                
+                return Promise.reject(refreshError);
+            }
         }
+
         return Promise.reject(error);
     }
 );
