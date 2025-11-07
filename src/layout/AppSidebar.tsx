@@ -228,11 +228,11 @@ const AppSidebar: React.FC = () => {
             <div className="flex justify-center">
                 <Link to="/" className="flex items-center gap-3 px-4 py-3">
                     {isExpanded || isHovered || isMobileOpen ? (
-                        <div className="flex items-center gap-2 justify-center dark:bg-black dark:p-2 dark:rounded-lg">
+                        <div className="flex items-center gap-2 justify-center">
                             <img className="w-10 h-auto" src="/logo.png" alt="Krew Carwash Logo" />
                         </div>
                     ) : (
-                        <div className="flex items-center justify-center dark:bg-black dark:p-2 dark:rounded-lg">
+                        <div className="flex items-center justify-center">
                             <img className="w-8 h-auto" src="/logo.png" alt="Krew Carwash Logo" />
                         </div>
                     )}
