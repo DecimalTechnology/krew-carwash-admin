@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router";
 // Assume these icons are imported from an icon library
 import { CalenderIcon, ChevronDownIcon, GridIcon, HorizontaLDots, PlugInIcon, UserIcon } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
-import { Bell, Briefcase, Building, Building2, Car, Droplet, LayoutDashboard, ListOrderedIcon, Option, Package, ShoppingBag, Sparkles, SprayCan, Tag } from "lucide-react";
+import { Bell, Briefcase, Building, Building2, CalendarCheck, Car, Droplet, LayoutDashboard, ListOrderedIcon, Option, Package, ShoppingBag, Sparkles, SprayCan, Tag } from "lucide-react";
 
 type NavItem = {
     name: string;
@@ -35,10 +35,11 @@ const navItems: NavItem[] = [
         path: "/cleaners",
     },
     {
-        icon: <Briefcase  />,
-        name: "Jobs",
-        path: "/cleaners",
+        icon: <CalendarCheck/>,
+        name: "Bookings",
+        path: "/bookings",
     },
+
     {
         icon: < Car />,
         name: "Car Types",
@@ -57,7 +58,7 @@ const navItems: NavItem[] = [
     {
         icon: <Bell />,
         name: "Notifications",
-        path: "/cleaners",
+        path: "/notifications",
     },
  
 ];
