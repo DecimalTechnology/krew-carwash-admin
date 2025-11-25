@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import { IBuilding } from "../../interface/IBuilding";
 import { Building2, X, Plus, Phone } from "lucide-react";
