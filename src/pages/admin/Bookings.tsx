@@ -118,12 +118,18 @@ function Bookings() {
                                     {obj?.package?.packageId?.name}
                                 </TableCell>
                                 <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                    <div className="flex flex-col">
-                                        <span className="">
-                                            {obj?.vehicleId?.vehicleModel} {obj?.vehicleId?.color}
+                                    {obj?.vehicleId ? (
+                                        <div className="flex flex-col">
+                                            <span className="text-gray-900 dark:text-white font-medium text-sm">
+                                                {obj.vehicleId.vehicleModel}
+                                            </span>
+                                            <span className="text-xs">{obj.vehicleId.vehicleNumber}</span>
+                                        </div>
+                                    ) : (
+                                        <span className="text-gray-500 dark:text-gray-400 text-sm">
+                                            {obj?.vehicleTypeId?.name || "N/A"}
                                         </span>
-                                        <span className="">{obj?.vehicleId?.vehicleNumber}</span>
-                                    </div>
+                                    )}
                                 </TableCell>
                                 <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
                                     {obj?.buildingId?.buildingName}

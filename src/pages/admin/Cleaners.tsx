@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
 import { Eye, Trash } from "lucide-react";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
@@ -13,6 +15,7 @@ import Pagination from "../../components/ui/pagination/Pagination";
 import CleanerAddEditModal from "../../components/cleaner/CleanerEditModal";
 import { createCleaner, getAllCleaners, getPassword, updateCleaner } from "../../api/admin/cleanerService";
 export default function Cleaners() {
+    const navigate = useNavigate();
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [sortKey, setSortKey] = useState("createdAt");
@@ -90,164 +93,179 @@ export default function Cleaners() {
                     { page: "Cleaners", path: "/cleaners" },
                 ]}
             />
-            <div className="p-4">
-                <div className="relative flex flex-col md:flex-row items-center justify-between gap-4 w-full">
-                    {/* Tabs */}
-                    <div className="flex flex-wrap gap-2 md:flex-1">
-                        {["All", "Available", "On Task", "On Leave"].map((tab) => (
-                            <button
-                                key={tab}
-                                onClick={() => setStatusFilter(tab.toLowerCase())}
-                                className={`px-4 py-2 rounded-lg font-medium ${
-                                    statusFilter === tab.toLowerCase()
-                                        ? "bg-brand-500 text-white"
-                                        : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
-                                }`}
+            <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+                <div className="p-4">
+                    <div className="relative flex flex-col md:flex-row items-center justify-between gap-4 w-full">
+                        {/* Tabs */}
+                        <div className="flex flex-wrap gap-2 md:flex-1">
+                            {["All", "Available", "On Task", "On Leave"].map((tab) => (
+                                <button
+                                    key={tab}
+                                    onClick={() => setStatusFilter(tab.toLowerCase())}
+                                    className={`px-4 py-2 rounded-lg font-medium ${
+                                        statusFilter === tab.toLowerCase()
+                                            ? "bg-brand-500 text-white"
+                                            : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                                    }`}
+                                >
+                                    {tab}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Centered Search */}
+                        <div className="absolute left-1/2 transform -translate-x-1/2 w-48 md:static md:mx-auto">
+                            <SearchBox search={search} setSearch={setSearch} className="h-10 w-full" />
+                        </div>
+
+                        {/* Right side controls */}
+                        <div className="flex flex-nowrap gap-2 items-center md:flex-1 md:justify-end">
+                            <select
+                                value={sortKey}
+                                onChange={(e) => setSortKey(e.target.value)}
+                                className="h-10 border rounded px-3 bg-white text-gray-900 dark:bg-gray-900 dark:text-white dark:border-gray-700"
                             >
-                                {tab}
+                                <option value="name">Name</option>
+                                <option value="createdAt">Created Date</option>
+                            </select>
+
+                            <button
+                                type="button"
+                                onClick={() => setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))}
+                                className="h-10 border rounded px-3 flex items-center justify-center bg-white text-gray-900 dark:bg-gray-900 dark:text-white dark:border-gray-700"
+                                title={sortOrder === "asc" ? "Ascending" : "Descending"}
+                            >
+                                {sortOrder === "asc" ? "▲" : "▼"}
                             </button>
-                        ))}
-                    </div>
-
-                    {/* Search */}
-                    <div className="absolute left-1/2 transform -translate-x-1/2 w-48 md:static md:mx-auto">
-                        <SearchBox search={search} setSearch={setSearch} className="h-10 w-full" />
-                    </div>
-
-                    {/* Sort */}
-                    <div className="flex flex-nowrap gap-2 items-center md:flex-1 md:justify-end">
-                        <select
-                            value={sortKey}
-                            onChange={(e) => setSortKey(e.target.value)}
-                            className="h-10 border rounded px-3 bg-white dark:bg-gray-900 dark:text-white"
-                        >
-                            <option value="name">Name</option>
-                            <option value="createdAt">Created Date</option>
-                        </select>
-
-                        <button
-                            type="button"
-                            onClick={() => setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))}
-                            className="h-10 border rounded px-3"
-                        >
-                            {sortOrder === "asc" ? "▲" : "▼"}
-                        </button>
-                        <button
-                            onClick={() => {setAddEditModalOpen(true);setSelectedCleaner(null)}}
-                            className="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg transition"
-                        >
-                            Add New Cleaner
-                        </button>
+                            <button
+                                onClick={() => {setAddEditModalOpen(true);setSelectedCleaner(null)}}
+                                className="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg transition"
+                            >
+                                Add New Cleaner
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-                <div className="max-w-full overflow-x-auto">
-                    {loading ? (
-                        <TableLoading />
-                    ) : (
-                        <Table>
-                            <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
-                                <TableRow>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                                        No
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                                        Cleaner ID
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                                        Name
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                                        Phone
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                                        Email
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                                        Image
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                                        Status
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                                        Active
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                                        Created At
-                                    </TableCell>
-                                    <TableCell>Credentials</TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400">
-                                        Actions
-                                    </TableCell>
-                                </TableRow>
-                            </TableHeader>
+                {loading ? (
+                    <TableLoading />
+                ) : (
+                    <Table>
+                        <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
+                            <TableRow>
+                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">
+                                    No
+                                </TableCell>
+                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">
+                                    ID
+                                </TableCell>
+                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">
+                                    Cleaner Info
+                                </TableCell>
+                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">
+                                    Contact
+                                </TableCell>
+                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">
+                                    Status
+                                </TableCell>
+                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-center text-xs dark:text-gray-400 select-none">
+                                    Active
+                                </TableCell>
+                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-center text-xs dark:text-gray-400 select-none">
+                                    Credentials
+                                </TableCell>
+                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-center text-xs dark:text-gray-400 select-none">
+                                    Actions
+                                </TableCell>
+                            </TableRow>
+                        </TableHeader>
 
-                            <TableBody>
-                                {cleaners?.map((cl, index) => (
-                                    <TableRow key={cl._id}>
-                                        <TableCell className="px-4 py-3 text-gray-800 dark:text-white/90">{index + 1}</TableCell>
+                        <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+                            {cleaners?.map((cl, index) => (
+                                <TableRow key={cl._id}>
+                                    <TableCell className="px-1.5 py-2.5 text-gray-800 text-start text-sm dark:text-white/90">
+                                        {index + 1}
+                                    </TableCell>
 
-                                        <TableCell className="px-4 py-3 text-gray-800 dark:text-white/90">{cl.cleanerId}</TableCell>
+                                    <TableCell className="px-1.5 py-2.5 text-gray-800 text-start text-sm dark:text-white/90 font-mono">
+                                        {cl.cleanerId}
+                                    </TableCell>
 
-                                        <TableCell className="px-4 py-3 text-gray-800 dark:text-white/90">{cl.name}</TableCell>
+                                    <TableCell className="px-1.5 py-2.5 text-gray-800 text-start text-sm dark:text-white/90">
+                                        <div className="flex items-center gap-2">
+                                            <img src={cl.image || "no-profile.jpg"} alt="cleaner" className="w-8 h-8 object-cover rounded-full" />
+                                            <div>
+                                                <div className="font-medium text-sm">{cl.name}</div>
+                                                <div className="text-xs text-gray-500">{new Date(cl.createdAt).toLocaleDateString()}</div>
+                                            </div>
+                                        </div>
+                                    </TableCell>
 
-                                        <TableCell className="px-4 py-3 text-gray-800 dark:text-white/90">{cl.phone}</TableCell>
+                                    <TableCell className="px-1.5 py-2.5 text-gray-500 text-start text-sm dark:text-gray-400">
+                                        <div>
+                                            <div className="text-sm">{cl.phone}</div>
+                                            <div className="text-xs text-gray-400">{cl.email || "N/A"}</div>
+                                        </div>
+                                    </TableCell>
 
-                                        <TableCell className="px-4 py-3 text-gray-800 dark:text-white/90">{cl.email}</TableCell>
+                                    <TableCell className="px-1.5 py-2.5 text-gray-500 text-start text-sm dark:text-gray-400">
+                                        {cl.status}
+                                    </TableCell>
 
-                                        <TableCell className="px-4 py-3">
-                                            <img src={cl.image || "no-profile.jpg"} className="w-10 h-10 object-cover rounded-full" />
-                                        </TableCell>
+                                    <TableCell className="px-1.5 py-2.5 text-center">
+                                        <div className="flex items-center justify-center">
+                                            <Switch
+                                                checked={cl.isActive}
+                                                onChange={() => handleUpdate({ isActive: !cl.isActive }, cl._id)}
+                                                size="sm"
+                                                color="success"
+                                            />
+                                        </div>
+                                    </TableCell>
 
-                                        <TableCell className="px-4 py-3 text-gray-800 dark:text-white/90">{cl.status}</TableCell>
+                                    <TableCell className="px-1.5 py-2.5 text-center">
+                                        <button
+                                            className="px-2.5 py-1 bg-brand-500 text-white rounded-md hover:bg-brand-600 text-xs"
+                                            onClick={async () => {
+                                                const res = await getPassword(cl?._id);
+                                                const text = `Cleaner ID: ${cl.cleanerId}\nPassword: ${res?.data?.password }`;
+                                                navigator.clipboard.writeText(text);
+                                                toast.success("Credentials copied!");
+                                            }}
+                                        >
+                                            Copy
+                                        </button>
+                                    </TableCell>
 
-                                        <TableCell className="px-4 py-3">
-                                            <Switch checked={cl.isActive} onChange={() => handleUpdate({ isActive: !cl.isActive }, cl._id)} />
-                                        </TableCell>
-
-                                        <TableCell className="px-4 py-3 text-gray-800 dark:text-white/90">
-                                            {new Date(cl.createdAt).toLocaleDateString()}
-                                        </TableCell>
-
-                                        <TableCell>
+                                    <TableCell className="px-1.5 py-2.5 text-center">
+                                        <div className="flex items-center justify-center gap-1">
                                             <button
-                                                className="px-3 py-1 bg-brand-500 text-white rounded-md hover:bg-brand-600"
-                                                onClick={async() => {
-                                                    const res = await getPassword(cl?._id)
-                                                    
-                                                    const text = `Cleaner ID: ${cl.cleanerId}\nPassword: ${res?.data?.password }`;
-                                                    navigator.clipboard.writeText(text);
-                                                    toast.success("Credentials copied!");
-                                                }}
+                                                onClick={() => navigate(`/cleaners/${cl._id}`)}
+                                                className="p-1.5 text-[#5DB7AE] hover:text-[#4a9d91] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+                                                title="View Details"
                                             >
-                                                Copy
+                                                <Eye size={16} />
                                             </button>
-                                        </TableCell>
-
-                                        <TableCell className="px-4 py-3 flex gap-2 text-gray-800 dark:text-white/90">
-                                            <button onClick={()=>{setAddEditModalOpen(true);setSelectedCleaner(cl)}} className="p-2 text-blue-500">
-                                                <Eye size={18} />
-                                            </button>
-
                                             <button
                                                 onClick={() => {
                                                     setSelectedCleanerId(cl._id);
                                                     setDeleteModalOpen(true);
                                                 }}
-                                                className="p-2 text-red-500"
+                                                className="p-1.5 text-red-500 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+                                                title="Delete"
                                             >
-                                                <Trash size={18} />
+                                                <Trash size={16} />
                                             </button>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    )}
-                </div>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                )}
             </div>
-            <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
+            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700">
+                <Pagination currentPage={page} totalPages={totalPages} onPageChange={(pg: number) => setPage(pg)} />
+            </div>
             {/* {deleteModalOpen && (
                 <DeleteModal
                     type="Cleaner"
