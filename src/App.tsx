@@ -14,6 +14,7 @@ import ProtectedRoute from "./components/common/ProtectedRoute";
 import Cleaners from "./pages/admin/Cleaners";
 import Bookings from "./pages/admin/Bookings";
 import BookingDetails from "./pages/admin/bookingDetails";
+import CleanerDetails from "./pages/admin/CleanerDetails";
 
 export default function App() {
     return (
@@ -76,6 +77,7 @@ export default function App() {
                     <Route path="add-building" element={<AddBuildingPage />} />
                     <Route path="profile" element={<Profile />} />
                     <Route path="cleaners" element={<Cleaners />} />
+                    <Route path="cleaners/:id" element={<CleanerDetails />} />
                     <Route path="bookings" element={<Bookings />} />
                     <Route path="bookings/:id" element={<BookingDetails />} />
                 </Route>

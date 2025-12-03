@@ -52,3 +52,32 @@ export const getPassword = async (cleanerId: string) => {
 };
 
 
+export const getCleanersList = async () => {
+    try {
+        const result = await baseUrl.get(`/admin/cleaners/list`);
+        return result?.data;
+    } catch (error) {
+        const message = errorHandler(error);
+        toast.error(message);
+    }
+};
+export const assignCleaner = async (cleanerId:string,bookingId:string) => {
+    try {
+        const result = await baseUrl.patch(`/admin/cleaners/assign`,{cleanerId,bookingId});
+        return result?.data;
+    } catch (error) {
+        const message = errorHandler(error);
+        toast.error(message);
+    }
+};
+
+export const getCleanerDetails = async (cleanerId: string) => {
+    try {
+        const result = await baseUrl.get(`/admin/cleaners/${cleanerId}/details`);
+        return result?.data;
+    } catch (error) {
+        const message = errorHandler(error);
+        toast.error(message);
+        throw new Error(message);
+    }
+};
