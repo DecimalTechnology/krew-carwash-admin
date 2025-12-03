@@ -22,3 +22,33 @@ export const getBooking = async (bookingId:string) => {
         throw new Error(message);
     }
 };
+
+
+export const assignCleaner = async (cleanerId:string,bookingId:string) => {
+    try {
+        const result = await baseUrl.patch(`/admin/bookings/cleaners/assign`,{cleanerId,bookingId});
+        return result?.data;
+    } catch (error) {
+        const message = errorHandler(error);
+        toast.error(message);
+    }
+};
+export const unAssignCleaner = async (cleanerId:string,bookingId:string) => {
+    try {
+        const result = await baseUrl.patch(`/admin/bookings/cleaners/unassign`,{cleanerId,bookingId});
+        return result?.data;
+    } catch (error) {
+        const message = errorHandler(error);
+        toast.error(message);
+    }
+};
+
+export const getCleanersList = async () => {
+    try {
+        const result = await baseUrl.get(`/admin/bookings/cleaners`);
+        return result?.data;
+    } catch (error) {
+        const message = errorHandler(error);
+        toast.error(message);
+    }
+};

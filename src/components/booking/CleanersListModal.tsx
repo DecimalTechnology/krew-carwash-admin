@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { assignCleaner, getCleanersList } from "../../api/admin/cleanerService";
+
 import { Plus, Trash2 } from "lucide-react";
+import { assignCleaner, getCleanersList, unAssignCleaner } from "../../api/admin/bookingServie";
 
 const CleanerListModal = ({ isOpen, onClose, selectedCleaners, setSelectedCleaners, setBooking, selectedBookingId }: any) => {
     if (!isOpen) return null;
@@ -10,7 +11,8 @@ const CleanerListModal = ({ isOpen, onClose, selectedCleaners, setSelectedCleane
     useEffect(() => {
         const fetchData = async () => {
             const res = await getCleanersList();
-            setCleaners(res?.data);
+
+            setCleaners(res?.data||[]);
         };
         fetchData();
     }, []);
@@ -69,6 +71,33 @@ const CleanerListModal = ({ isOpen, onClose, selectedCleaners, setSelectedCleane
         });
     };
 
+    const removeCleaner = async (cleaner: any) => {
+        const res = await unAssignCleaner(cleaner?._id, selectedBookingId);
+    
+        // REMOVE from selectedCleaners
+        setSelectedCleaners((prev: any) =>
+            prev.filter((c: any) => c._id.toString() !== cleaner._id.toString())
+        );
+    
+        // REMOVE from booking state
+        setBooking((prev: any) => {
+            const updated = prev.map((obj: any) => {
+                if (obj?._id === selectedBookingId) {
+                    return {
+                        ...obj,
+                        cleanersAssigned: obj.cleanersAssigned.filter(
+                            (c: any) => c._id.toString() !== cleaner._id.toString()
+                        ),
+                        status: res?.data?.status,
+                    };
+                }
+                return obj;
+            });
+            return updated;
+        });
+    };
+    
+
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
             <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-6">
@@ -120,25 +149,7 @@ const CleanerListModal = ({ isOpen, onClose, selectedCleaners, setSelectedCleane
                                 {/* Action Button */}
                                 <div>
                                     {assigned ? (
-                                        <button
-                                            onClick={() => {
-                                                // REMOVE CLEANER
-                                                setSelectedCleaners((prev: any) => prev.filter((obj: any) => obj._id !== c._id));
-
-                                                setBooking((prev: any) =>
-                                                    prev.map((obj: any) => {
-                                                        if (obj?._id === selectedBookingId) {
-                                                            return {
-                                                                ...obj,
-                                                                cleanersAssigned: obj.cleanersAssigned.filter((cl: any) => cl._id !== c._id),
-                                                            };
-                                                        }
-                                                        return obj;
-                                                    })
-                                                );
-                                            }}
-                                            className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-full"
-                                        >
+                                        <button onClick={()=>removeCleaner({_id:c?._id,name:c?.name})} className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-full">
                                             <Trash2 size={16} />
                                         </button>
                                     ) : (
