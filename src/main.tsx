@@ -9,6 +9,7 @@ import { Provider } from "react-redux";
 import { store } from "./app/store.ts";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import SocketProvider from "./context/SocketProvider.tsx";
 
 const queryClient = new QueryClient();
 createRoot(document.getElementById("root")!).render(
@@ -16,7 +17,10 @@ createRoot(document.getElementById("root")!).render(
         <ThemeProvider>
             <Provider store={store}>
                 <QueryClientProvider client={queryClient}>
+                    <SocketProvider>
+
                     <App />
+                    </SocketProvider>
                 </QueryClientProvider>
             </Provider>
         </ThemeProvider>
