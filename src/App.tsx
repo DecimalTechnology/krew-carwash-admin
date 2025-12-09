@@ -15,6 +15,7 @@ import Cleaners from "./pages/admin/Cleaners";
 import Bookings from "./pages/admin/Bookings";
 import BookingDetails from "./pages/admin/bookingDetails";
 import CleanerDetails from "./pages/admin/CleanerDetails";
+import IssueReports from "./pages/admin/IssueReports";
 
 export default function App() {
     return (
@@ -80,6 +81,7 @@ export default function App() {
                     <Route path="cleaners/:id" element={<CleanerDetails />} />
                     <Route path="bookings" element={<Bookings />} />
                     <Route path="bookings/:id" element={<BookingDetails />} />
+                    <Route path="issue-reports" element={<IssueReports />} />
                 </Route>
 
                 <Route path="*" element={<Navigate to="/" replace />} />
