@@ -1,4 +1,5 @@
-import React from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState, useMemo, useRef } from "react";
 import {
   TrendingUp,
   Users,
@@ -7,140 +8,165 @@ import {
   Calendar,
   MapPin,
   Star,
-  Clock,
   Droplet,
   CheckCircle,
-  AlertCircle,
-  ArrowUp,
-  ArrowDown,
+ 
 } from "lucide-react";
 import Badge from "../../components/ui/badge/Badge";
+import { getAdminDashboard } from "../../api/admin/dashboardService";
+import toast from "react-hot-toast";
+import { generateDashboardPDF } from "../../utils/generateDashboardPDF";
 
-// Dummy Data
-const stats = [
-  {
-    title: "Total Bookings",
-    value: "2,847",
-    change: "+12.5%",
-    trend: "up",
-    icon: Calendar,
-  },
-  {
-    title: "Revenue (AED)",
-    value: "485,290",
-    change: "+8.2%",
-    trend: "up",
-    icon: DollarSign,
-  },
-  {
-    title: "Active Cleaners",
-    value: "156",
-    change: "+5.1%",
-    trend: "up",
-    icon: Users,
-  },
-  {
-    title: "Completed Today",
-    value: "94",
-    change: "-2.4%",
-    trend: "down",
-    icon: CheckCircle,
-  },
-];
+type RecentBookingRow = {
+  id: string;
+  customer: string;
+  building: string;
+  location: string;
+  service: string;
+  carType: string;
+  status: string;
+  amount: string;
+  time: string;
+};
 
-const recentBookings = [
-  {
-    id: "#BK-2847",
-    customer: "Ahmed Al Maktoum",
-    building: "Marina Heights",
-    location: "Dubai Marina",
-    service: "Premium Wash",
-    carType: "SUV",
-    status: "Completed",
-    amount: "AED 180",
-    time: "10:30 AM",
-  },
-  {
-    id: "#BK-2846",
-    customer: "Fatima Hassan",
-    building: "Business Bay Tower",
-    location: "Business Bay",
-    service: "Express Wash",
-    carType: "Sedan",
-    status: "In Progress",
-    amount: "AED 120",
-    time: "11:15 AM",
-  },
-  {
-    id: "#BK-2845",
-    customer: "Mohammed Ali",
-    building: "Downtown Residence",
-    location: "Downtown Dubai",
-    service: "Deluxe Package",
-    carType: "Luxury",
-    status: "Scheduled",
-    amount: "AED 250",
-    time: "12:00 PM",
-  },
-  {
-    id: "#BK-2844",
-    customer: "Sara Abdullah",
-    building: "JBR Walk",
-    location: "Jumeirah Beach",
-    service: "Interior Cleaning",
-    carType: "Sedan",
-    status: "Completed",
-    amount: "AED 150",
-    time: "09:45 AM",
-  },
-  {
-    id: "#BK-2843",
-    customer: "Khalid Ahmed",
-    building: "Emirates Hills",
-    location: "Emirates Hills",
-    service: "Premium Wash",
-    carType: "SUV",
-    status: "Pending",
-    amount: "AED 180",
-    time: "01:30 PM",
-  },
-];
+type CleanerRow = {
+  name: string;
+  completed: number;
+  rating?: number;
+  revenue?: string;
+};
 
-const topLocations = [
-  { name: "Dubai Marina", bookings: 487, revenue: "AED 87,660", growth: "+15%" },
-  { name: "Business Bay", bookings: 392, revenue: "AED 70,560", growth: "+12%" },
-  { name: "Downtown Dubai", bookings: 356, revenue: "AED 64,080", growth: "+8%" },
-  { name: "Jumeirah Beach", bookings: 298, revenue: "AED 53,640", growth: "+18%" },
-];
+type LocationRow = {
+  name: string;
+  bookings: number;
+  revenue: string | number;
+};
 
-const topCleaners = [
-  { name: "Ahmed Hassan", completed: 142, rating: 4.9, revenue: "AED 25,560" },
-  { name: "Mohammed Rashed", completed: 128, rating: 4.8, revenue: "AED 23,040" },
-  { name: "Youssef Ibrahim", completed: 115, rating: 4.9, revenue: "AED 20,700" },
-  { name: "Ali Mansoor", completed: 103, rating: 4.7, revenue: "AED 18,540" },
-];
-
-const serviceBreakdown = [
-  { service: "Premium Wash", bookings: 892, percentage: 31 },
-  { service: "Express Wash", bookings: 741, percentage: 26 },
-  { service: "Deluxe Package", bookings: 598, percentage: 21 },
-  { service: "Interior Cleaning", bookings: 427, percentage: 15 },
-  { service: "Basic Wash", bookings: 189, percentage: 7 },
-];
+type ServiceRow = {
+  service: string;
+  bookings: number;
+  percentage: number;
+};
 
 function Dashboard() {
+  const [loading, setLoading] = useState(true);
+  const [range, setRange] = useState<string>("last_7_days");
+  const [dashboardData, setDashboardData] = useState<any | null>(null);
+  const cacheRef = useRef<Map<string, any>>(new Map());
+
   const getStatusColor = (status: string) => {
     switch (status) {
+      case "COMPLETED":
       case "Completed":
         return "success";
+      case "IN PROGRESS":
       case "In Progress":
         return "info";
+      case "SCHEDULED":
       case "Scheduled":
         return "warning";
+      case "PENDING":
       case "Pending":
         return "warning";
       default:
         return "light";
+    }
+  };
+
+  useEffect(() => {
+    let mounted = true;
+    const fetchDashboard = async () => {
+      setLoading(true);
+      try {
+        if (cacheRef.current.has(range)) {
+          if (!mounted) return;
+          setDashboardData(cacheRef.current.get(range));
+          setLoading(false);
+          return;
+        }
+        const res = await getAdminDashboard({ range });
+        const payload = res?.data ?? res;
+        if (!payload || !payload.stats) {
+          toast.error("Dashboard API returned unexpected payload — check network response.");
+        }
+        cacheRef.current.set(range, payload);
+        if (mounted) setDashboardData(payload);
+      } catch (err) {
+        console.error("Dashboard fetch failed", err);
+        toast.error("Failed to load dashboard data");
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    fetchDashboard();
+    return () => {
+      mounted = false;
+    };
+  }, [range]);
+
+  const stats = useMemo(() => {
+    const s = dashboardData?.stats || {};
+    return [
+      { title: "Total Bookings", value: String(s.totalBookings || 0), change: "", trend: "up", icon: Calendar },
+      { title: "Revenue (AED)", value: `AED ${Number(s.revenue || 0).toLocaleString()}`, change: "", trend: "up", icon: DollarSign },
+      { title: "Active Cleaners", value: String(s.activeCleaners || 0), change: "", trend: "up", icon: Users },
+      { title: "Completed", value: String(s.completed || 0), change: "", trend: "up", icon: CheckCircle },
+    ];
+  }, [dashboardData]);
+
+  const recentBookings = useMemo(() => {
+    return (dashboardData?.recentBookings || dashboardData?.bookings || []).slice(0, 5).map((b: any) => ({
+      id: b?.bookingId || b?._id,
+      customer: b?.userId?.name || "N/A",
+      building: b?.buildingId?.buildingName || "N/A",
+      location: b?.buildingId?.location || "N/A",
+      service: b?.package?.packageId?.name || "N/A",
+      carType: b?.vehicleId?.vehicleModel || b?.vehicleTypeId?.name || "N/A",
+      status: b?.status || "N/A",
+      amount: `AED ${Number(b?.totalPrice || 0).toLocaleString()}`,
+      time: new Date(b?.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    }));
+  }, [dashboardData]);
+
+  const topLocations = useMemo(() => {
+    return (dashboardData?.topLocations || []).map((l: any) => ({
+      name: l.name,
+      bookings: l.bookings,
+      revenue: typeof l.revenue === "number" ? `AED ${l.revenue.toLocaleString()}` : l.revenue,
+    })).slice(0, 4);
+  }, [dashboardData]);
+
+  const topCleaners = useMemo(() => {
+    return (dashboardData?.topCleaners || []).map((c: any) => ({
+      name: c.name,
+      completed: c.completed,
+      rating: c.rating || 0,
+      revenue: c.revenue || "",
+    })).slice(0, 4);
+  }, [dashboardData]);
+
+  const serviceBreakdown = useMemo(() => {
+    const totalBookingsForPercent = dashboardData?.stats?.totalBookings ?? 1;
+    return (dashboardData?.serviceBreakdown || []).map((s: any) => ({
+      service: s.service,
+      bookings: s.bookings,
+      percentage: s.percentage ?? Math.round((s.bookings / Math.max(1, totalBookingsForPercent)) * 100),
+    })).slice(0, 5);
+  }, [dashboardData]);
+
+  // payments handled in PDF util when needed; keep backend-driven payload available on dashboardData
+
+  const handleExportReport = async () => {
+    if (!dashboardData) {
+      toast.error("No dashboard data to export");
+      return;
+    }
+    try {
+      await generateDashboardPDF(dashboardData, range);
+    } catch (err) {
+      // generateDashboardPDF already shows toast; ensure any unexpected errors are logged
+      console.error("Export failed", err);
+      toast.error("Failed to export PDF");
     }
   };
 
@@ -153,16 +179,37 @@ function Dashboard() {
           <p className="text-gray-500 dark:text-gray-400 mt-1">Welcome back! Here's what's happening today.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-            Last 7 Days
-          </button>
-          <button className="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg transition">
+          <div>
+            <select
+              value={range}
+              onChange={(e) => {
+                setRange(e.target.value);
+              }}
+              className="px-3 py-2 border rounded-lg text-sm bg-white dark:bg-gray-900"
+            >
+              <option value="today">Today</option>
+              <option value="this_week">This Week</option>
+              <option value="this_month">This Month</option>
+              <option value="last_7_days">Last 7 Days</option>
+              <option value="last_month">Last Month</option>
+              <option value="this_year">This Year</option>
+              <option value="last_year">Last Year</option>
+            </select>
+          </div>
+
+          {/* From/To custom range removed — use preset dropdown only */}
+
+          <button onClick={handleExportReport} className="px-4 py-2 bg-brand-500 hover:bg-brand-600 text-white rounded-lg transition">
             Export Report
           </button>
+          
         </div>
       </div>
 
       {/* Stats Grid */}
+      {loading && (
+        <div className="p-4 bg-white rounded-md text-sm text-gray-500">Loading dashboard...</div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
@@ -171,12 +218,12 @@ function Dashboard() {
               key={index}
               className="relative bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden group hover:shadow-md transition-shadow"
             >
-              <div className="p-6">
+              <div className="px-6 py-10">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{stat.title}</p>
                     <h3 className="text-3xl font-bold text-gray-900 dark:text-white mt-2">{stat.value}</h3>
-                    <div className="flex items-center gap-1 mt-3">
+                    {/* <div className="flex items-center gap-1 mt-3">
                       {stat.trend === "up" ? (
                         <ArrowUp className="w-4 h-4 text-green-600" />
                       ) : (
@@ -190,7 +237,7 @@ function Dashboard() {
                         {stat.change}
                       </span>
                       <span className="text-sm text-gray-500 dark:text-gray-400">vs last month</span>
-                    </div>
+                    </div> */}
                   </div>
                   <div
                     className="p-3 bg-brand-500 rounded-lg group-hover:scale-110 transition-transform"
@@ -204,6 +251,7 @@ function Dashboard() {
           );
         })}
       </div>
+      
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -240,7 +288,7 @@ function Dashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
-                {recentBookings.map((booking) => (
+                {recentBookings.map((booking: RecentBookingRow) => (
                   <tr key={booking.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex flex-col">
@@ -289,7 +337,7 @@ function Dashboard() {
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">This month's performers</p>
           </div>
           <div className="p-6 space-y-4">
-            {topCleaners.map((cleaner, index) => (
+            {topCleaners.map((cleaner: CleanerRow, index: number) => (
               <div
                 key={index}
                 className="flex items-center gap-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
@@ -326,7 +374,7 @@ function Dashboard() {
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Most active areas in UAE</p>
           </div>
           <div className="p-6 space-y-4">
-            {topLocations.map((location, index) => (
+            {topLocations.map((location: LocationRow, index: number) => (
               <div key={index} className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -340,7 +388,6 @@ function Dashboard() {
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-medium text-gray-900 dark:text-white">{location.revenue}</p>
-                    <p className="text-xs text-green-600">{location.growth}</p>
                   </div>
                 </div>
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
@@ -361,10 +408,10 @@ function Dashboard() {
               <Droplet className="w-5 h-5 text-[#5DB7AE]" />
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Service Breakdown</h2>
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Popular services this month</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Popular services</p>
           </div>
           <div className="p-6 space-y-4">
-            {serviceBreakdown.map((service, index) => (
+            {serviceBreakdown.map((service: ServiceRow, index: number) => (
               <div key={index} className="space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
