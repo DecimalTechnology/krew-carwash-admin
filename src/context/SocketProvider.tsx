@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { io, Socket } from "socket.io-client";
 import { IRootState } from "../app/store";
+import { BACKEND_URL } from "../api/baseUrl";
 
 interface ISocketContext {
     socket: Socket | null;
@@ -24,8 +25,9 @@ interface Props {
 export default function SocketProvider({ children }: Props) {
     const admin = useSelector((state: IRootState) => state.admin.adminData);
 
+
     const socket = useMemo(() => {
-        return io("http://localhost:5000", {
+        return io(BACKEND_URL, {
             autoConnect: false,
             withCredentials: true,
             transports: ["websocket"],

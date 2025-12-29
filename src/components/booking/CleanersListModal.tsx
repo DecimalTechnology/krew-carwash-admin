@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
-
 import { Plus, Trash2 } from "lucide-react";
 import { assignCleaner, getCleanersList, unAssignCleaner } from "../../api/admin/bookingServie";
 
-const CleanerListModal = ({ isOpen, onClose, selectedCleaners, setSelectedCleaners, setBooking, selectedBookingId }: any) => {
+const CleanerListModal = ({
+    isOpen,
+    onClose,
+    selectedCleaners,
+    setSelectedCleaners,
+    setBooking,
+    selectedBookingId,
+}: any) => {
     if (!isOpen) return null;
 
     const [cleaners, setCleaners] = useState([]);
@@ -11,15 +17,13 @@ const CleanerListModal = ({ isOpen, onClose, selectedCleaners, setSelectedCleane
     useEffect(() => {
         const fetchData = async () => {
             const res = await getCleanersList();
-
-            setCleaners(res?.data||[]);
+            setCleaners(res?.data || []);
         };
         fetchData();
     }, []);
 
-    const isAssigned = (cleanerId: string) => {
-        return selectedCleaners.some((obj: any) => obj?._id.toString() === cleanerId.toString());
-    };
+    const isAssigned = (cleanerId: string) =>
+        selectedCleaners.some((obj: any) => obj?._id.toString() === cleanerId.toString());
 
     // COLOR MAP BASED ON FIRST LETTER
     const getColor = (letter: string) => {
@@ -59,57 +63,60 @@ const CleanerListModal = ({ isOpen, onClose, selectedCleaners, setSelectedCleane
         const res = await assignCleaner(newCleaner?._id, selectedBookingId);
 
         setSelectedCleaners((prev: any) => [...prev, newCleaner]);
-        setBooking((prev: any) => {
-            const newBookings = prev.map((obj: any) => {
-                if (obj?._id == selectedBookingId) {
-                    return { ...obj, cleanersAssigned: [...obj?.cleanersAssigned, newCleaner], status: res?.data?.status };
-                }
-                return obj;
-            });
-
-            return newBookings;
-        });
+        setBooking((prev: any) =>
+            prev.map((obj: any) =>
+                obj?._id === selectedBookingId
+                    ? {
+                          ...obj,
+                          cleanersAssigned: [...obj?.cleanersAssigned, newCleaner],
+                          status: res?.data?.status,
+                      }
+                    : obj
+            )
+        );
     };
 
     const removeCleaner = async (cleaner: any) => {
         const res = await unAssignCleaner(cleaner?._id, selectedBookingId);
-    
-        // REMOVE from selectedCleaners
+
         setSelectedCleaners((prev: any) =>
             prev.filter((c: any) => c._id.toString() !== cleaner._id.toString())
         );
-    
-        // REMOVE from booking state
-        setBooking((prev: any) => {
-            const updated = prev.map((obj: any) => {
-                if (obj?._id === selectedBookingId) {
-                    return {
-                        ...obj,
-                        cleanersAssigned: obj.cleanersAssigned.filter(
-                            (c: any) => c._id.toString() !== cleaner._id.toString()
-                        ),
-                        status: res?.data?.status,
-                    };
-                }
-                return obj;
-            });
-            return updated;
-        });
+
+        setBooking((prev: any) =>
+            prev.map((obj: any) =>
+                obj?._id === selectedBookingId
+                    ? {
+                          ...obj,
+                          cleanersAssigned: obj.cleanersAssigned.filter(
+                              (c: any) => c._id.toString() !== cleaner._id.toString()
+                          ),
+                          status: res?.data?.status,
+                      }
+                    : obj
+            )
+        );
     };
-    
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
-            <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-6">
+        <div className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50 backdrop-blur-sm">
+            <div className="bg-white dark:bg-gray-900 w-full max-w-lg rounded-2xl shadow-2xl p-6">
                 {/* Header */}
                 <div className="flex justify-between items-center mb-5">
-                    <h2 className="text-xl font-semibold text-gray-800">Assign Cleaner</h2>
-                    <button onClick={onClose} className="text-gray-500 hover:text-gray-700 transition">
+                    <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+                        Assign Cleaner
+                    </h2>
+                    <button
+                        onClick={onClose}
+                        className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition"
+                    >
                         ✕
                     </button>
                 </div>
 
-                <p className="text-sm text-gray-600 mb-4">Select a cleaner from the list below</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Select a cleaner from the list below
+                </p>
 
                 {/* Cleaner List */}
                 <div className="space-y-3 max-h-[55vh] overflow-y-auto pr-1">
@@ -118,29 +125,46 @@ const CleanerListModal = ({ isOpen, onClose, selectedCleaners, setSelectedCleane
                         const assigned = isAssigned(c._id);
 
                         return (
-                            <div key={c._id} className="p-4 rounded-xl border flex items-center justify-between transition hover:bg-gray-100">
+                            <div
+                                key={c._id}
+                                className="p-4 rounded-xl border
+                                border-gray-200 dark:border-gray-700
+                                flex items-center justify-between transition
+                                hover:bg-gray-100 dark:hover:bg-gray-800"
+                            >
                                 {/* Avatar + Details */}
                                 <div className="flex items-center gap-3">
                                     <div
-                                        className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-medium ${getColor(
-                                            first
-                                        )}`}
+                                        className={`w-10 h-10 rounded-full flex items-center justify-center 
+                                        text-white font-medium ${getColor(first)}`}
                                     >
                                         {first}
                                     </div>
 
                                     <div className="space-y-0.5">
-                                        {/* Name */}
-                                        <p className="font-medium text-gray-800">{c?.name}</p>
+                                        <p className="font-medium text-gray-800 dark:text-gray-200">
+                                            {c?.name}
+                                        </p>
 
-                                        {/* Phone */}
-                                        {c?.phone && <p className="text-xs text-gray-600">📞 {c.phone}</p>}
+                                        {c?.phone && (
+                                            <p className="text-xs text-gray-600 dark:text-gray-400">
+                                                📞 {c.phone}
+                                            </p>
+                                        )}
 
-                                        {/* Email */}
-                                        {c?.email && <p className="text-xs text-gray-600">✉️ {c.email}</p>}
+                                        {c?.email && (
+                                            <p className="text-xs text-gray-600 dark:text-gray-400">
+                                                ✉️ {c.email}
+                                            </p>
+                                        )}
 
-                                        {/* Status */}
-                                        <p className={`text-xs mt-1 ${assigned ? "text-green-600" : "text-gray-500"}`}>
+                                        <p
+                                            className={`text-xs mt-1 ${
+                                                assigned
+                                                    ? "text-green-600 dark:text-green-400"
+                                                    : "text-gray-500 dark:text-gray-400"
+                                            }`}
+                                        >
                                             {assigned ? "Assigned" : "Not assigned"}
                                         </p>
                                     </div>
@@ -149,13 +173,20 @@ const CleanerListModal = ({ isOpen, onClose, selectedCleaners, setSelectedCleane
                                 {/* Action Button */}
                                 <div>
                                     {assigned ? (
-                                        <button onClick={()=>removeCleaner({_id:c?._id,name:c?.name})} className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-full">
+                                        <button
+                                            onClick={() =>
+                                                removeCleaner({ _id: c?._id, name: c?.name })
+                                            }
+                                            className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-full transition"
+                                        >
                                             <Trash2 size={16} />
                                         </button>
                                     ) : (
                                         <button
-                                            onClick={() => handleSelect({ _id: c?._id, name: c.name })}
-                                            className="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full"
+                                            onClick={() =>
+                                                handleSelect({ _id: c?._id, name: c.name })
+                                            }
+                                            className="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full transition"
                                         >
                                             <Plus size={16} />
                                         </button>
@@ -168,7 +199,14 @@ const CleanerListModal = ({ isOpen, onClose, selectedCleaners, setSelectedCleane
 
                 {/* Footer */}
                 <div className="flex justify-end mt-6">
-                    <button onClick={onClose} className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 transition">
+                    <button
+                        onClick={onClose}
+                        className="px-4 py-2 rounded-lg
+                        bg-gray-200 dark:bg-gray-800
+                        text-gray-800 dark:text-gray-200
+                        hover:bg-gray-300 dark:hover:bg-gray-700
+                        transition"
+                    >
                         Cancel
                     </button>
                 </div>

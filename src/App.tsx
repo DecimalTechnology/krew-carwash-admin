@@ -16,6 +16,7 @@ import Bookings from "./pages/admin/Bookings";
 import BookingDetails from "./pages/admin/bookingDetails";
 import CleanerDetails from "./pages/admin/CleanerDetails";
 import IssueReports from "./pages/admin/IssueReports";
+import Notifications from "./pages/admin/Notifications";
 
 export default function App() {
     return (
@@ -82,6 +83,7 @@ export default function App() {
                     <Route path="bookings" element={<Bookings />} />
                     <Route path="bookings/:id" element={<BookingDetails />} />
                     <Route path="issue-reports" element={<IssueReports />} />
+                    <Route path="notifications" element={<Notifications />} />
                 </Route>
 
                 <Route path="*" element={<Navigate to="/" replace />} />

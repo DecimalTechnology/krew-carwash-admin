@@ -9,7 +9,7 @@ import { useNavigate } from "react-router";
 
 function RightChatPannel() {
     const selectedChat = useSelector((state: any) => state?.chat?.selectedChat);
-    console.log(selectedChat);
+  
     const allChats = useSelector((data: IRootState) => data.chat.chats);
     const admin = useSelector((state: IRootState) => state.admin.adminData);
     const [messages, setMessages] = useState<any[]>([]);
