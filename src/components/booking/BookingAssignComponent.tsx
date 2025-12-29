@@ -1,58 +1,55 @@
-function BookingAssignComponent({ cleaners = [] ,setCleanerModal,setSelectedCleaners,booking,setSelectedBookingId}: any) {
+function BookingAssignComponent({
+    cleaners = [],
+    setCleanerModal,
+    setSelectedCleaners,
+    booking,
+    setSelectedBookingId,
+}: any) {
     const hasCleaners = cleaners.length > 0;
 
     const letterColors = [
-        "#6C5CE7",
-        "#0984E3",
-        "#00B894",
-        "#E17055",
-        "#D63031",
-        "#FDCB6E",
-        "#B53471",
+        "text-purple-600",
+        "text-blue-600",
+        "text-green-600",
+        "text-orange-600",
+        "text-red-600",
+        "text-yellow-600",
+        "text-pink-600",
     ];
 
     const getLetterColor = (index: number) => {
         return letterColors[index % letterColors.length];
     };
 
+    const openAssignModal = () => {
+        setCleanerModal(true);
+        setSelectedCleaners(cleaners);
+        setSelectedBookingId(booking?._id);
+    };
+
     return (
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div className="flex items-center">
             {hasCleaners ? (
                 <>
                     {cleaners.map((cleaner: any, index: number) => (
                         <div
                             key={index}
-                            style={{
-                                width: "32px",
-                                height: "32px",
-                                borderRadius: "50%",
-                                overflow: "hidden",
-                                border: "2px solid white",
-                                background: "#e6e6e6",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                marginLeft: index === 0 ? "0px" : "-10px",
-                                zIndex: cleaners.length - index,
-                            }}
+                            className="w-8 h-8 rounded-full overflow-hidden
+                            flex items-center justify-center
+                            border-2 border-white dark:border-gray-800
+                            bg-gray-200 dark:bg-gray-700
+                            -ml-2 first:ml-0"
+                            style={{ zIndex: cleaners.length - index }}
                         >
                             {cleaner?.image ? (
                                 <img
                                     src={cleaner.image}
                                     alt="cleaner"
-                                    style={{
-                                        width: "100%",
-                                        height: "100%",
-                                        objectFit: "cover",
-                                    }}
+                                    className="w-full h-full object-cover"
                                 />
                             ) : (
                                 <span
-                                    style={{
-                                        fontWeight: "700",
-                                        fontSize: "15px",
-                                        color: getLetterColor(index),
-                                    }}
+                                    className={`font-bold text-sm ${getLetterColor(index)}`}
                                 >
                                     {cleaner?.name?.charAt(0)?.toUpperCase()}
                                 </span>
@@ -62,43 +59,34 @@ function BookingAssignComponent({ cleaners = [] ,setCleanerModal,setSelectedClea
 
                     {/* PLUS BUTTON */}
                     <button
-                     onClick={()=>{setCleanerModal(true);setSelectedCleaners(cleaners);setSelectedBookingId(booking?._id)}}
-                        style={{
-                            width: "32px",
-                            height: "32px",
-                            borderRadius: "50%",
-                            background: "#f5f5f5",
-                            border: "1px solid #ccc",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            fontSize: "18px",
-                            cursor: "pointer",
-                            marginLeft: "-10px",
-                        }}
+                        onClick={openAssignModal}
+                        className="w-8 h-8 rounded-full 
+                        bg-gray-100 dark:bg-gray-800
+                        border border-gray-300 dark:border-gray-600
+                        flex items-center justify-center
+                        text-lg font-semibold
+                        text-gray-700 dark:text-gray-300
+                        -ml-2 hover:bg-gray-200 dark:hover:bg-gray-700
+                        transition"
                     >
                         +
                     </button>
                 </>
             ) : (
-                // SINGLE "Assign +" BUTTON
+                /* Assign button */
                 <button
-                    onClick={()=>{setCleanerModal(true);setSelectedCleaners(cleaners);setSelectedBookingId(booking?._id)}}
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "6px",
-                        padding: "4px 12px",
-                        borderRadius: "16px",
-                        background: "#f5f5f5",
-                        border: "1px solid #ccc",
-                        cursor: "pointer",
-                        fontSize: "13px",
-                        fontWeight: "500",
-                    }}
+                    onClick={openAssignModal}
+                    className="flex items-center gap-1.5
+                    px-3 py-1.5 rounded-full
+                    bg-gray-100 dark:bg-gray-800
+                    border border-gray-300 dark:border-gray-600
+                    text-sm font-medium
+                    text-gray-700 dark:text-gray-300
+                    hover:bg-gray-200 dark:hover:bg-gray-700
+                    transition"
                 >
                     Assign
-                    <span style={{ fontSize: "18px", marginTop: "-2px" }}>+</span>
+                    <span className="text-lg leading-none">+</span>
                 </button>
             )}
         </div>

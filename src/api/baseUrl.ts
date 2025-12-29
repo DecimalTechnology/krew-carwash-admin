@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 
-export const BASE_URL = `http://localhost:5000/api/v1`;
+export const  BACKEND_URL = 'http://15.206.195.131:5000'
+export const BASE_URL  = `${BACKEND_URL}/api/v1`;
+
+// export const BASE_URL = `https://krew-car-wash-server.onrender.com/api/v1`;
 
 export const baseUrl = axios.create({
     baseURL: BASE_URL,
@@ -9,6 +12,8 @@ export const baseUrl = axios.create({
         "Content-Type": "application/json",
     },
 });
+
+console.log(BASE_URL)
 
 // Flag to prevent multiple refresh token requests
 let isRefreshing = false;
@@ -77,10 +82,7 @@ baseUrl.interceptors.response.use(
 
             try {
                 // Call refresh token endpoint
-                const { data } = await axios.post(
-                    `${BASE_URL}/admin/refresh-token`,
-                    { refreshToken }
-                );
+                const { data } = await axios.post(`${BASE_URL}/admin/refresh-token`, { refreshToken });
 
                 // Store new access token
                 const newAccessToken = data.accessToken;
@@ -100,11 +102,11 @@ baseUrl.interceptors.response.use(
                 // Refresh token failed - clear tokens and redirect to login
                 processQueue(refreshError, null);
                 isRefreshing = false;
-                
+
                 localStorage.removeItem("krew_adminAccessToken");
                 localStorage.removeItem("krew_adminRefreshToken");
                 window.location.href = "/login";
-                
+
                 return Promise.reject(refreshError);
             }
         }
@@ -117,9 +119,9 @@ export const errorHandler = (error: any) => {
     if (axios.isAxiosError(error)) {
         const axiosError = error;
         if (axiosError?.response?.data?.message) {
-            return axiosError?.response?.data?.message
+            return axiosError?.response?.data?.message;
         }
     }
 
-    return "Internal Server Error"
+    return "Internal Server Error";
 };

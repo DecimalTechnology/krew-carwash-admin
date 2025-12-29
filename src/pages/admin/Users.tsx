@@ -30,6 +30,7 @@ export default function Users() {
     const [fetch,setFetch]=  useState(false);
     const [userViewModalOpen,setUserViewModalOpen] = useState(false);
     const [selectedUser,setSelectedUser] = useState<IUser|{}>({})
+    console.log(totalPages)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -38,7 +39,9 @@ export default function Users() {
                 const res = await getAllUsers({ search, status: statusFilter, sortedBy: sortKey, sortOrder, page });
                 setLoading(false);
                 setUsers(res?.data);
-                setTotalPages(res?.data?.pagination?.totalPages);
+                setTotalPages(Math.ceil( res?.pagination?.totalPages)/limit);
+                
+              
             } catch (error) {
                 toast.error(error as string);
             }
