@@ -1,6 +1,6 @@
 import { Eye, Trash } from "lucide-react";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { deleteBooking, getAllBooking } from "../../api/admin/bookingServie";
 import BookingAssignComponent from "../../components/booking/BookingAssignComponent";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
@@ -34,6 +34,8 @@ function Bookings() {
 
         fetchData();
     }, [search, selectedStatus, page]);
+
+    
 
     return (
         <div className="w-full text-gray-800 dark:text-gray-200">
@@ -69,7 +71,10 @@ function Bookings() {
                     {["ALL", "PENDING", "ASSIGNED", "IN PROGRESS", "COMPLETED"].map((item) => (
                         <button
                             key={item}
-                            onClick={() => setSelectedStatus(item)}
+                            onClick={() => {
+                                setSelectedStatus(item);
+                                setPage(1);
+                            }}
                             className={`px-4 py-1.5 rounded-full transition
                             ${selectedStatus === item ? "bg-[#5DB7AE] text-white" : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"}`}
                         >
@@ -94,10 +99,10 @@ function Bookings() {
                 <TableBody>
                     {booking?.map((obj: any) => (
                         <TableRow key={obj?._id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                            <TableCell className="px-5 py-3 text-gray-500 dark:text-gray-400">{obj?.bookingId}</TableCell>
+                            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">{obj?.bookingId}</TableCell>
 
-                            <TableCell className="px-5 py-3 text-gray-500 dark:text-gray-400">{obj?.userId?.name}</TableCell>
-                            <TableCell className="px-5 py-3 text-gray-500 dark:text-gray-400">
+                            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">{obj?.userId?.name}</TableCell>
+                            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                 {obj?.package?.packageId?.name ? (
                                     <>
                                         {obj.package.packageId.name}
@@ -121,7 +126,7 @@ function Bookings() {
                                 )}
                             </TableCell>
 
-                            <TableCell className="px-5 py-3 text-gray-500 dark:text-gray-400">{obj?.buildingId?.buildingName}</TableCell>
+                            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">{obj?.buildingId?.buildingName}</TableCell>
 
                             <TableCell className="px-5 py-3">
                                 <BookingAssignComponent
@@ -156,9 +161,9 @@ function Bookings() {
                                 </span>
                             </TableCell>
 
-                            <TableCell className="px-5 py-3 text-gray-500 dark:text-gray-400">{new Date(obj?.createdAt).toDateString()}</TableCell>
+                            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">{new Date(obj?.createdAt).toDateString()}</TableCell>
 
-                            <TableCell className="px-5 py-3 text-gray-500 dark:text-gray-400">{obj?.totalPrice} AED</TableCell>
+                            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">{obj?.totalPrice} AED</TableCell>
 
                             <TableCell className="px-4 py-3">
                                 <div className="flex items-center gap-2">

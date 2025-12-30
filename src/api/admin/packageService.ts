@@ -3,14 +3,7 @@ import toast from "react-hot-toast";
 import { baseUrl, errorHandler } from "../baseUrl";
 
 // GET /admin/packages - Get all packages with query params
-export const getAllPackages = async (params?: {
-    search?: string;
-    status?: string;
-    sortedBy?: string;
-    sortOrder?: string;
-    page?: number;
-    limit?: number;
-}) => {
+export const getAllPackages = async (params?: { search?: string; status?: string; sortedBy?: string; sortOrder?: string; page?: number; limit?: number }) => {
     try {
         // Add populate=true to get populated vehicle types
         const result = await baseUrl.get("/admin/packages", {

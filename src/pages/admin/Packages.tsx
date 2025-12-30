@@ -36,6 +36,7 @@ export default function Packages() {
   const [packages, setPackages] = useState<IPackage[]>([]);
   const [fetch, setFetch] = useState(false);
   const [selectedPackageId, setSelectedPackageId] = useState("");
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,7 +85,7 @@ export default function Packages() {
   };
 
   const handleEditUpdate = (updatedPackage: IPackage) => {
-    setPackages((prev) => prev.map((p) => (p._id === updatedPackage._id ? updatedPackage : p)));
+    setFetch(!fetch)
   };
 
   return (

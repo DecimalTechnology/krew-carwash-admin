@@ -13,6 +13,14 @@ interface IProps {
   onUpdate: (updatedBuilding: IBuilding) => void;
 }
 
+interface ValidationErrors {
+  buildingName?: string;
+  address?: string;
+  city?: string;
+  area?: string;
+  contactNumbers?: string[];
+}
+
 function BuildingEditModal({ isOpen, building, onClose, onUpdate }: IProps) {
   const [formData, setFormData] = useState({
     buildingName: "",
@@ -24,6 +32,7 @@ function BuildingEditModal({ isOpen, building, onClose, onUpdate }: IProps) {
 
   const [contactNumbers, setContactNumbers] = useState<string[]>([""]);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<ValidationErrors>({});
 
   useEffect(() => {
     if (building) {
@@ -40,14 +49,108 @@ function BuildingEditModal({ isOpen, building, onClose, onUpdate }: IProps) {
       } else {
         setContactNumbers([""]);
       }
+      
+      // Clear errors when building data loads
+      setErrors({});
     }
   }, [building]);
 
   if (!isOpen || !building) return null;
 
+  const validateForm = (): boolean => {
+    const newErrors: ValidationErrors = {};
+    let isValid = true;
+
+    // Building Name validation
+    if (!formData.buildingName.trim()) {
+      newErrors.buildingName = "Building name is required";
+      isValid = false;
+    } else if (formData.buildingName.trim().length < 2) {
+      newErrors.buildingName = "Building name must be at least 2 characters";
+      isValid = false;
+    } else if (formData.buildingName.trim().length > 100) {
+      newErrors.buildingName = "Building name cannot exceed 100 characters";
+      isValid = false;
+    }
+
+    // City validation
+    if (!formData.city.trim()) {
+      newErrors.city = "City is required";
+      isValid = false;
+    } else if (formData.city.trim().length < 2) {
+      newErrors.city = "City must be at least 2 characters";
+      isValid = false;
+    } else if (!/^[a-zA-Z\s\-']+$/.test(formData.city.trim())) {
+      newErrors.city = "City can only contain letters, spaces, hyphens, and apostrophes";
+      isValid = false;
+    }
+
+    // Area validation
+    if (!formData.area.trim()) {
+      newErrors.area = "Area is required";
+      isValid = false;
+    } else if (formData.area.trim().length < 2) {
+      newErrors.area = "Area must be at least 2 characters";
+      isValid = false;
+    }
+
+    // Address validation (optional)
+    if (formData.address.trim() && formData.address.trim().length < 5) {
+      newErrors.address = "Address must be at least 5 characters if provided";
+      isValid = false;
+    }
+
+    // Contact Numbers validation
+    const contactErrors: string[] = [];
+    const validContacts = contactNumbers.filter(num => num.trim() !== "");
+    
+    if (validContacts.length === 0) {
+      // Check if there's at least one non-empty contact
+      if (contactNumbers.some(num => num.trim() !== "")) {
+        // If there are contacts but all are empty after trim
+        contactErrors.push("Contact number cannot be empty spaces");
+      } else {
+        contactErrors.push("At least one contact number is required");
+      }
+      isValid = false;
+    } else {
+      validContacts.forEach((num, index) => {
+        // Find the original index in contactNumbers array
+        const originalIndex = contactNumbers.findIndex(cn => cn === num);
+        
+        // Phone number validation (adjust regex for your country)
+        const phoneRegex = /^[+]?[\d\s\-\(\)]{10,15}$/;
+        const cleanedNum = num.trim();
+        
+        if (!phoneRegex.test(cleanedNum)) {
+          contactErrors[originalIndex] = "Invalid phone number format";
+          isValid = false;
+        } else if (cleanedNum.replace(/\D/g, '').length < 10) {
+          contactErrors[originalIndex] = "Phone number must be at least 10 digits";
+          isValid = false;
+        } else if (cleanedNum.replace(/\D/g, '').length > 15) {
+          contactErrors[originalIndex] = "Phone number cannot exceed 15 digits";
+          isValid = false;
+        }
+      });
+    }
+    
+    if (contactErrors.some(error => error)) {
+      newErrors.contactNumbers = contactErrors;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    // Clear error for this field when user starts typing
+    if (errors[name as keyof ValidationErrors]) {
+      setErrors(prev => ({ ...prev, [name]: undefined }));
+    }
   };
 
   const handleToggleActive = () => {
@@ -58,6 +161,13 @@ function BuildingEditModal({ isOpen, building, onClose, onUpdate }: IProps) {
     const newContacts = [...contactNumbers];
     newContacts[index] = value;
     setContactNumbers(newContacts);
+    
+    // Clear error for this specific contact
+    if (errors.contactNumbers && errors.contactNumbers[index]) {
+      const newContactErrors = [...(errors.contactNumbers || [])];
+      newContactErrors[index] = "";
+      setErrors(prev => ({ ...prev, contactNumbers: newContactErrors }));
+    }
   };
 
   const addContact = () => {
@@ -66,12 +176,29 @@ function BuildingEditModal({ isOpen, building, onClose, onUpdate }: IProps) {
 
   const removeContact = (index: number) => {
     if (contactNumbers.length > 1) {
-      setContactNumbers(contactNumbers.filter((_, i) => i !== index));
+      const newContacts = contactNumbers.filter((_, i) => i !== index);
+      setContactNumbers(newContacts);
+      
+      // Remove error for this contact if it exists
+      if (errors.contactNumbers) {
+        const newContactErrors = errors.contactNumbers.filter((_, i) => i !== index);
+        setErrors(prev => ({ ...prev, contactNumbers: newContactErrors }));
+      }
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      // Scroll to first error
+      const firstErrorField = document.querySelector('.border-red-500');
+      if (firstErrorField) {
+        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -81,7 +208,9 @@ function BuildingEditModal({ isOpen, building, onClose, onUpdate }: IProps) {
         city: formData.city.trim(),
         area: formData.area.trim(),
         isActive: formData.isActive,
-        contactNumbers: contactNumbers.filter((num) => num.trim() !== ""),
+        contactNumbers: contactNumbers
+          .filter((num) => num.trim() !== "")
+          .map(num => num.trim()),
       };
 
       const res = await updateBuilding(payload, building._id);
@@ -98,6 +227,13 @@ function BuildingEditModal({ isOpen, building, onClose, onUpdate }: IProps) {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Helper function to get error styling
+  const getErrorClass = (fieldName: keyof ValidationErrors) => {
+    return errors[fieldName] 
+      ? "border-red-500 focus:ring-red-500 focus:border-red-500" 
+      : "border-gray-300 dark:border-gray-600 focus:ring-brand-500 focus:border-transparent";
   };
 
   return (
@@ -140,8 +276,11 @@ function BuildingEditModal({ isOpen, building, onClose, onUpdate }: IProps) {
                 value={formData.buildingName}
                 onChange={handleChange}
                 required
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200"
+                className={`w-full border rounded-lg px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 transition-all duration-200 ${getErrorClass('buildingName')}`}
               />
+              {errors.buildingName && (
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.buildingName}</p>
+              )}
             </div>
 
             {/* Address */}
@@ -155,8 +294,11 @@ function BuildingEditModal({ isOpen, building, onClose, onUpdate }: IProps) {
                 placeholder="Enter building address"
                 value={formData.address}
                 onChange={handleChange}
-                className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200"
+                className={`w-full border rounded-lg px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 transition-all duration-200 ${getErrorClass('address')}`}
               />
+              {errors.address && (
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.address}</p>
+              )}
             </div>
 
             {/* City & Area */}
@@ -172,8 +314,11 @@ function BuildingEditModal({ isOpen, building, onClose, onUpdate }: IProps) {
                   value={formData.city}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200"
+                  className={`w-full border rounded-lg px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 transition-all duration-200 ${getErrorClass('city')}`}
                 />
+                {errors.city && (
+                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.city}</p>
+                )}
               </div>
 
               <div>
@@ -187,8 +332,11 @@ function BuildingEditModal({ isOpen, building, onClose, onUpdate }: IProps) {
                   value={formData.area}
                   onChange={handleChange}
                   required
-                  className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200"
+                  className={`w-full border rounded-lg px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 transition-all duration-200 ${getErrorClass('area')}`}
                 />
+                {errors.area && (
+                  <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.area}</p>
+                )}
               </div>
             </div>
 
@@ -197,7 +345,7 @@ function BuildingEditModal({ isOpen, building, onClose, onUpdate }: IProps) {
               <div className="flex items-center justify-between mb-3">
                 <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
                   <Phone size={16} />
-                  Contact Numbers
+                  Contact Numbers <span className="text-red-500">*</span>
                 </label>
                 <button
                   type="button"
@@ -211,27 +359,46 @@ function BuildingEditModal({ isOpen, building, onClose, onUpdate }: IProps) {
 
               <div className="space-y-3">
                 {contactNumbers.map((num, index) => (
-                  <div key={index} className="flex gap-3 items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
-                    <input
-                      type="text"
-                      placeholder="Enter contact number"
-                      value={num}
-                      onChange={(e) => handleContactChange(index, e.target.value)}
-                      className="flex-1 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200"
-                    />
-                    {contactNumbers.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeContact(index)}
-                        className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
-                        title="Remove"
-                      >
-                        <X size={20} />
-                      </button>
-                    )}
+                  <div key={index} className="p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+                    <div className="flex gap-3 items-center">
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          placeholder="Enter contact number (e.g., +1234567890)"
+                          value={num}
+                          onChange={(e) => handleContactChange(index, e.target.value)}
+                          className={`w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 transition-all duration-200 ${
+                            errors.contactNumbers && errors.contactNumbers[index] 
+                              ? "border-red-500 focus:ring-red-500 focus:border-red-500" 
+                              : "border-gray-300 dark:border-gray-600 focus:ring-brand-500 focus:border-transparent"
+                          }`}
+                        />
+                        {errors.contactNumbers && errors.contactNumbers[index] && (
+                          <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                            {errors.contactNumbers[index]}
+                          </p>
+                        )}
+                      </div>
+                      {contactNumbers.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeContact(index)}
+                          className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200 self-start"
+                          title="Remove"
+                        >
+                          <X size={20} />
+                        </button>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
+              {errors.contactNumbers && typeof errors.contactNumbers === 'string' && (
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.contactNumbers}</p>
+              )}
+              <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                Format: +1234567890 or 01234567890. At least one contact number is required.
+              </p>
             </div>
 
             {/* Active Status Toggle */}
@@ -267,7 +434,14 @@ function BuildingEditModal({ isOpen, building, onClose, onUpdate }: IProps) {
             disabled={loading}
             className="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 dark:bg-brand-600 dark:hover:bg-brand-700 text-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "Updating..." : "Update Building"}
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                Updating...
+              </span>
+            ) : (
+              "Update Building"
+            )}
           </button>
         </div>
       </div>
@@ -276,4 +450,3 @@ function BuildingEditModal({ isOpen, building, onClose, onUpdate }: IProps) {
 }
 
 export default BuildingEditModal;
-

@@ -188,14 +188,14 @@ export default function Login() {
                                 </label>
                             </div>
 
-                            <div className="text-sm">
+                            {/* <div className="text-sm">
                                 <a
                                     href="#"
                                     className="font-medium text-brand-600 hover:text-brand-500 transition duration-200"
                                 >
                                     Forgot password?
                                 </a>
-                            </div>
+                            </div> */}
                         </div>
 
                         <button
@@ -262,7 +262,7 @@ export default function Login() {
                     </div>
                 </div>
 
-                <div className="mt-8 text-center">
+                {/* <div className="mt-8 text-center">
                     <p className="text-sm text-gray-600">
                         Need help?{" "}
                         <a
@@ -272,7 +272,7 @@ export default function Login() {
                             Contact Support
                         </a>
                     </p>
-                </div>
+                </div> */}
             </div>
         </div>
     );

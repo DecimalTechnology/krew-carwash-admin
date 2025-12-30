@@ -74,3 +74,16 @@ export const deleteBooking = async (bookingId:string) => {
 };
 
 
+
+export const getSessionDetails = async (bookingId:string,sessionId:string,sessionType:string,addonId:string) => {
+    try {
+
+        const result = await baseUrl.get(`/admin/bookings/${bookingId}/session/${sessionId}`,{params:{sessionType:sessionType,addonId:addonId}});
+        return result?.data;
+    } catch (error) {
+        const message = errorHandler(error);
+        toast.error(message);
+    }
+};
+
+

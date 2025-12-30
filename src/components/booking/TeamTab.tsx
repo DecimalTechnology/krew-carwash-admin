@@ -2,6 +2,7 @@ import React from "react";
 import { Briefcase, Phone, Mail, User, ExternalLink } from "lucide-react";
 import { BookingData } from "../../interface/IBooking";
 import CardHeader from "./CardHeader";
+import { useNavigate } from "react-router";
 
 interface TeamTabProps {
     booking: BookingData;
@@ -40,9 +41,10 @@ const TeamTab: React.FC<TeamTabProps> = ({ booking }) => {
         window.open(mailtoUrl, '_blank');
     };
 
+    const navigate = useNavigate()
     const openManageTeam = () => {
-        console.log("Manage team clicked");
-        // navigate('/admin/cleaners/manage');
+        localStorage.setItem("bookingId",booking?._id)
+        navigate('/bookings')
     };
 
     return (

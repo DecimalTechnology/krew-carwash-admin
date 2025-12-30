@@ -2,14 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { assignCleaner, getCleanersList, unAssignCleaner } from "../../api/admin/bookingServie";
 
-const CleanerListModal = ({
-    isOpen,
-    onClose,
-    selectedCleaners,
-    setSelectedCleaners,
-    setBooking,
-    selectedBookingId,
-}: any) => {
+const CleanerListModal = ({ isOpen, onClose, selectedCleaners, setSelectedCleaners, setBooking, selectedBookingId }: any) => {
     if (!isOpen) return null;
 
     const [cleaners, setCleaners] = useState([]);
@@ -22,8 +15,7 @@ const CleanerListModal = ({
         fetchData();
     }, []);
 
-    const isAssigned = (cleanerId: string) =>
-        selectedCleaners.some((obj: any) => obj?._id.toString() === cleanerId.toString());
+    const isAssigned = (cleanerId: string) => selectedCleaners.some((obj: any) => obj?._id.toString() === cleanerId.toString());
 
     // COLOR MAP BASED ON FIRST LETTER
     const getColor = (letter: string) => {
@@ -79,18 +71,14 @@ const CleanerListModal = ({
     const removeCleaner = async (cleaner: any) => {
         const res = await unAssignCleaner(cleaner?._id, selectedBookingId);
 
-        setSelectedCleaners((prev: any) =>
-            prev.filter((c: any) => c._id.toString() !== cleaner._id.toString())
-        );
+        setSelectedCleaners((prev: any) => prev.filter((c: any) => c._id.toString() !== cleaner._id.toString()));
 
         setBooking((prev: any) =>
             prev.map((obj: any) =>
                 obj?._id === selectedBookingId
                     ? {
                           ...obj,
-                          cleanersAssigned: obj.cleanersAssigned.filter(
-                              (c: any) => c._id.toString() !== cleaner._id.toString()
-                          ),
+                          cleanersAssigned: obj.cleanersAssigned.filter((c: any) => c._id.toString() !== cleaner._id.toString()),
                           status: res?.data?.status,
                       }
                     : obj
@@ -103,20 +91,13 @@ const CleanerListModal = ({
             <div className="bg-white dark:bg-gray-900 w-full max-w-lg rounded-2xl shadow-2xl p-6">
                 {/* Header */}
                 <div className="flex justify-between items-center mb-5">
-                    <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-                        Assign Cleaner
-                    </h2>
-                    <button
-                        onClick={onClose}
-                        className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition"
-                    >
+                    <h2 className="text-xl font-semibold text-gray-800 dark:text-white">Assign Cleaner</h2>
+                    <button onClick={onClose} className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition">
                         ✕
                     </button>
                 </div>
 
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    Select a cleaner from the list below
-                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">Select a cleaner from the list below</p>
 
                 {/* Cleaner List */}
                 <div className="space-y-3 max-h-[55vh] overflow-y-auto pr-1">
@@ -142,29 +123,13 @@ const CleanerListModal = ({
                                     </div>
 
                                     <div className="space-y-0.5">
-                                        <p className="font-medium text-gray-800 dark:text-gray-200">
-                                            {c?.name}
-                                        </p>
+                                        <p className="font-medium text-gray-800 dark:text-gray-200">{c?.name}</p>
 
-                                        {c?.phone && (
-                                            <p className="text-xs text-gray-600 dark:text-gray-400">
-                                                📞 {c.phone}
-                                            </p>
-                                        )}
+                                        {c?.phone && <p className="text-xs text-gray-600 dark:text-gray-400">📞 {c.phone}</p>}
 
-                                        {c?.email && (
-                                            <p className="text-xs text-gray-600 dark:text-gray-400">
-                                                ✉️ {c.email}
-                                            </p>
-                                        )}
+                                        {c?.email && <p className="text-xs text-gray-600 dark:text-gray-400">✉️ {c.email}</p>}
 
-                                        <p
-                                            className={`text-xs mt-1 ${
-                                                assigned
-                                                    ? "text-green-600 dark:text-green-400"
-                                                    : "text-gray-500 dark:text-gray-400"
-                                            }`}
-                                        >
+                                        <p className={`text-xs mt-1 ${assigned ? "text-green-600 dark:text-green-400" : "text-gray-500 dark:text-gray-400"}`}>
                                             {assigned ? "Assigned" : "Not assigned"}
                                         </p>
                                     </div>
@@ -173,21 +138,11 @@ const CleanerListModal = ({
                                 {/* Action Button */}
                                 <div>
                                     {assigned ? (
-                                        <button
-                                            onClick={() =>
-                                                removeCleaner({ _id: c?._id, name: c?.name })
-                                            }
-                                            className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-full transition"
-                                        >
+                                        <button onClick={() => removeCleaner({ _id: c?._id, name: c?.name })} className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-full transition">
                                             <Trash2 size={16} />
                                         </button>
                                     ) : (
-                                        <button
-                                            onClick={() =>
-                                                handleSelect({ _id: c?._id, name: c.name })
-                                            }
-                                            className="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full transition"
-                                        >
+                                        <button onClick={() => handleSelect({ _id: c?._id, name: c.name })} className="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full transition">
                                             <Plus size={16} />
                                         </button>
                                     )}

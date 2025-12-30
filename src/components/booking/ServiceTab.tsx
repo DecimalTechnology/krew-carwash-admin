@@ -18,6 +18,7 @@ const ServicesTab: React.FC<ServicesTabProps> = ({ booking }) => {
     const [imageModal, setImagesModal] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [loadingImage, setLoadingImage] = useState(false);
+    
 
     const handleSessionImage = async (sessionId: string, sessionType: string, addonId: string) => {
         setLoadingImage(true);
@@ -122,9 +123,11 @@ const ServicesTab: React.FC<ServicesTabProps> = ({ booking }) => {
                                 <SessionCard
                                     key={session._id}
                                     session={session}
+                                    bookingId={booking?._id}
                                     index={index}
                                     total={totalSessions}
                                     type="PACKAGE"
+                                    addonId={''}
                                     onClick={() => {
                                         handleSessionImage(session?._id, "package", '');
                                     }}
@@ -153,13 +156,16 @@ const ServicesTab: React.FC<ServicesTabProps> = ({ booking }) => {
                                         {addon.sessions.map((session, sIndex) => (
                                             <SessionCard
                                                 onClick={() => {
+                                                    
                                                     handleSessionImage(session?._id, "addon", addon?.addonId as any);
                                                 }}
                                                 key={session._id}
                                                 session={session}
                                                 index={sIndex}
                                                 total={addon.totalSessions}
+                                                bookingId={booking?._id}
                                                 type="ADDON"
+                                                addonId={addon?.addonId}
                                             />
                                         ))}
                                     </div>

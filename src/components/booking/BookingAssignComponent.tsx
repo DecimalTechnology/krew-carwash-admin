@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 function BookingAssignComponent({
     cleaners = [],
     setCleanerModal,
@@ -20,6 +22,17 @@ function BookingAssignComponent({
     const getLetterColor = (index: number) => {
         return letterColors[index % letterColors.length];
     };
+
+    useEffect(() => {
+            const id = localStorage.getItem("bookingId");
+            if (id) {
+                  setCleanerModal(true);
+        setSelectedCleaners(cleaners);
+        setSelectedBookingId(booking?._id);
+    
+                localStorage.removeItem("bookingId");
+            }
+        }, []);
 
     const openAssignModal = () => {
         setCleanerModal(true);
