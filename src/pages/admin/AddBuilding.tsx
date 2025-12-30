@@ -198,7 +198,7 @@ function AddBuildingPage() {
             const res = await createBuilding(payload);
             if (res?.success) {
                 // Show success message
-                toastst.success("Building created successfully!");
+                toast.success("Building created successfully!");
                 navigate("/building");
             } else {
                 // Handle API error
