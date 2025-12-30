@@ -254,7 +254,7 @@ function Dashboard() {
                                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Recent Bookings</h2>
                                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Latest booking activities</p>
                             </div>
-                            <button className="text-sm text-[#5DB7AE] hover:text-[#4a9d91] font-medium">View All</button>
+                            <button onClick={()=>navigate('/bookings')} className="text-sm text-[#5DB7AE] hover:text-[#4a9d91] font-medium">View All</button>
                         </div>
                     </div>
                     <div className="overflow-x-auto">
@@ -262,7 +262,7 @@ function Dashboard() {
                             <thead className="bg-gray-50 dark:bg-gray-800">
                                 <tr>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Booking</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Location</th>
+                                    {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Location</th> */}
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Service</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
@@ -270,7 +270,7 @@ function Dashboard() {
                             </thead>
                             <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
                                 {recentBookings.map((booking: RecentBookingRow) => (
-                                    <tr key={booking.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition">
+                                    <tr key={booking.id} onClick={()=>navigate(`/bookings/`)} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition">
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex flex-col">
                                                 <span className="text-sm font-medium text-gray-900 dark:text-white">{booking.id}</span>
@@ -278,7 +278,7 @@ function Dashboard() {
                                                 <span className="text-xs text-gray-400 dark:text-gray-500">{booking.time}</span>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        {/* <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex flex-col">
                                                 <span className="text-sm text-gray-900 dark:text-white">{booking.building}</span>
                                                 <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
@@ -286,7 +286,7 @@ function Dashboard() {
                                                     {booking.location}
                                                 </span>
                                             </div>
-                                        </td>
+                                        </td> */}
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="flex flex-col">
                                                 <span className="text-sm text-gray-900 dark:text-white">{booking.service}</span>
@@ -319,7 +319,7 @@ function Dashboard() {
                     </div>
                     <div className="p-6 space-y-4">
                         {topCleaners.map((cleaner: CleanerRow, index: number) => (
-                            <div key={index} className="flex items-center gap-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                            <div onClick={()=>{navigate("/cleaners")}} key={index} className="flex items-center gap-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
                                 <div className="flex items-center justify-center w-10 h-10 rounded-full bg-brand-500 text-white font-bold">{index + 1}</div>
                                 <div className="flex-1 min-w-0">
                                     <h4 className="text-sm font-medium text-gray-900 dark:text-white">{cleaner.name}</h4>
@@ -341,7 +341,7 @@ function Dashboard() {
             {/* Secondary Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Top Locations */}
-                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+                {/* <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
                     <div className="p-6 border-b border-gray-200 dark:border-gray-800">
                         <div className="flex items-center gap-2">
                             <MapPin className="w-5 h-5 text-[#5DB7AE]" />
@@ -370,10 +370,10 @@ function Dashboard() {
                             </div>
                         ))}
                     </div>
-                </div>
+                </div> */}
 
-                {/* Service Breakdown */}
-                <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+                Service Breakdown
+                {/* <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
                     <div className="p-6 border-b border-gray-200 dark:border-gray-800">
                         <div className="flex items-center gap-2">
                             <Droplet className="w-5 h-5 text-[#5DB7AE]" />
@@ -400,7 +400,7 @@ function Dashboard() {
                             </div>
                         ))}
                     </div>
-                </div>
+                </div> */}
             </div>
 
             {/* Quick Actions */}
