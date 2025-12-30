@@ -87,7 +87,7 @@ function PackageSelector({ setFormData ,handleSubmit}: IProps) {
             )}
 
             {selectedPackages?.length > 0 && <PackageList setFormData={setFormData} selectedPackages={selectedPackages} />}
-            <div className="flex justify-end mt-10">
+            {/* <div className="flex justify-end mt-10">
                 <button
                    onClick={handleSubmit}
                     type="submit"
@@ -95,7 +95,7 @@ function PackageSelector({ setFormData ,handleSubmit}: IProps) {
                 >
                     Save
                 </button>
-            </div>
+            </div> */}
         </div>
     );
 }

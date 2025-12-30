@@ -92,34 +92,14 @@ export default function Users() {
                         </div>
 
                         {/* Right side controls */}
-                        <div className="flex flex-nowrap gap-2 items-center md:flex-1 md:justify-end">
-                            {/* Sort key dropdown */}
-                            <select
-                                value={sortKey}
-                                onChange={(e) => setSortKey(e.target.value)}
-                                className="h-10 border rounded px-3 bg-white text-gray-900 dark:bg-gray-900 dark:text-white dark:border-gray-700"
-                            >
-                                <option value="name">Name</option>
-                                <option value="createdAt">Date</option>
-                            </select>
-
-                            {/* Sort order toggle */}
-                            <button
-                                type="button"
-                                onClick={() => setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))}
-                                className="h-10 border rounded px-3 flex items-center justify-center bg-white text-gray-900 dark:bg-gray-900 dark:text-white dark:border-gray-700"
-                                title={sortOrder === "asc" ? "Ascending" : "Descending"}
-                            >
-                                {sortOrder === "asc" ? "▲" : "▼"}
-                            </button>
-                        </div>
+                        
                     </div>
                 </div>
                 <div className="max-w-full overflow-x-auto">
                     {loading ? (
                         <TableLoading />
                     ) : (
-                        <Table>
+                        <Table className="bg-white dark:bg-gray-900 mt-4 rounded-xl overflow-hidden">
                             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                                 <TableRow>
                                     <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
@@ -157,7 +137,7 @@ export default function Users() {
                             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
                                 {users?.map((data: IUser, index: number) => (
                                     <TableRow key={String(data?._id)}>
-                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
+                                        <TableCell className="px-4 py-3 ml-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
                                             {index + 1}
                                         </TableCell>
                                         <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">

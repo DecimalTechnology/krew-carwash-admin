@@ -32,7 +32,7 @@ const navItems: NavItem[] = [
   { icon: <CalendarCheck />, name: "Bookings", path: "/bookings" },
   { icon: <Car />, name: "Car Types", path: "/cars" },
   { icon: <Package />, name: "Packages", path: "/packages" },
-  { icon: <Tag />, name: "Pricing", path: "/vehicles" },
+
   { icon: <AlertCircle />, name: "Issue Reports", path: "/issue-reports" },
   { icon: <Bell />, name: "Notifications", path: "/notifications" },
 ];
@@ -83,7 +83,7 @@ const AppSidebar: React.FC = () => {
               className={`menu-item group
               ${
                 isActive(nav.path)
-                  ? "menu-item-active bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white"
+                  ? "menu-item-active bg-[#4A9D91] text-white"
                   : "menu-item-inactive text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
               }`}
             >
@@ -91,7 +91,7 @@ const AppSidebar: React.FC = () => {
                 className={`relative menu-item-icon-size
                 ${
                   isActive(nav.path)
-                    ? "menu-item-icon-active text-gray-900 dark:text-white"
+                    ? "menu-item-icon-active text-white"
                     : "menu-item-icon-inactive text-gray-500 dark:text-gray-400"
                 }`}
               >
@@ -104,7 +104,9 @@ const AppSidebar: React.FC = () => {
               </span>
 
               {(isExpanded || isHovered || isMobileOpen) && (
-                <span className="menu-item-text flex items-center w-full text-gray-800 dark:text-gray-200">
+                <span className={`menu-item-text flex items-center w-full ${
+                  isActive(nav.path) ? "text-white" : "text-gray-800 dark:text-gray-200"
+                }`}>
                   {nav.name}
 
                   {/* count badge */}

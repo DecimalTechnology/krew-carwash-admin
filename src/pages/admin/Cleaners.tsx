@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
-import { Eye, Trash } from "lucide-react";
+import { Edit, Eye, Trash } from "lucide-react";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 import SearchBox from "../../components/ui/SearchBox";
 import TableLoading from "../../components/ui/table/TableLoading";
@@ -14,6 +14,7 @@ import Pagination from "../../components/ui/pagination/Pagination";
 // import CleanerViewModal from "../../components/cleaners/CleanerViewModal";
 import CleanerAddEditModal from "../../components/cleaner/CleanerEditModal";
 import { createCleaner, getAllCleaners, getPassword, updateCleaner } from "../../api/admin/cleanerService";
+import DeleteModal from "../../components/ui/modals/common/DeleteModal";
 export default function Cleaners() {
     const navigate = useNavigate();
     const [search, setSearch] = useState("");
@@ -60,11 +61,9 @@ export default function Cleaners() {
         try {
             const res = await updateCleaner(payload, cleanerId);
             const updatedCleaner = res?.data;
-            
-            setCleaners((prev) =>
-                prev.map((cl) => (cl._id === cleanerId ? updatedCleaner : cl))
-            );
-            setAddEditModalOpen(false)
+
+            setCleaners((prev) => prev.map((cl) => (cl._id === cleanerId ? updatedCleaner : cl)));
+            setAddEditModalOpen(false);
         } catch (error) {
             toast.error("Update failed");
         }
@@ -75,7 +74,7 @@ export default function Cleaners() {
         const newCleaner = res?.data;
 
         setCleaners((prev) => [...prev, newCleaner]);
-        setAddEditModalOpen(false)
+        setAddEditModalOpen(false);
     };
     const handleSubmit = (payload: any) => {
         if (selectedCleaner) {
@@ -98,14 +97,12 @@ export default function Cleaners() {
                     <div className="relative flex flex-col md:flex-row items-center justify-between gap-4 w-full">
                         {/* Tabs */}
                         <div className="flex flex-wrap gap-2 md:flex-1">
-                            {["All", "Available", "On Task", "On Leave"].map((tab) => (
+                            {["All", "Active", "Inactive"].map((tab) => (
                                 <button
                                     key={tab}
                                     onClick={() => setStatusFilter(tab.toLowerCase())}
                                     className={`px-4 py-2 rounded-lg font-medium ${
-                                        statusFilter === tab.toLowerCase()
-                                            ? "bg-brand-500 text-white"
-                                            : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                                        statusFilter === tab.toLowerCase() ? "bg-brand-500 text-white" : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                                     }`}
                                 >
                                     {tab}
@@ -138,7 +135,10 @@ export default function Cleaners() {
                                 {sortOrder === "asc" ? "▲" : "▼"}
                             </button>
                             <button
-                                onClick={() => {setAddEditModalOpen(true);setSelectedCleaner(null)}}
+                                onClick={() => {
+                                    setAddEditModalOpen(true);
+                                    setSelectedCleaner(null);
+                                }}
                                 className="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg transition"
                             >
                                 Add New Cleaner
@@ -152,43 +152,27 @@ export default function Cleaners() {
                     <Table>
                         <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                             <TableRow>
-                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">
+                                <TableCell className="pl-4 pr-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">
                                     No
                                 </TableCell>
-                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">
-                                    ID
-                                </TableCell>
-                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">
-                                    Cleaner Info
-                                </TableCell>
-                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">
-                                    Contact
-                                </TableCell>
-                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">
-                                    Status
-                                </TableCell>
-                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-center text-xs dark:text-gray-400 select-none">
-                                    Active
-                                </TableCell>
-                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-center text-xs dark:text-gray-400 select-none">
-                                    Credentials
-                                </TableCell>
-                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-center text-xs dark:text-gray-400 select-none">
-                                    Actions
-                                </TableCell>
+                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">ID</TableCell>
+                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">Cleaner Info</TableCell>
+                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">Contact</TableCell>
+
+                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-center text-xs dark:text-gray-400 select-none">Active</TableCell>
+                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-center text-xs dark:text-gray-400 select-none">Credentials</TableCell>
+                                <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-center text-xs dark:text-gray-400 select-none">Actions</TableCell>
                             </TableRow>
                         </TableHeader>
 
                         <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
                             {cleaners?.map((cl, index) => (
                                 <TableRow key={cl._id}>
-                                    <TableCell className="px-1.5 py-2.5 text-gray-800 text-start text-sm dark:text-white/90">
+                                    <TableCell className="pl-4 pr-1.5 py-2.5 text-gray-800 text-start text-sm dark:text-white/90">
                                         {index + 1}
                                     </TableCell>
 
-                                    <TableCell className="px-1.5 py-2.5 text-gray-800 text-start text-sm dark:text-white/90 font-mono">
-                                        {cl.cleanerId}
-                                    </TableCell>
+                                    <TableCell className="px-1.5 py-2.5 text-gray-800 text-start text-sm dark:text-white/90 font-mono">{cl.cleanerId}</TableCell>
 
                                     <TableCell className="px-1.5 py-2.5 text-gray-800 text-start text-sm dark:text-white/90">
                                         <div className="flex items-center gap-2">
@@ -207,18 +191,9 @@ export default function Cleaners() {
                                         </div>
                                     </TableCell>
 
-                                    <TableCell className="px-1.5 py-2.5 text-gray-500 text-start text-sm dark:text-gray-400">
-                                        {cl.status}
-                                    </TableCell>
-
                                     <TableCell className="px-1.5 py-2.5 text-center">
                                         <div className="flex items-center justify-center">
-                                            <Switch
-                                                checked={cl.isActive}
-                                                onChange={() => handleUpdate({ isActive: !cl.isActive }, cl._id)}
-                                                size="sm"
-                                                color="success"
-                                            />
+                                            <Switch checked={cl.isActive} onChange={() => handleUpdate({ isActive: !cl.isActive }, cl._id)} size="sm" color="success" />
                                         </div>
                                     </TableCell>
 
@@ -227,7 +202,7 @@ export default function Cleaners() {
                                             className="px-2.5 py-1 bg-brand-500 text-white rounded-md hover:bg-brand-600 text-xs"
                                             onClick={async () => {
                                                 const res = await getPassword(cl?._id);
-                                                const text = `Cleaner ID: ${cl.cleanerId}\nPassword: ${res?.data?.password }`;
+                                                const text = `Cleaner ID: ${cl.cleanerId}\nPassword: ${res?.data?.password}`;
                                                 navigator.clipboard.writeText(text);
                                                 toast.success("Credentials copied!");
                                             }}
@@ -244,6 +219,16 @@ export default function Cleaners() {
                                                 title="View Details"
                                             >
                                                 <Eye size={16} />
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    setSelectedCleaner(cl);
+                                                    setAddEditModalOpen(true);
+                                                }}
+                                                className="p-1.5 text-[#5DB7AE] hover:text-[#4a9d91] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+                                                title="View Details"
+                                            >
+                                                <Edit size={16} />
                                             </button>
                                             <button
                                                 onClick={() => {
@@ -266,19 +251,19 @@ export default function Cleaners() {
             <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700">
                 <Pagination currentPage={page} totalPages={totalPages} onPageChange={(pg: number) => setPage(pg)} />
             </div>
-            {/* {deleteModalOpen && (
-                <DeleteModal
-                    type="Cleaner"
-                    isOpen={deleteModalOpen}
-                    handleDelete={async (confirm: boolean) => {
-                        if (confirm) {
-                            await updateCleaner({ isActive: false }, selectedCleanerId);
-                            setRefresh(!refresh);
-                        }
-                        setDeleteModalOpen(false);
-                    }}
-                />
-            )} */}
+
+            <DeleteModal
+                type="Cleaner"
+                isOpen={deleteModalOpen}
+                handleDelete={async (confirm: boolean) => {
+                    if (confirm) {
+                        await updateCleaner({ isDeleted: true }, selectedCleanerId);
+                        setCleaners((prev: any) => prev.filter((obj: any) => obj?._id !== selectedCleanerId));
+                    }
+                    setDeleteModalOpen(false);
+                }}
+            />
+
             {addEditModalOpen && <CleanerAddEditModal cleaner={selectedCleaner} onClose={() => setAddEditModalOpen(false)} onSubmit={handleSubmit} />}
         </div>
     );

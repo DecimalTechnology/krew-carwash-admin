@@ -50,7 +50,8 @@ export default function Buildings() {
                 });
                 
                 setBuildings(res?.data?.data || res?.data || []);
-                setTotalPages(res?.data?.pagination?.totalPages || res?.pagination?.totalPages || 1);
+                setTotalPages(res?.pagination?.totalPages || res?.pagination?.totalPages || 1);
+                console.log(res)
                 setLoading(false);
             } catch (error) {
                 setLoading(false);
