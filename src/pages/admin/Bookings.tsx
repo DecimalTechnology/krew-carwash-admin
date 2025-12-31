@@ -1,11 +1,10 @@
 import { Eye, Trash } from "lucide-react";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { deleteBooking, getAllBooking } from "../../api/admin/bookingServie";
 import BookingAssignComponent from "../../components/booking/BookingAssignComponent";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 import { getStatusColor } from "../../utils/getStatusColorOfBooking";
-
 import Pagination from "../../components/ui/pagination/Pagination";
 import CleanerListModal from "../../components/booking/CleanersListModal";
 import { useNavigate } from "react-router";
@@ -13,7 +12,7 @@ import DeleteModal from "../../components/ui/modals/common/DeleteModal";
 
 function Bookings() {
     const [booking, setBooking] = useState([]);
-    const [selectedStatus, setSelectedStatus] = useState("ALL");
+    const [selectedStatus, setSelectedStatus] = useState("PENDING");
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(15);
@@ -22,20 +21,35 @@ function Bookings() {
     const [selectedBookingId, setSelectedBookingId] = useState("");
     const [bookingId, setBookingId] = useState("");
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    
+    // New filter states
+    const [paymentStatusFilter, setPaymentStatusFilter] = useState("COMPLETED");
+    
 
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await getAllBooking({ status: selectedStatus, search, page });
+            const filters: any = {
+                status: selectedStatus === "ALL" ? undefined : selectedStatus,
+                search,
+                page,
+            };
+
+            // Add payment status filter if not "ALL"
+            if (paymentStatusFilter !== "ALL") {
+                filters.paymentStatus = paymentStatusFilter;
+            }
+
+         
+
+            const res = await getAllBooking(filters);
             setBooking(res?.data);
             setTotalPages(res?.totalPages);
         };
 
         fetchData();
-    }, [search, selectedStatus, page]);
-
-    
+    }, [search, selectedStatus, page, paymentStatusFilter]);
 
     return (
         <div className="w-full text-gray-800 dark:text-gray-200">
@@ -54,21 +68,47 @@ function Bookings() {
                 border border-gray-100 dark:border-gray-700 
                 rounded-xl mb-4"
             >
-                <input
-                    type="text"
-                    placeholder="Search Booking Ids"
-                    className="w-72 px-4 py-2 text-sm rounded-lg 
-                    bg-white dark:bg-gray-800
-                    border border-gray-200 dark:border-gray-600
-                    text-gray-800 dark:text-gray-200
-                    placeholder-gray-400 dark:placeholder-gray-500
-                    focus:border-black dark:focus:border-white
-                    focus:outline-none"
-                    onChange={(e: any) => setSearch(e.target.value)}
-                />
+                <div className="flex items-center gap-4">
+                    <input
+                        type="text"
+                        placeholder="Search Booking Ids"
+                        className="w-64 px-4 py-2 text-sm rounded-lg 
+                        bg-white dark:bg-gray-800
+                        border border-gray-200 dark:border-gray-600
+                        text-gray-800 dark:text-gray-200
+                        placeholder-gray-400 dark:placeholder-gray-500
+                        focus:border-black dark:focus:border-white
+                        focus:outline-none"
+                        onChange={(e: any) => setSearch(e.target.value)}
+                    />
+
+                    {/* Payment Status Dropdown */}
+                    <div className="flex flex-col">
+                        <label className="text-xs text-gray-500 dark:text-gray-400 mb-1">Payment Status</label>
+                        <select
+                            value={paymentStatusFilter}
+                            onChange={(e) => setPaymentStatusFilter(e.target.value)}
+                            className="w-40 px-3 py-2 text-sm rounded-lg 
+                            bg-white dark:bg-gray-800
+                            border border-gray-200 dark:border-gray-600
+                            text-gray-800 dark:text-gray-200
+                            focus:border-black dark:focus:border-white
+                            focus:outline-none"
+                        >
+                            <option value="ALL">ALL  </option>
+                            <option value="PENDING">PENDING</option>
+                            <option value="COMPLETED">COMPLETED</option>
+                            <option value="FAILED">FAILED</option>
+                            <option value="CANCELLED">CANCELLED</option>
+                        </select>
+                    </div>
+
+                    {/* Booking Status Dropdown */}
+                    
+                </div>
 
                 <div className="flex items-center gap-2 text-xs font-medium select-none">
-                    {["ALL", "PENDING", "ASSIGNED", "IN PROGRESS", "COMPLETED"].map((item) => (
+                    {["ALL",'CANCELLED','FAILED', "PENDING", "ASSIGNED", "IN PROGRESS", "COMPLETED"].map((item) => (
                         <button
                             key={item}
                             onClick={() => {

@@ -54,17 +54,10 @@ const BookingDetails = () => {
     }
 
     if (error || !booking) {
-        return (
-            <div className="min-h-screen flex flex-col items-center justify-center p-4">
-                <div className="bg-red-50 p-6 rounded-2xl flex flex-col items-center max-w-md text-center">
-                    <AlertCircle className="w-12 h-12 text-red-500 mb-4" />
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Error Loading Booking</h2>
-                    <p className="text-gray-600 dark:text-gray-400">{error || "Booking information unavailable"}</p>
-                    <button onClick={() => window.location.reload()} className="mt-6 px-6 py-2 bg-white border border-gray-200 rounded-xl font-medium text-gray-700 hover:bg-gray-50">
-                        Try Again
-                    </button>
-                </div>
-            </div>
+        return (<div className="w-full h-full">
+
+            <Loader2/>
+        </div>
         );
     }
 
@@ -76,20 +69,29 @@ const BookingDetails = () => {
                     <div className="pt-6 pb-2">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                             <div className="flex items-start gap-4">
+                                {/* Icon */}
                                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#5DB7AE] to-[#4a9d91] text-white flex items-center justify-center shadow-lg shadow-[#5DB7AE]/20 shrink-0">
                                     <Package className="w-7 h-7" />
                                 </div>
+
+                                {/* Details */}
                                 <div>
                                     <div className="flex items-center gap-3 flex-wrap">
-                                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">{booking.package?.packageId?.name}</h1>
+                                        {/* Title */}
+                                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Booking Details</h1>
+
+                                        {/* Booking Status */}
                                         <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold ring-1 ring-inset ${getStatusStyles(booking.status)}`}>
                                             {booking.status}
                                         </span>
+
+                                        {/* Payment Status */}
+                                        
                                     </div>
+
+                                    {/* Meta */}
                                     <div className="flex items-center gap-3 mt-1 text-sm text-gray-500 dark:text-gray-400">
                                         <span className="font-mono bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-gray-600 dark:text-gray-300">#{booking.bookingId}</span>
-                                        <span className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></span>
-                                        <span>{booking.bookingType}</span>
                                     </div>
                                 </div>
                             </div>

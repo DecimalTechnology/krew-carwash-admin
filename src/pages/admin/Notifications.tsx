@@ -99,7 +99,7 @@ const AdminNotificationsPage: React.FC = () => {
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <div className="relative hidden md:block">
+                        {/* <div className="relative hidden md:block">
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                             <input
                                 type="text"
@@ -113,7 +113,7 @@ const AdminNotificationsPage: React.FC = () => {
                                     <X size={16} />
                                 </button>
                             )}
-                        </div>
+                        </div> */}
 
                         <button 
                             onClick={fetchNotifications} 
@@ -149,12 +149,12 @@ const AdminNotificationsPage: React.FC = () => {
                             </button>
                         )}
 
-                        <button 
+                        {/* <button 
                             onClick={() => setShowSettings(!showSettings)} 
                             className="p-2.5 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors"
                         >
                             <Settings size={20} className="text-gray-600" />
-                        </button>
+                        </button> */}
                     </div>
                 </div>
             </div>

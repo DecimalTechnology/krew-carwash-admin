@@ -142,7 +142,7 @@ const CleanerListModal = ({ isOpen, onClose, selectedCleaners, setSelectedCleane
                                             <Trash2 size={16} />
                                         </button>
                                     ) : (
-                                        <button onClick={() => handleSelect({ _id: c?._id, name: c.name })} className="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full transition">
+                                        <button  onClick={() => handleSelect({ _id: c?._id, name: c.name })} className="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full transition">
                                             <Plus size={16} />
                                         </button>
                                     )}

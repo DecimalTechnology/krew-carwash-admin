@@ -4,7 +4,6 @@ import { BookingData } from "../../interface/IBooking";
 import { formatDate } from "./FormDate";
 import DetailRow from "./DetailRow";
 
-
 interface OverviewTabProps {
     booking: BookingData;
 }
@@ -23,8 +22,17 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ booking }) => {
                         <Calendar className="w-6 h-6" />
                     </div>
                     <div>
-                        <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Start Date</p>
-                        <p className="text-lg font-bold text-gray-900 dark:text-white">{formatDate(booking.startDate)}</p>
+                        <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Start Date & Time</p>
+                        <p className="text-lg font-bold text-gray-900 dark:text-white">
+                            {new Date(booking.startDate).toLocaleString("en-IN", {
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true,
+                            })}
+                        </p>
                     </div>
                 </div>
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm flex items-center gap-4">
