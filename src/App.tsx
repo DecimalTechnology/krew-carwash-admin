@@ -13,7 +13,7 @@ import Profile from "./pages/admin/Profile";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import Cleaners from "./pages/admin/Cleaners";
 import Bookings from "./pages/admin/Bookings";
-import BookingDetails from "./pages/admin/bookingDetails";
+import BookingDetails from "./pages/admin/BookingDetails";
 import CleanerDetails from "./pages/admin/CleanerDetails";
 import IssueReports from "./pages/admin/IssueReports";
 import Notifications from "./pages/admin/Notifications";
