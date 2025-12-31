@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 
-// export const  BACKEND_URL = 'http://15.206.195.131:5000'
-export const  BACKEND_URL = 'http://localhost:5000'
+ export const  BACKEND_URL = 'http://15.206.195.131:5000'
+// export const  BACKEND_URL = 'http://localhost:5000'
 export const BASE_URL  = `${BACKEND_URL}/api/v1`;
 
 // export const BASE_URL = `https://krew-car-wash-server.onrender.com/api/v1`;
