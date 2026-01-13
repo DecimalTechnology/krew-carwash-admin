@@ -35,3 +35,13 @@ export const updateBuilding = async (data: Record<string, any>, buildingId: stri
         throw new Error(message);
     }
 };
+export const getBuildingById = async (buildingId:string) => {
+    try {
+        const result = await baseUrl.get(`/admin/buildings/${buildingId}` );
+        return result?.data;
+    } catch (error) {
+        const message = errorHandler(error);
+        toast.error(message);
+        throw new Error(message);
+    }
+};

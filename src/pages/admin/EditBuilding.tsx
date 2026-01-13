@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
-import { createBuilding } from "../../api/admin/buildingService";
+import { useNavigate, useParams } from "react-router";
+import { getBuildingById, updateBuilding } from "../../api/admin/buildingService";
 import Switch from "../../components/ui/switch/Switch";
 import PackageSelector from "../../components/building/PackageSelector";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
@@ -9,20 +9,36 @@ import toast from "react-hot-toast";
 
 // Validation error type
 interface ValidationErrors {
-  buildingName?: string;
-  address?: string;
-  city?: string;
-  area?: string;
-  contactNumbers?: string;
-  packages?: string;
-  general?: string;
+    buildingName?: string;
+    address?: string;
+    city?: string;
+    area?: string;
+    contactNumbers?: string;
+    packages?: string;
+    general?: string;
 }
 
-function AddBuildingPage() {
+// Building interface
+interface Building {
+    _id: string;
+    buildingName: string;
+    address: string;
+    city: string;
+    area: string;
+    isActive: boolean;
+    contactNumbers: string[];
+    packages: any[];
+    [key: string]: any;
+}
+
+function EditBuildingPage() {
     const navigate = useNavigate();
+    const { id } = useParams<{ id: string }>();
+
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
-    const [selectedPackages,setSelectedPackages] = useState<any>()
+    const [selectedPackages, setSelectedPackages] = useState<any>();
 
     const [formData, setFormData] = useState({
         buildingName: "",
@@ -32,10 +48,53 @@ function AddBuildingPage() {
         isActive: true,
         contactNumbers: [""],
         packages: [],
-        
     });
 
-   
+    // Fetch building details on component mount
+    useEffect(() => {
+        const fetchBuildingDetails = async () => {
+            if (!id) {
+                toast.error("Building ID is required");
+                navigate("/building");
+                return;
+            }
+
+            setIsLoading(true);
+            try {
+                const res = await getBuildingById(id);
+
+                if (res?.success && res.data) {
+                    const buildingData: Building = res.data;
+
+                    // Format contact numbers - ensure we have at least one empty string if no contacts
+                    const contactNumbers = buildingData.contactNumbers && buildingData.contactNumbers.length > 0 ? buildingData.contactNumbers : [""];
+
+                    setFormData({
+                        buildingName: buildingData.buildingName || "",
+                        address: buildingData.address || "",
+                        city: buildingData.city || "",
+                        area: buildingData.area || "",
+                        isActive: buildingData.isActive !== undefined ? buildingData.isActive : true,
+                        contactNumbers: contactNumbers,
+                        packages: buildingData.packages || [],
+                    });
+
+                    setSelectedPackages(res?.packages);
+                    console.log(res?.packages, "res pacakges");
+                } else {
+                    toast.error(res?.message || "Failed to fetch building details");
+                    navigate("/building");
+                }
+            } catch (error: any) {
+                toast.error(error.message || "An error occurred while fetching building details");
+                navigate("/building");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchBuildingDetails();
+    }, [id, navigate]);
 
     // Clear validation errors when form data changes
     useEffect(() => {
@@ -91,8 +150,8 @@ function AddBuildingPage() {
         }
 
         // Validate contact numbers
-        const validContacts = formData.contactNumbers.filter(num => num.trim() !== "");
-        
+        const validContacts = formData.contactNumbers.filter((num) => num.trim() !== "");
+
         if (validContacts.length === 0) {
             errors.contactNumbers = "At least one contact number is required";
             isValid = false;
@@ -100,11 +159,11 @@ function AddBuildingPage() {
             // Validate each contact number format
             for (const contact of validContacts) {
                 // Remove spaces, dashes, and parentheses
-                const cleanNumber = contact.replace(/[\s\-()]/g, '');
-                
+                const cleanNumber = contact.replace(/[\s\-()]/g, "");
+
                 // Check if it's a valid phone number (8-15 digits, may start with +)
                 const phoneRegex = /^\+?[0-9]{8,15}$/;
-                
+
                 if (!phoneRegex.test(cleanNumber)) {
                     errors.contactNumbers = `Invalid phone number format: ${contact}. Must be 8-15 digits`;
                     isValid = false;
@@ -114,7 +173,7 @@ function AddBuildingPage() {
         }
 
         // Validate duplicate contact numbers
-        const uniqueContacts = new Set(validContacts.map(num => num.trim()));
+        const uniqueContacts = new Set(validContacts.map((num) => num.trim()));
         if (uniqueContacts.size !== validContacts.length) {
             errors.contactNumbers = "Duplicate contact numbers are not allowed";
             isValid = false;
@@ -132,13 +191,13 @@ function AddBuildingPage() {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        
+
         // Special handling for numeric fields (if needed)
         let processedValue = value;
-        
-        setFormData((prev) => ({ 
-            ...prev, 
-            [name]: processedValue 
+
+        setFormData((prev) => ({
+            ...prev,
+            [name]: processedValue,
         }));
     };
 
@@ -148,8 +207,8 @@ function AddBuildingPage() {
 
     const handleContactChange = (index: number, value: string) => {
         // Allow only numbers, plus sign, spaces, dashes, and parentheses
-        const sanitizedValue = value.replace(/[^0-9+\-\s()]/g, '');
-        
+        const sanitizedValue = value.replace(/[^0-9+\-\s()]/g, "");
+
         const newContacts = [...formData.contactNumbers];
         newContacts[index] = sanitizedValue;
         setFormData((prev) => ({ ...prev, contactNumbers: newContacts }));
@@ -172,13 +231,18 @@ function AddBuildingPage() {
     };
 
     const handleSubmit = async () => {
+        if (!id) {
+            toast.error("Building ID is missing");
+            return;
+        }
+
         if (!validateForm()) {
             // Scroll to first error
-            const firstErrorElement = document.querySelector('.error-message');
+            const firstErrorElement = document.querySelector(".error-message");
             if (firstErrorElement) {
-                firstErrorElement.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'center' 
+                firstErrorElement.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
                 });
             }
             return;
@@ -193,27 +257,25 @@ function AddBuildingPage() {
                 city: formData.city.trim(),
                 area: formData.area.trim(),
                 isActive: formData.isActive,
-                contactNumbers: formData.contactNumbers
-                    .filter((num) => num.trim() !== "")
-                    .map(num => num.trim()),
+                contactNumbers: formData.contactNumbers.filter((num) => num.trim() !== "").map((num) => num.trim()),
                 packages: formData?.packages,
             };
 
-            const res = await createBuilding(payload);
+            const res = await updateBuilding(id, payload);
             if (res?.success) {
                 // Show success message
-                toast.success("Building created successfully!");
+                toast.success("Building updated successfully!");
                 navigate("/building");
             } else {
                 // Handle API error
                 setValidationErrors({
-                    general: res?.message || "Failed to create building. Please try again."
+                    general: res?.message || "Failed to update building. Please try again.",
                 });
             }
         } catch (error: any) {
-            console.error("Building creation error:", error);
+            console.error("Building update error:", error);
             setValidationErrors({
-                general: error.message || "An unexpected error occurred. Please try again."
+                general: error.message || "An unexpected error occurred. Please try again.",
             });
         } finally {
             setIsSubmitting(false);
@@ -221,22 +283,38 @@ function AddBuildingPage() {
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter' && !isSubmitting) {
+        if (e.key === "Enter" && !isSubmitting) {
             e.preventDefault();
             handleSubmit();
         }
     };
+
+    // Show loading state
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-gray-50 py-10">
+                <div className="max-w-6xl mx-auto px-4">
+                    <div className="flex items-center justify-center h-64">
+                        <div className="text-center">
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-500 mx-auto"></div>
+                            <p className="mt-4 text-gray-600">Loading building details...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-gray-50 py-10" onKeyDown={handleKeyDown}>
             <div className="max-w-6xl mx-auto px-4">
                 {/* Header Section */}
                 <Breadcrumb
-                    pageName="Add Building"
+                    pageName="Edit Building"
                     elements={[
                         { page: "Home", path: "/" },
                         { page: "Buildings", path: "/building" },
-                        { page: "Add Building", path: "" },
+                        { page: "Edit Building", path: "" },
                     ]}
                 />
 
@@ -245,7 +323,11 @@ function AddBuildingPage() {
                     <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg error-message">
                         <div className="flex items-center">
                             <svg className="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                <path
+                                    fillRule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                    clipRule="evenodd"
+                                />
                             </svg>
                             <span className="text-red-700 font-medium">{validationErrors.general}</span>
                         </div>
@@ -272,22 +354,22 @@ function AddBuildingPage() {
                                         required
                                         maxLength={100}
                                         className={`w-full border rounded-lg p-3 text-base focus:ring-2 focus:ring-brand-500 outline-none transition-colors ${
-                                            validationErrors.buildingName 
-                                            ? 'border-red-500 focus:ring-red-500' 
-                                            : 'border-gray-300 focus:ring-brand-500'
+                                            validationErrors.buildingName ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500"
                                         }`}
                                     />
                                     {validationErrors.buildingName && (
                                         <div className="mt-1 flex items-center">
                                             <svg className="w-4 h-4 text-red-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                    clipRule="evenodd"
+                                                />
                                             </svg>
                                             <span className="text-sm text-red-600">{validationErrors.buildingName}</span>
                                         </div>
                                     )}
-                                    <div className="mt-1 text-xs text-gray-500 text-right">
-                                        {formData.buildingName.length}/100 characters
-                                    </div>
+                                    <div className="mt-1 text-xs text-gray-500 text-right">{formData.buildingName.length}/100 characters</div>
                                 </div>
 
                                 {/* Address */}
@@ -301,22 +383,22 @@ function AddBuildingPage() {
                                         onChange={handleChange}
                                         maxLength={200}
                                         className={`w-full border rounded-lg p-3 text-base focus:ring-2 focus:ring-brand-500 outline-none transition-colors ${
-                                            validationErrors.address 
-                                            ? 'border-red-500 focus:ring-red-500' 
-                                            : 'border-gray-300 focus:ring-brand-500'
+                                            validationErrors.address ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500"
                                         }`}
                                     />
                                     {validationErrors.address && (
                                         <div className="mt-1 flex items-center">
                                             <svg className="w-4 h-4 text-red-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                    clipRule="evenodd"
+                                                />
                                             </svg>
                                             <span className="text-sm text-red-600">{validationErrors.address}</span>
                                         </div>
                                     )}
-                                    <div className="mt-1 text-xs text-gray-500 text-right">
-                                        {formData.address.length}/200 characters
-                                    </div>
+                                    <div className="mt-1 text-xs text-gray-500 text-right">{formData.address.length}/200 characters</div>
                                 </div>
 
                                 {/* City & Area */}
@@ -334,22 +416,22 @@ function AddBuildingPage() {
                                             required
                                             maxLength={50}
                                             className={`w-full border rounded-lg p-3 text-base focus:ring-2 focus:ring-brand-500 outline-none transition-colors ${
-                                                validationErrors.city 
-                                                ? 'border-red-500 focus:ring-red-500' 
-                                                : 'border-gray-300 focus:ring-brand-500'
+                                                validationErrors.city ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500"
                                             }`}
                                         />
                                         {validationErrors.city && (
                                             <div className="mt-1 flex items-center">
                                                 <svg className="w-4 h-4 text-red-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                    <path
+                                                        fillRule="evenodd"
+                                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                        clipRule="evenodd"
+                                                    />
                                                 </svg>
                                                 <span className="text-sm text-red-600">{validationErrors.city}</span>
                                             </div>
                                         )}
-                                        <div className="mt-1 text-xs text-gray-500 text-right">
-                                            {formData.city.length}/50 characters
-                                        </div>
+                                        <div className="mt-1 text-xs text-gray-500 text-right">{formData.city.length}/50 characters</div>
                                     </div>
 
                                     <div>
@@ -365,22 +447,22 @@ function AddBuildingPage() {
                                             required
                                             maxLength={50}
                                             className={`w-full border rounded-lg p-3 text-base focus:ring-2 focus:ring-brand-500 outline-none transition-colors ${
-                                                validationErrors.area 
-                                                ? 'border-red-500 focus:ring-red-500' 
-                                                : 'border-gray-300 focus:ring-brand-500'
+                                                validationErrors.area ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-brand-500"
                                             }`}
                                         />
                                         {validationErrors.area && (
                                             <div className="mt-1 flex items-center">
                                                 <svg className="w-4 h-4 text-red-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                    <path
+                                                        fillRule="evenodd"
+                                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                        clipRule="evenodd"
+                                                    />
                                                 </svg>
                                                 <span className="text-sm text-red-600">{validationErrors.area}</span>
                                             </div>
                                         )}
-                                        <div className="mt-1 text-xs text-gray-500 text-right">
-                                            {formData.area.length}/50 characters
-                                        </div>
+                                        <div className="mt-1 text-xs text-gray-500 text-right">{formData.area.length}/50 characters</div>
                                     </div>
                                 </div>
                             </div>
@@ -393,9 +475,7 @@ function AddBuildingPage() {
                                         <label className="block text-base font-semibold text-gray-800">
                                             Contact Numbers <span className="text-red-500">*</span>
                                         </label>
-                                        <span className="text-sm text-gray-500">
-                                            {formData.contactNumbers.filter(num => num.trim() !== "").length}/5 contacts
-                                        </span>
+                                        <span className="text-sm text-gray-500">{formData.contactNumbers.filter((num) => num.trim() !== "").length}/5 contacts</span>
                                     </div>
                                     <div className="space-y-3">
                                         {formData.contactNumbers.map((num, index) => (
@@ -408,15 +488,17 @@ function AddBuildingPage() {
                                                         onChange={(e) => handleContactChange(index, e.target.value)}
                                                         maxLength={20}
                                                         className={`w-full border rounded-lg p-3 text-base focus:ring-2 focus:ring-[#4B164C] outline-none transition-colors ${
-                                                            validationErrors.contactNumbers && index === 0
-                                                            ? 'border-red-500 focus:ring-red-500' 
-                                                            : 'border-gray-300 focus:ring-[#4B164C]'
+                                                            validationErrors.contactNumbers && index === 0 ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-[#4B164C]"
                                                         }`}
                                                     />
                                                     {validationErrors.contactNumbers && index === 0 && (
                                                         <div className="mt-1 flex items-center">
                                                             <svg className="w-4 h-4 text-red-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                                                <path
+                                                                    fillRule="evenodd"
+                                                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                                                    clipRule="evenodd"
+                                                                />
                                                             </svg>
                                                             <span className="text-sm text-red-600">{validationErrors.contactNumbers}</span>
                                                         </div>
@@ -435,17 +517,15 @@ function AddBuildingPage() {
                                             </div>
                                         ))}
                                     </div>
-                                    <button 
-                                        type="button" 
+                                    <button
+                                        type="button"
                                         onClick={addContact}
                                         disabled={formData.contactNumbers.length >= 5 || isSubmitting}
                                         className="mt-3 px-5 py-2 bg-brand-500 text-white rounded-md hover:bg-brand-600 text-sm font-medium transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
                                     >
                                         + Add Contact
                                     </button>
-                                    <div className="mt-2 text-sm text-gray-500">
-                                        Maximum 5 contact numbers allowed
-                                    </div>
+                                    <div className="mt-2 text-sm text-gray-500">Maximum 5 contact numbers allowed</div>
                                 </div>
 
                                 {/* Active Status */}
@@ -456,43 +536,41 @@ function AddBuildingPage() {
                                             <p className="text-sm text-gray-500">Set the building as active or inactive</p>
                                         </div>
                                         <div className="flex items-center gap-3">
-                                            <Switch 
-                                                checked={formData.isActive} 
-                                                onChange={handleToggleActive} 
-                                                disabled={isSubmitting}
-                                            />
-                                            <span className={`text-base font-semibold ${formData.isActive ? "text-green-600" : "text-red-600"}`}>
-                                                {formData.isActive ? "Active" : "Inactive"}
-                                            </span>
+                                            <Switch checked={formData.isActive} onChange={handleToggleActive} disabled={isSubmitting} />
+                                            <span className={`text-base font-semibold ${formData.isActive ? "text-green-600" : "text-red-600"}`}>{formData.isActive ? "Active" : "Inactive"}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </form>
-                    
+
                     {/* Package Selector with validation */}
                     <div className="px-8 pb-8">
                         {validationErrors.packages && (
                             <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
                                 <div className="flex items-center">
                                     <svg className="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                            clipRule="evenodd"
+                                        />
                                     </svg>
                                     <span className="text-red-700 font-medium">{validationErrors.packages}</span>
                                 </div>
                             </div>
                         )}
-                        
-                        <PackageSelector 
-                            handleSubmit={handleSubmit} 
+
+                        <PackageSelector
+                            handleSubmit={handleSubmit}
                             setFormData={setFormData}
                             isSubmitting={isSubmitting}
                             validationError={validationErrors.packages}
                             selectedPackages={selectedPackages}
-                            setSelectedPackages={setSelectedPackages }
+                            setSelectedPackages={setSelectedPackages}
                         />
-                        
+
                         {/* Submit Button */}
                         <div className="mt-8 pt-6 border-t border-gray-200">
                             <div className="flex justify-end gap-4">
@@ -514,12 +592,16 @@ function AddBuildingPage() {
                                         <>
                                             <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                <path
+                                                    className="opacity-75"
+                                                    fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                                ></path>
                                             </svg>
-                                            Creating...
+                                            Updating...
                                         </>
                                     ) : (
-                                        'Create Building'
+                                        "Update Building"
                                     )}
                                 </button>
                             </div>
@@ -531,4 +613,4 @@ function AddBuildingPage() {
     );
 }
 
-export default AddBuildingPage;
+export default EditBuildingPage;

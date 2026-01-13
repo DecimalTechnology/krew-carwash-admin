@@ -17,6 +17,7 @@ import BookingDetails from "./pages/admin/BookingDetails";
 import CleanerDetails from "./pages/admin/CleanerDetails";
 import IssueReports from "./pages/admin/IssueReports";
 import Notifications from "./pages/admin/Notifications";
+import EditBuildingPage from "./pages/admin/EditBuilding";
 
 export default function App() {
     return (
@@ -74,6 +75,7 @@ export default function App() {
                     <Route index element={<Dashoard />} />
                     <Route path="users" element={<Users />} />
                     <Route path="building" element={<Building />} />
+                    <Route path="edit-building/:id" element={<EditBuildingPage />} />
                     <Route path="cars" element={<Cars />} />
                     <Route path="packages" element={<Packages />} />
                     <Route path="add-building" element={<AddBuildingPage />} />
