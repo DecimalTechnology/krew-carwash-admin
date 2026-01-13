@@ -15,6 +15,7 @@ import Pagination from "../../components/ui/pagination/Pagination";
 import CleanerAddEditModal from "../../components/cleaner/CleanerEditModal";
 import { createCleaner, getAllCleaners, getPassword, updateCleaner } from "../../api/admin/cleanerService";
 import DeleteModal from "../../components/ui/modals/common/DeleteModal";
+import ExportAndFilter from "../../components/package/ExportAndFilter";
 export default function Cleaners() {
     const navigate = useNavigate();
     const [search, setSearch] = useState("");
@@ -33,6 +34,7 @@ export default function Cleaners() {
 
     const [addEditModalOpen, setAddEditModalOpen] = useState(false);
     const [selectedCleaner, setSelectedCleaner] = useState<any>(null);
+    const [cleanerId, setCleanerId] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -92,6 +94,18 @@ export default function Cleaners() {
                     { page: "Cleaners", path: "/cleaners" },
                 ]}
             />
+            <div className="flex w-full flex-row justify-between mt-8 mb-8">
+                <div>
+                    <select value={cleanerId} onChange={(e: any) => setCleanerId(e.target.value)} className="px-3 py-2 border rounded-lg text-sm bg-white dark:bg-gray-900">
+                        <option value="">All</option>
+                        {cleaners?.map((obj: any) => {
+                            return <option value={obj?._id}>{obj?.name}</option>;
+                        })}
+                    </select>
+                </div>
+
+                <ExportAndFilter cleanerId={cleanerId} />
+            </div>
             <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
                 <div className="p-4">
                     <div className="relative flex flex-col md:flex-row items-center justify-between gap-4 w-full">
@@ -146,15 +160,14 @@ export default function Cleaners() {
                         </div>
                     </div>
                 </div>
+
                 {loading ? (
                     <TableLoading />
                 ) : (
                     <Table>
                         <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                             <TableRow>
-                                <TableCell className="pl-4 pr-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">
-                                    No
-                                </TableCell>
+                                <TableCell className="pl-4 pr-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">No</TableCell>
                                 <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">ID</TableCell>
                                 <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">Cleaner Info</TableCell>
                                 <TableCell className="px-0.5 py-2.5 font-medium text-gray-500 text-start text-xs dark:text-gray-400 select-none">Contact</TableCell>
@@ -168,9 +181,7 @@ export default function Cleaners() {
                         <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
                             {cleaners?.map((cl, index) => (
                                 <TableRow key={cl._id}>
-                                    <TableCell className="pl-4 pr-1.5 py-2.5 text-gray-800 text-start text-sm dark:text-white/90">
-                                        {index + 1}
-                                    </TableCell>
+                                    <TableCell className="pl-4 pr-1.5 py-2.5 text-gray-800 text-start text-sm dark:text-white/90">{index + 1}</TableCell>
 
                                     <TableCell className="px-1.5 py-2.5 text-gray-800 text-start text-sm dark:text-white/90 font-mono">{cl.cleanerId}</TableCell>
 

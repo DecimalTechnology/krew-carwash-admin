@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 
 import { getAllBuildings, updateBuilding } from "../../api/admin/buildingService";
 import { IBuilding } from "../../interface/IBuilding";
+import ExportAndFilter from "../../components/package/ExportAndFilter";
 
 export default function Buildings() {
     const [search, setSearch] = useState("");
@@ -33,7 +34,8 @@ export default function Buildings() {
     const [buildings, setBuildings] = useState<IBuilding[]>([]);
     const [fetch, setFetch] = useState(false);
     const [selectedBuildingId, setSelectedBuildingId] = useState("");
-    console.log(totalPages,'page')
+    const [buildingId,setBuildingId] = useState('')
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -108,6 +110,25 @@ export default function Buildings() {
                 >
                     Add New Building
                 </button>
+            </div>
+
+
+             <div className="flex w-full flex-row justify-between mt-8 mb-8">
+                <div>
+                    <select value={buildingId} onChange={(e:any)=>setBuildingId(e.target.value)} className="px-3 py-2 border rounded-lg text-sm bg-white dark:bg-gray-900">
+                        <option value="">All</option>
+                        {
+                          buildings?.map((obj:any)=>{
+                            return (
+                              <option value={obj?._id}>{obj?.buildingName}</option>
+                            )
+                          })
+                        }
+                   
+                    </select>
+                </div>
+
+                <ExportAndFilter buildingId={buildingId}/>
             </div>
 
             <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
@@ -202,8 +223,10 @@ export default function Buildings() {
                                                 </button>
                                                 <button
                                                     onClick={() => {
-                                                        setSelectedBuilding(b);
-                                                        setEditModalOpen(true);
+                                                        // setSelectedBuilding(b);
+                                                        // setEditModalOpen(true);
+                                                        navigate(`/edit-building/${b?._id}`)
+                                                        
                                                     }}
                                                     className="p-2 text-brand-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
                                                     title="Edit"

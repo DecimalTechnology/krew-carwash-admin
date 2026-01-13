@@ -4,6 +4,8 @@ import Select from "react-select";
 import { IPackage } from "../../interface/IPackage";
 import PackageList from "./PackageList";
 import { getAllPackages } from "../../api/admin/packageService";
+import { getBuildingById } from "../../api/admin/buildingService";
+import { useParams } from "react-router";
 
 interface IProps {
     setFormData: React.Dispatch<
@@ -16,15 +18,18 @@ interface IProps {
             contactNumbers: string[];
             packages: never[];
         }>
-    >;
+        >;
+        selectedPackages:any;
+        setSelectedPackages:any
  handleSubmit:()=>void
 }
 
-function PackageSelector({ setFormData ,handleSubmit}: IProps) {
+function PackageSelector({ setFormData ,handleSubmit,selectedPackages,setSelectedPackages}: IProps) {
     const [packages, setPackages] = useState<IPackage[]>([]);
     const [loading, setLoading] = useState(true);
-    const [selectedPackages, setSelectedPackages] = useState<IPackage[]>([]);
-
+    const {id} = useParams()
+    
+    
     // Fetch all packages
     useEffect(() => {
         const fetchData = async () => {
@@ -48,12 +53,31 @@ function PackageSelector({ setFormData ,handleSubmit}: IProps) {
 
     // Handle selection
     const handleSelection = (selectedOptions: any) => {
+        console.log(selectedOptions)
+   
         const selectedIds = selectedOptions ? selectedOptions.map((option: any) => option.value) : [];
 
         // Get the full objects
         const selectedFullPackages = packages.filter((pkg) => selectedIds.includes(pkg._id));
+        console.log(selectedFullPackages)
         setSelectedPackages(selectedFullPackages);
     };
+
+   
+
+    useEffect(()=>{
+        const fetchData  =async ()=>{
+            if(id){
+
+                const res = await getBuildingById(id);
+            }
+
+        }
+
+
+        fetchData()
+    },[])
+    
 
     return (
         <div className="flex flex-col gap-4 w-full mb-8 p-8 bg-white shadow-md rounded-2xl">

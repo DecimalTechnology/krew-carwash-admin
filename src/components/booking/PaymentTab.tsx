@@ -47,14 +47,21 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
     const calculateSubtotal = () => {
         const packagePrice = booking.package?.price || 0;
         const addonsTotal = booking.addons?.reduce((sum, addon) => {
-            // The addon.price already includes the quantity calculation
-            // So we just add the price directly
             return sum + (addon.price || 0);
         }, 0) || 0;
         return packagePrice + addonsTotal;
     };
 
     const subtotal = calculateSubtotal();
+    
+    // Calculate VAT (5% of subtotal)
+    const vatAmount = subtotal * 0.05;
+    
+    // Calculate total including VAT (before discount)
+    const subtotalWithVAT = subtotal + vatAmount;
+    
+    // Calculate final total (with VAT and after discount)
+    const totalWithVAT = subtotalWithVAT - (booking.discount || 0);
 
     const generateInvoiceNumber = () => {
         const date = new Date(booking.createdAt);
@@ -167,6 +174,10 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                                 <span style="font-size: 14px;">Subtotal:</span>
                                 <span style="font-size: 14px; font-weight: 600;">${formatAED(subtotal)}</span>
                             </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="font-size: 14px;">VAT (5%):</span>
+                                <span style="font-size: 14px; font-weight: 600;">${formatAED(vatAmount)}</span>
+                            </div>
                             ${
                                 booking.discount && booking.discount > 0
                                     ? `
@@ -179,7 +190,7 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                             }
                             <div style="display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 2px solid #5DB7AE;">
                                 <span style="font-size: 16px; font-weight: bold;">Total Amount:</span>
-                                <span style="font-size: 20px; font-weight: bold; color: #5DB7AE;">${formatAED(booking.totalPrice)}</span>
+                                <span style="font-size: 20px; font-weight: bold; color: #5DB7AE;">${formatAED(totalWithVAT)}</span>
                             </div>
                         </div>
                     </div>
@@ -271,7 +282,7 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                         </div>
                         <div className="relative z-10">
                             <p className="text-gray-300 text-sm uppercase tracking-wider mb-2">Total Amount Paid</p>
-                            <h2 className="text-5xl font-bold mb-4">{formatAED(booking.totalPrice)}</h2>
+                            <h2 className="text-5xl font-bold mb-4">{formatAED(totalWithVAT)}</h2>
                             <div className={`mt-4 inline-flex items-center px-4 py-2 rounded-full ${statusConfig.color} text-sm font-medium`}>
                                 <StatusIcon className="w-4 h-4 mr-2" />
                                 {statusConfig.label}
@@ -312,6 +323,11 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                                 <span className="font-medium text-gray-900 dark:text-white">{formatAED(subtotal)}</span>
                             </div>
 
+                            <div className="flex justify-between items-center py-3 border-b border-gray-100 dark:border-gray-700">
+                                <span className="text-gray-600 dark:text-gray-400">VAT (5%)</span>
+                                <span className="font-medium text-gray-900 dark:text-white">{formatAED(vatAmount)}</span>
+                            </div>
+
                             {booking.discount && booking.discount > 0 && (
                                 <div className="flex justify-between items-center py-3 border-b border-gray-100 dark:border-gray-700">
                                     <span className="text-gray-600 dark:text-gray-400">Discount</span>
@@ -321,7 +337,7 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
 
                             <div className="flex justify-between items-center py-3 pt-6">
                                 <span className="font-bold text-gray-900 dark:text-white">Total Amount</span>
-                                <span className="font-bold text-xl text-[#5DB7AE]">{formatAED(booking.totalPrice)}</span>
+                                <span className="font-bold text-xl text-[#5DB7AE]">{formatAED(totalWithVAT)}</span>
                             </div>
                         </div>
 
