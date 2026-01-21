@@ -23,9 +23,7 @@ function TopCleaners() {
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                     Top Cleaners
                 </h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                    This month's performers
-                </p>
+               
             </div>
 
             <div className="p-6 space-y-4">

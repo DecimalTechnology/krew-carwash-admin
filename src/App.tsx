@@ -18,6 +18,8 @@ import CleanerDetails from "./pages/admin/CleanerDetails";
 import IssueReports from "./pages/admin/IssueReports";
 import Notifications from "./pages/admin/Notifications";
 import EditBuildingPage from "./pages/admin/EditBuilding";
+import DeleteAccount from "./pages/admin/DeleteAccount";
+import PrivacyPolicy from "./pages/admin/PrivacyPolicy";
 
 export default function App() {
     return (
@@ -86,6 +88,8 @@ export default function App() {
                     <Route path="bookings/:id" element={<BookingDetails />} />
                     <Route path="issue-reports" element={<IssueReports />} />
                     <Route path="notifications" element={<Notifications />} />
+                    <Route path="delete-account" element={<DeleteAccount />} />
+                    <Route path="privacy-policy" element={<PrivacyPolicy />} />
                 </Route>
 
                 <Route path="*" element={<Navigate to="/" replace />} />

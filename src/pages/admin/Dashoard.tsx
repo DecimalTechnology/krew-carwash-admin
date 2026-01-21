@@ -6,7 +6,6 @@ import MainCards from "../../components/dashboard/MainCards";
 import RecentBookings from "../../components/dashboard/RecentBookings";
 
 import ExportParent from "../../components/dashboard/ExportParent";
-import MonthlySalesChart from "../../components/dashboard/MonthlyChart";
 import TopServices from "../../components/dashboard/TopServices";
 
 function Dashboard() {
@@ -42,7 +41,7 @@ function Dashboard() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
-                    <p className="text-gray-500 dark:text-gray-400 mt-1">Welcome back! Here's what's happening today.</p>
+                    <p className="text-gray-500 dark:text-gray-400 mt-1">Welcome back! Here's what's happening </p>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
