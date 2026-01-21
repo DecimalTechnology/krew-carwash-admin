@@ -103,13 +103,15 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                 <div style="margin-bottom: 30px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
                         <div>
-                            <h1 style="font-size: 28px; font-weight: bold; color: #5DB7AE; margin: 0;">INVOICE</h1>
+                            <h1 style="font-size: 28px; font-weight: bold; color: #5DB7AE; margin: 0;">TAX INVOICE</h1>
                             <p style="font-size: 12px; color: #666; margin: 5px 0 0 0;">Invoice No: ${generateInvoiceNumber()}</p>
                             <p style="font-size: 12px; color: #666; margin: 2px 0;">Date: ${formatDate(booking.createdAt)}</p>
+                            <p style="font-size: 12px; color: #666; margin: 2px 0;">TRN: 100248955500003</p>
                         </div>
                         <div style="text-align: right;">
                             <h2 style="font-size: 24px; font-weight: bold; color: #333; margin: 0;">Krew Car Wash</h2>
                             <p style="font-size: 12px; color: #666; margin: 5px 0 0 0;">Professional Car Wash Services</p>
+                            <p style="font-size: 12px; color: #666; margin: 2px 0;">TRN: 100248955500003</p>
                         </div>
                     </div>
                     
@@ -118,6 +120,7 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                             <h3 style="font-size: 14px; font-weight: bold; color: #333; margin: 0 0 10px 0;">Customer Details</h3>
                             <p style="font-size: 13px; margin: 5px 0; font-weight: 600;">${booking.userId?.name || "Customer"}</p>
                             ${booking.userId?.phone ? `<p style="font-size: 13px; margin: 3px 0;">Phone: ${booking.userId.phone}</p>` : ""}
+                            ${booking.userId?.email ? `<p style="font-size: 13px; margin: 3px 0;">Email: ${booking.userId.email}</p>` : ""}
                         </div>
                         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
                             <h3 style="font-size: 14px; font-weight: bold; color: #333; margin: 0 0 10px 0;">Booking Details</h3>
@@ -135,6 +138,7 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                             <tr style="background: #5DB7AE; color: white;">
                                 <th style="padding: 12px; text-align: left; font-size: 13px; font-weight: 600;">Description</th>
                                 <th style="padding: 12px; text-align: right; font-size: 13px; font-weight: 600;">Sessions</th>
+                                <th style="padding: 12px; text-align: right; font-size: 13px; font-weight: 600;">Unit Price</th>
                                 <th style="padding: 12px; text-align: right; font-size: 13px; font-weight: 600;">Total Price</th>
                             </tr>
                         </thead>
@@ -144,14 +148,16 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                                     <strong>${booking.package?.packageId?.name || "Car Wash Package"}</strong>
                                 </td>
                                 <td style="padding: 12px; text-align: right; font-size: 13px;">${booking.package?.totalSessions || 1}</td>
+                                <td style="padding: 12px; text-align: right; font-size: 13px;">${formatAED(booking.package?.price || 0)}</td>
                                 <td style="padding: 12px; text-align: right; font-size: 13px; font-weight: 600;">${formatAED(booking.package?.price || 0)}</td>
                             </tr>
                             ${booking.addons
                                 ?.map(
                                     (addon, idx) => {
                                         const addonName = addon.addonId?.name || `Add-on Service ${idx + 1}`;
-                                        const totalPrice = addon.price || 0;
+                                        const unitPrice = addon.price || 0;
                                         const sessions = addon.totalSessions || 1;
+                                        const totalPrice = unitPrice * sessions;
                                         
                                         return `
                                             <tr style="border-bottom: 1px solid #e5e7eb;">
@@ -159,6 +165,7 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                                                     <strong>${addonName}</strong>
                                                 </td>
                                                 <td style="padding: 12px; text-align: right; font-size: 13px;">${sessions}</td>
+                                                <td style="padding: 12px; text-align: right; font-size: 13px;">${formatAED(unitPrice)}</td>
                                                 <td style="padding: 12px; text-align: right; font-size: 13px; font-weight: 600;">${formatAED(totalPrice)}</td>
                                             </tr>
                                         `;
@@ -171,7 +178,7 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                     <div style="display: flex; justify-content: flex-end; margin-bottom: 40px;">
                         <div style="width: 300px;">
                             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <span style="font-size: 14px;">Subtotal:</span>
+                                <span style="font-size: 14px;">Subtotal (Excluding VAT):</span>
                                 <span style="font-size: 14px; font-weight: 600;">${formatAED(subtotal)}</span>
                             </div>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
@@ -189,7 +196,7 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                                     : ""
                             }
                             <div style="display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 2px solid #5DB7AE;">
-                                <span style="font-size: 16px; font-weight: bold;">Total Amount:</span>
+                                <span style="font-size: 16px; font-weight: bold;">Total Amount (Including VAT):</span>
                                 <span style="font-size: 20px; font-weight: bold; color: #5DB7AE;">${formatAED(totalWithVAT)}</span>
                             </div>
                         </div>
@@ -205,6 +212,10 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                             <div style="border-bottom: 1px dashed #e5e7eb; padding-bottom: 8px;">
                                 <p style="font-size: 12px; color: #666; margin: 0 0 4px 0; font-weight: 600;">Invoice No</p>
                                 <p style="font-size: 13px; color: #333; margin: 0; font-family: monospace;">${generateInvoiceNumber()}</p>
+                            </div>
+                            <div style="border-bottom: 1px dashed #e5e7eb; padding-bottom: 8px;">
+                                <p style="font-size: 12px; color: #666; margin: 0 0 4px 0; font-weight: 600;">TRN Number</p>
+                                <p style="font-size: 13px; color: #333; margin: 0; font-family: monospace;">100248955500003</p>
                             </div>
                             ${
                                 booking.payment?.transactionRef
@@ -230,6 +241,10 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                     </div>
                     
                     <div style="border-top: 2px solid #5DB7AE; padding-top: 20px; text-align: center;">
+                        <p style="font-size: 12px; color: #666; margin: 5px 0;">
+                            <strong>Tax Invoice Disclaimer:</strong> This document serves as an official tax invoice under UAE VAT Law.
+                        </p>
+                        <p style="font-size: 12px; color: #666; margin: 5px 0;">TRN: 100248955500003</p>
                         <p style="font-size: 12px; color: #666; margin: 5px 0;">Thank you for choosing Krew Car Wash!</p>
                         <p style="font-size: 11px; color: #999; margin: 5px 0;">This is a computer-generated invoice and does not require a signature.</p>
                     </div>
@@ -256,7 +271,7 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
             const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
             pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-            pdf.save(`Invoice_${booking.bookingId}_${new Date().getTime()}.pdf`);
+            pdf.save(`Tax_Invoice_${booking.bookingId}_${new Date().getTime()}.pdf`);
 
             document.body.removeChild(tempDiv);
         } catch (error) {
@@ -302,8 +317,9 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                             {booking.addons &&
                                 booking.addons.map((addon: any, idx: number) => {
                                     const addonName = addon.addonId?.name || `Add-on Service ${idx + 1}`;
-                                    const totalPrice = addon.price || 0;
+                                    const unitPrice = addon.price || 0;
                                     const sessions = addon.totalSessions || 1;
+                                    const totalPrice = unitPrice * sessions;
                                     
                                     return (
                                         <div key={addon._id} className="flex justify-between items-center py-3 border-b border-gray-100 dark:border-gray-700">
@@ -319,7 +335,7 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                                 })}
 
                             <div className="flex justify-between items-center py-3 border-b border-gray-100 dark:border-gray-700">
-                                <span className="text-gray-600 dark:text-gray-400">Subtotal</span>
+                                <span className="text-gray-600 dark:text-gray-400">Subtotal (Excluding VAT)</span>
                                 <span className="font-medium text-gray-900 dark:text-white">{formatAED(subtotal)}</span>
                             </div>
 
@@ -336,7 +352,7 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                             )}
 
                             <div className="flex justify-between items-center py-3 pt-6">
-                                <span className="font-bold text-gray-900 dark:text-white">Total Amount</span>
+                                <span className="font-bold text-gray-900 dark:text-white">Total Amount (Including VAT)</span>
                                 <span className="font-bold text-xl text-[#5DB7AE]">{formatAED(totalWithVAT)}</span>
                             </div>
                         </div>
@@ -388,6 +404,20 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                                             <code className="text-xs font-mono bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">{generateInvoiceNumber()}</code>
                                             <button
                                                 onClick={() => handleCopyToClipboard(generateInvoiceNumber())}
+                                                className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded"
+                                                title="Copy to clipboard"
+                                            >
+                                                <Copy className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-between pb-2 border-b border-gray-200 dark:border-gray-600">
+                                        <span className="text-xs font-medium text-gray-600 dark:text-gray-400">TRN Number</span>
+                                        <div className="flex items-center gap-2">
+                                            <code className="text-xs font-mono bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">100248955500003</code>
+                                            <button
+                                                onClick={() => handleCopyToClipboard("100248955500003")}
                                                 className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded"
                                                 title="Copy to clipboard"
                                             >
@@ -463,7 +493,7 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                                 className="flex-1 bg-[#5DB7AE] hover:bg-[#4a9d91] text-white font-bold py-3 px-4 rounded-xl transition-colors shadow-lg shadow-[#5DB7AE]/30 flex items-center justify-center gap-2"
                             >
                                 <Download className="w-5 h-5" />
-                                Download Invoice
+                                Download Tax Invoice
                             </button>
 
                             {booking.payment?.status === "FAILED" && (

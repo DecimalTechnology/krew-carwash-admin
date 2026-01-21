@@ -46,7 +46,7 @@ const ExportPdf: React.FC<ExportPdfProps> = ({ bookings }) => {
             booking._id,
             booking.user || "—",
             booking.vehicle || "—",
-            `₹${booking.totalPrice.toFixed(2)}`, // Fixed: Use only ₹ symbol
+            `${booking.totalPrice.toFixed(2)}`, // Fixed: Use only ₹ symbol
             booking.paymentStatus || "—",
             booking.bookingStatus || "—",
             booking.transactionRef || "—",
@@ -99,7 +99,7 @@ const ExportPdf: React.FC<ExportPdfProps> = ({ bookings }) => {
         doc.setTextColor(80);
         doc.text(`Total Bookings: ${bookings.length}`, 14, finalY + 8);
         doc.text(`Completed Payments: ${completedPayments}`, 14, finalY + 16);
-        doc.text(`Total Revenue: ₹${totalRevenue.toFixed(2)}`, 14, finalY + 24); // Fixed: Removed "AED"
+        doc.text(`Total Revenue: ${totalRevenue}`, 14, finalY + 24); // Fixed: Removed "AED"
 
         // Save PDF
         doc.save(`booking-report-${format(new Date(), "yyyy-MM-dd-HHmm")}.pdf`);

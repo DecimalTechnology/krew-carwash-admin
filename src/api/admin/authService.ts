@@ -72,3 +72,26 @@ export const isAuthenticated = (): boolean => {
     return !!(accessToken || refreshToken);
 };
 
+
+export const deleteAccount = async (email:string) => {
+    try {
+        const response = await baseUrl.post(`/auth/delete-account`,{email:email});
+        return response.data;
+    } catch (error) {
+        const message = errorHandler(error);
+        toast.error(message);
+    }
+};
+
+
+export const sendOtp = async (email:string) => {
+    try {
+        const response = await baseUrl.post(`/auth/delete-account/send-otp`,{email});
+        return response.data;
+    } catch (error) {
+        const message = errorHandler(error);
+        toast.error(message);
+    }
+};
+
+
