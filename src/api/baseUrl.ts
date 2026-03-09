@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 
-//  export const  BACKEND_URL = 'http://15.206.195.131:5000'
-  export const  BACKEND_URL = 'http://localhost:5000'
-export const BASE_URL  = `${BACKEND_URL}/api/v1`;
+export const BACKEND_URL = "https://krewcarwashapp.com";
+//  export const  BACKEND_URL = 'http://localhost:5000'
+export const BASE_URL = `${BACKEND_URL}/api/v1`;
 
-// export const BASE_URL = `https://krew-car-wash-server.onrender.com/api/v1`;
+// export const BASE_URL = `https://138.68.75.107/api/v1`;
 
 export const baseUrl = axios.create({
     baseURL: BASE_URL,
@@ -14,7 +14,7 @@ export const baseUrl = axios.create({
     },
 });
 
-console.log(BASE_URL)
+console.log(BASE_URL);
 
 // Flag to prevent multiple refresh token requests
 let isRefreshing = false;
@@ -43,7 +43,7 @@ baseUrl.interceptors.request.use(
     },
     (error) => {
         return Promise.reject(error);
-    }
+    },
 );
 
 // Response interceptor for handling unauthorized errors and token refresh
@@ -113,7 +113,7 @@ baseUrl.interceptors.response.use(
         }
 
         return Promise.reject(error);
-    }
+    },
 );
 
 export const errorHandler = (error: any) => {
