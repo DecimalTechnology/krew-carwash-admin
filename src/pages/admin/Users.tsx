@@ -13,10 +13,10 @@ import { IUser } from "../../interface/IUser";
 import Pagination from "../../components/ui/pagination/Pagination";
 import UserViewModal from "../../components/users/UserViewModal";
 
-
 export default function Users() {
     // Static UI state only
     const [search, setSearch] = useState("");
+
     const [statusFilter, setStatusFilter] = useState("all");
     const [sortKey, setSortKey] = useState<string>("createdAt");
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -26,29 +26,28 @@ export default function Users() {
     const [selectedUserId, setSelectedUserId] = useState("");
     const [loading, setLoading] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-    const [users, setUsers] = useState<IUser[]>([]);
-    const [fetch,setFetch]=  useState(false);
-    const [userViewModalOpen,setUserViewModalOpen] = useState(false);
-    const [selectedUser,setSelectedUser] = useState<IUser|{}>({})
-    console.log(totalPages)
+    const [users, setUsers] = useState([]);
+    const [fetch, setFetch] = useState(false);
+    const [userViewModalOpen, setUserViewModalOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState<IUser | {}>({});
 
     useEffect(() => {
-        const fetchData = async () => {
+        async function fetchData() {
             try {
                 setLoading(true);
+
                 const res = await getAllUsers({ search, status: statusFilter, sortedBy: sortKey, sortOrder, page });
+
                 setLoading(false);
                 setUsers(res?.data);
-                setTotalPages(Math.ceil( res?.pagination?.totalPages)/limit);
-                
-              
+                setTotalPages(Math.ceil(res?.pagination?.totalPages) / limit);
             } catch (error) {
                 toast.error(error as string);
             }
-        };
+        }
 
         fetchData();
-    }, [search, statusFilter, sortKey, limit, sortOrder, page,fetch]);
+    }, [search, statusFilter, sortKey, limit, sortOrder, page, fetch]);
 
     const handleUpdate = async (payload: any, userId: string) => {
         const result = await updateUser(payload, userId);
@@ -76,9 +75,7 @@ export default function Users() {
                                     key={tab}
                                     onClick={() => setStatusFilter(tab.toLowerCase())}
                                     className={`px-4 py-2 rounded-lg font-medium ${
-                                        statusFilter === tab.toLowerCase()
-                                            ? "bg-brand-500 text-white"
-                                            : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                                        statusFilter === tab.toLowerCase() ? "bg-brand-500 text-white" : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                                     }`}
                                 >
                                     {tab}
@@ -92,7 +89,6 @@ export default function Users() {
                         </div>
 
                         {/* Right side controls */}
-                        
                     </div>
                 </div>
                 <div className="max-w-full overflow-x-auto">
@@ -102,81 +98,42 @@ export default function Users() {
                         <Table className="bg-white dark:bg-gray-900 mt-4 rounded-xl overflow-hidden">
                             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                                 <TableRow>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        No
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        Name
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        Email
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        Phone
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        Image
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        Verification Method
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        Active
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        Created At
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        Updated At
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        Actions
-                                    </TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">No</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Name</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Email</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Phone</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Image</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Verification Method</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Active</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Created At</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Updated At</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Actions</TableCell>
                                 </TableRow>
                             </TableHeader>
                             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
                                 {users?.map((data: IUser, index: number) => (
                                     <TableRow key={String(data?._id)}>
-                                        <TableCell className="px-4 py-3 ml-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
-                                            {index + 1}
-                                        </TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
-                                            {data?.name}
-                                        </TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                            {data.email}
-                                        </TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                            {String(data?.phone)}
-                                        </TableCell>
+                                        <TableCell className="px-4 py-3 ml-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{index + 1}</TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{data?.name}</TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">{data.email}</TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">{String(data?.phone)}</TableCell>
                                         <TableCell className="px-5 py-4 sm:px-6 text-start">
                                             <img src={data?.image || "no-profile.jpg"} alt="user" className="w-10 h-10 rounded-full object-cover" />
                                         </TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                            {String(data?.verificationMethod)}
-                                        </TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">{String(data?.verificationMethod)}</TableCell>
                                         <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                             <div className="flex items-center gap-2">
-                                                <Switch
-                                                    checked={data?.isActive}
-                                                    onChange={() => handleUpdate({ isActive: !data?.isActive }, data?._id)}
-                                                    size="sm"
-                                                    color="success"
-                                                />
+                                                <Switch checked={data?.isActive} onChange={() => handleUpdate({ isActive: !data?.isActive }, data?._id)} size="sm" color="success" />
                                             </div>
                                         </TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                            {new Date(data.createdAt).toLocaleDateString()}
-                                        </TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                            {new Date(data.updatedAt).toLocaleDateString()}
-                                        </TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">{new Date(data.createdAt).toLocaleDateString()}</TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">{new Date(data.updatedAt).toLocaleDateString()}</TableCell>
 
                                         <TableCell>
                                             <div className="flex items-center gap-2">
                                                 <button
                                                     onClick={() => {
-                                                        setSelectedUser(data)
+                                                        setSelectedUser(data);
                                                         setUserViewModalOpen(true);
                                                     }}
                                                     className="p-2 text-[#5DB7AE] hover:text-[#4a9d91] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
@@ -208,12 +165,11 @@ export default function Users() {
             </div>
             {deleteModalOpen && (
                 <DeleteModal
-                    handleDelete={async(arg: boolean) => {
+                    handleDelete={async (arg: boolean) => {
                         if (arg) {
-                            
                             setDeleteModalOpen(false);
-                           await  updateUser({isDeleted:true},selectedUserId)
-                            setFetch(!fetch)
+                            await updateUser({ isDeleted: true }, selectedUserId);
+                            setFetch(!fetch);
                         } else {
                             setDeleteModalOpen(false);
                         }
@@ -223,7 +179,7 @@ export default function Users() {
                 />
             )}
 
-            {userViewModalOpen&&<UserViewModal onClose={()=>setUserViewModalOpen(false)} user={selectedUser}/>}
+            {userViewModalOpen && <UserViewModal onClose={() => setUserViewModalOpen(false)} user={selectedUser} />}
         </div>
     );
 }
