@@ -66,6 +66,7 @@ export default function App() {
             <Routes>
                 <Route path="/login" element={<Login />} />
 
+                <Route path="privacy-policy" element={<PrivacyPolicy />} />
                 <Route
                     path="/"
                     element={
@@ -89,7 +90,6 @@ export default function App() {
                     <Route path="issue-reports" element={<IssueReports />} />
                     <Route path="notifications" element={<Notifications />} />
                     <Route path="delete-account" element={<DeleteAccount />} />
-                    <Route path="privacy-policy" element={<PrivacyPolicy />} />
                 </Route>
 
                 <Route path="*" element={<Navigate to="/" replace />} />

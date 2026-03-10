@@ -1,10 +1,12 @@
+
+
 export default function PrivacyPolicy() {
   return (
-<div className="fixed inset-0 z-100 bg-gray-50 py-8 px-4 overflow-y-auto">
+<div className="fixed inset-0 z-100 py-8 px-4 overflow-y-auto" style={{ backgroundColor: '#F9FAFB' }}>
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-8 md:px-10">
+          <div className="bg-[#4A9D91] px-6 py-8 md:px-10">
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
               Privacy Policy
             </h1>
@@ -12,10 +14,10 @@ export default function PrivacyPolicy() {
               <p className="text-lg font-medium">Krew Car Wash Application</p>
               <div className="mt-2 sm:mt-0">
                 <p className="text-sm">
-                  <span className="font-semibold">Effective:</span> January 19, 2026
+                  <span className="font-semibold">Effective:</span> March 10, 2026
                 </p>
                 <p className="text-sm">
-                  <span className="font-semibold">Last Updated:</span> January 19, 2026
+                  <span className="font-semibold">Last Updated:</span> March 10, 2026
                 </p>
               </div>
             </div>
@@ -406,7 +408,7 @@ export default function PrivacyPolicy() {
                   understood, and agree to the terms of this Privacy Policy.
                 </p>
                 <p className="text-gray-500 text-sm text-center mt-2">
-                  Version 1.0 | Effective January 19, 2026
+                  Version 1.0 | Effective March 10, 2026
                 </p>
               </div>
             </div>
@@ -414,17 +416,7 @@ export default function PrivacyPolicy() {
         </div>
         
         {/* Back Button (Optional) */}
-        <div className="mt-6 text-center">
-          <button 
-            onClick={() => window.history.back()}
-            className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
-          >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Back to App
-          </button>
-        </div>
+    
       </div>
     </div>
   );
