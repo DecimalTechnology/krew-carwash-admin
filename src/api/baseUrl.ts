@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 
-export const BACKEND_URL = "https://krewcarwashapp.com";
-//  export const  BACKEND_URL = 'http://localhost:5000'
+//export const BACKEND_URL = "https://krewcarwashapp.com";
+ export const  BACKEND_URL = 'http://localhost:5000'
 export const BASE_URL = `${BACKEND_URL}/api/v1`;
 
 // export const BASE_URL = `https://138.68.75.107/api/v1`;

@@ -562,14 +562,23 @@ function EditBuildingPage() {
                             </div>
                         )}
 
-                        <PackageSelector
+                        {/* <PackageSelector
                             handleSubmit={handleSubmit}
                             setFormData={setFormData}
                             isSubmitting={isSubmitting}
                             validationError={validationErrors.packages}
                             selectedPackages={selectedPackages}
                             setSelectedPackages={setSelectedPackages}
-                        />
+                        /> */}
+
+                             {/* <PackageSelector 
+                            handleSubmit={handleSubmit} 
+                            setFormData={setFormData}
+                            isSubmitting={isSubmitting}
+                            validationError={validationErrors.packages}
+                            selectedPackages={selectedPackages}
+                            setSelectedPackages={setSelectedPackages }
+                        /> */}
 
                         {/* Submit Button */}
                         <div className="mt-8 pt-6 border-t border-gray-200">

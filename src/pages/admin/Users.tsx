@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
-import { Eye, Trash } from "lucide-react";
+import { Eye, Trash, UserIcon } from "lucide-react";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 import SearchBox from "../../components/ui/SearchBox";
 import TableLoading from "../../components/ui/table/TableLoading";
@@ -8,7 +8,7 @@ import TableLoading from "../../components/ui/table/TableLoading";
 import Switch from "../../components/ui/switch/Switch";
 import DeleteModal from "../../components/ui/modals/common/DeleteModal";
 import toast from "react-hot-toast";
-import { getAllUsers, updateUser } from "../../api/admin/userService";
+import { deleteUser, getAllUsers, updateUser } from "../../api/admin/userService";
 import { IUser } from "../../interface/IUser";
 import Pagination from "../../components/ui/pagination/Pagination";
 import UserViewModal from "../../components/users/UserViewModal";
@@ -30,7 +30,7 @@ export default function Users() {
     const [fetch, setFetch] = useState(false);
     const [userViewModalOpen, setUserViewModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<IUser | {}>({});
-
+   
     useEffect(() => {
         async function fetchData() {
             try {
@@ -40,7 +40,7 @@ export default function Users() {
 
                 setLoading(false);
                 setUsers(res?.data);
-                setTotalPages(Math.ceil(res?.pagination?.totalPages) / limit);
+                setTotalPages(Math.ceil(Math.ceil(res?.pagination?.totalPages) / limit));
             } catch (error) {
                 toast.error(error as string);
             }
@@ -160,6 +160,13 @@ export default function Users() {
                     )}
                 </div>
             </div>
+            {users.length==0&&<div className="flex flex-col items-center justify-center py-12">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                    <UserIcon className="w-8 h-8 text-gray-400" />
+                </div>
+                <p className="text-gray-600 font-medium">No users found</p>
+                <p className="text-sm text-gray-400 mt-1">There are no users to display</p>
+            </div>}
             <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700">
                 <Pagination currentPage={page} totalPages={totalPages} onPageChange={(page: number) => setPage(page)} />
             </div>
@@ -168,7 +175,10 @@ export default function Users() {
                     handleDelete={async (arg: boolean) => {
                         if (arg) {
                             setDeleteModalOpen(false);
-                            await updateUser({ isDeleted: true }, selectedUserId);
+                            const res = await deleteUser(selectedUserId);
+                            if (!res) {
+                                return;
+                            }
                             setFetch(!fetch);
                         } else {
                             setDeleteModalOpen(false);

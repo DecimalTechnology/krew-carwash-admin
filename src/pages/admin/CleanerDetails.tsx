@@ -1,20 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-    User,
-    Phone,
-    Mail,
-    Calendar,
-    CheckCircle,
-    Clock,
-    AlertCircle,
-    ClipboardList,
-    TrendingUp,
-    Briefcase,
-    ArrowLeft,
-    Badge,
-} from "lucide-react";
+import { User, Phone, Mail, Calendar, CheckCircle, Clock, AlertCircle, ClipboardList, TrendingUp, Briefcase, ArrowLeft, Badge } from "lucide-react";
 import { getCleanerDetails } from "../../api/admin/cleanerService";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
@@ -140,12 +127,7 @@ const StatCard: React.FC<{ icon: React.ElementType; label: string; value: string
     </div>
 );
 
-const BookingsTable: React.FC<{ bookings: Booking[]; navigate: any; emptyMessage: string; emptyIcon: React.ElementType }> = ({ 
-    bookings, 
-    navigate, 
-    emptyMessage,
-    emptyIcon: EmptyIcon 
-}) => {
+const BookingsTable: React.FC<{ bookings: Booking[]; navigate: any; emptyMessage: string; emptyIcon: React.ElementType }> = ({ bookings, navigate, emptyMessage, emptyIcon: EmptyIcon }) => {
     if (bookings.length === 0) {
         return (
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-12 text-center border border-gray-100 dark:border-gray-700">
@@ -161,46 +143,24 @@ const BookingsTable: React.FC<{ bookings: Booking[]; navigate: any; emptyMessage
                 <Table>
                     <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                         <TableRow>
-                            <TableCell className="px-2 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                No
-                            </TableCell>
-                            <TableCell className="px-2 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                Booking ID
-                            </TableCell>
-                            <TableCell className="px-2 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                Package
-                            </TableCell>
-                            <TableCell className="px-2 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                Customer
-                            </TableCell>
-                            <TableCell className="px-2 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                Vehicle
-                            </TableCell>
-                            <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                Building
-                            </TableCell>
-                            <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                Start Date
-                            </TableCell>
-                            <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                Status
-                            </TableCell>
-                            <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                Actions
-                            </TableCell>
+                            <TableCell className="px-2 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">No</TableCell>
+                            <TableCell className="px-2 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Booking ID</TableCell>
+                            <TableCell className="px-2 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Package</TableCell>
+                            <TableCell className="px-2 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Customer</TableCell>
+                            <TableCell className="px-2 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Vehicle</TableCell>
+                            <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Building</TableCell>
+                            <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Start Date</TableCell>
+                            <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Status</TableCell>
+                            <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Actions</TableCell>
                         </TableRow>
                     </TableHeader>
 
                     <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
                         {bookings.map((booking, index) => (
                             <TableRow key={booking._id} className="hover:bg-gray-50 dark:hover:bg-white/[0.02]">
-                                <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
-                                    {index + 1}
-                                </TableCell>
+                                <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{index + 1}</TableCell>
 
-                                <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90 font-mono">
-                                    {booking.bookingId}
-                                </TableCell>
+                                <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90 font-mono">{booking.bookingId}</TableCell>
 
                                 <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
                                     <div>
@@ -218,29 +178,19 @@ const BookingsTable: React.FC<{ bookings: Booking[]; navigate: any; emptyMessage
 
                                 <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                     <div>
-                                        <div className="font-medium text-gray-800 dark:text-white/90">
-                                            {booking.vehicleId?.vehicleModel || "N/A"}
-                                        </div>
+                                        <div className="font-medium text-gray-800 dark:text-white/90">{booking.vehicleId?.vehicleModel || "N/A"}</div>
                                         <div className="text-xs">{booking.vehicleId?.vehicleNumber || "N/A"}</div>
                                     </div>
                                 </TableCell>
 
                                 <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                     <div>
-                                        <div className="font-medium text-gray-800 dark:text-white/90">
-                                            {booking.buildingId?.buildingName || "N/A"}
-                                        </div>
-                                        <div className="text-xs">
-                                            {booking.buildingId?.area && booking.buildingId?.city 
-                                                ? `${booking.buildingId.area}, ${booking.buildingId.city}`
-                                                : "N/A"}
-                                        </div>
+                                        <div className="font-medium text-gray-800 dark:text-white/90">{booking.buildingId?.buildingName || "N/A"}</div>
+                                        <div className="text-xs">{booking.buildingId?.area && booking.buildingId?.city ? `${booking.buildingId.area}, ${booking.buildingId.city}` : "N/A"}</div>
                                     </div>
                                 </TableCell>
 
-                                <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                    {formatDate(booking.startDate)}
-                                </TableCell>
+                                <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">{formatDate(booking.startDate)}</TableCell>
 
                                 <TableCell className="px-4 py-3 text-start">
                                     <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold ring-1 ring-inset ${getBookingStatusStyles(booking.status)}`}>
@@ -331,10 +281,7 @@ const CleanerDetails = () => {
                     <AlertCircle className="w-12 h-12 text-red-500 mb-4" />
                     <h2 className="text-xl font-bold text-gray-900 mb-2">Error Loading Cleaner Details</h2>
                     <p className="text-gray-600">{error || "Cleaner information unavailable"}</p>
-                    <button
-                        onClick={() => navigate("/cleaners")}
-                        className="mt-6 px-6 py-2 bg-white border border-gray-200 rounded-xl font-medium text-gray-700 hover:bg-gray-50"
-                    >
+                    <button onClick={() => navigate("/cleaners")} className="mt-6 px-6 py-2 bg-white border border-gray-200 rounded-xl font-medium text-gray-700 hover:bg-gray-50">
                         Back to Cleaners
                     </button>
                 </div>
@@ -393,7 +340,9 @@ const CleanerDetails = () => {
                     <div>
                         <label className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Account Status</label>
                         <div className="mt-1">
-                            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold ${cleaner.isActive ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400" : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"}`}>
+                            <span
+                                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold ${cleaner.isActive ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400" : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"}`}
+                            >
                                 {cleaner.isActive ? "Active" : "Inactive"}
                             </span>
                         </div>
@@ -422,9 +371,7 @@ const CleanerDetails = () => {
                             <div>
                                 <p className="text-xs font-semibold text-blue-600 uppercase">Completion Rate</p>
                                 <p className="text-3xl font-bold text-blue-700 mt-1">
-                                    {statistics.totalTasksAssigned > 0 
-                                        ? Math.round((statistics.totalTasksCompleted / statistics.totalTasksAssigned) * 100)
-                                        : 0}%
+                                    {statistics.totalTasksAssigned > 0 ? Math.round((statistics.totalTasksCompleted / statistics.totalTasksAssigned) * 100) : 0}%
                                 </p>
                             </div>
                             <TrendingUp className="w-10 h-10 text-blue-600" />
@@ -437,34 +384,19 @@ const CleanerDetails = () => {
 
     const renderCompletedTasks = () => (
         <div className="space-y-6 animate-in fade-in duration-300">
-            <BookingsTable 
-                bookings={completedBookings} 
-                navigate={navigate}
-                emptyMessage="No Completed Tasks"
-                emptyIcon={CheckCircle}
-            />
+            <BookingsTable bookings={completedBookings} navigate={navigate} emptyMessage="No Completed Tasks" emptyIcon={CheckCircle} />
         </div>
     );
 
     const renderInProgressTasks = () => (
         <div className="space-y-6 animate-in fade-in duration-300">
-            <BookingsTable 
-                bookings={inProgressBookings} 
-                navigate={navigate}
-                emptyMessage="No Tasks In Progress"
-                emptyIcon={Clock}
-            />
+            <BookingsTable bookings={inProgressBookings} navigate={navigate} emptyMessage="No Tasks In Progress" emptyIcon={Clock} />
         </div>
     );
 
     const renderPendingTasks = () => (
         <div className="space-y-6 animate-in fade-in duration-300">
-            <BookingsTable 
-                bookings={pendingBookings} 
-                navigate={navigate}
-                emptyMessage="No Pending Tasks"
-                emptyIcon={ClipboardList}
-            />
+            <BookingsTable bookings={pendingBookings} navigate={navigate} emptyMessage="No Pending Tasks" emptyIcon={ClipboardList} />
         </div>
     );
 
@@ -490,19 +422,11 @@ const CleanerDetails = () => {
                     <div className="pt-6 pb-2">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                             <div className="flex items-start gap-4">
-                                <button
-                                    onClick={() => navigate("/cleaners")}
-                                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                                    title="Back to Cleaners"
-                                >
+                                <button onClick={() => navigate("/cleaners")} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors" title="Back to Cleaners">
                                     <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                                 </button>
                                 {cleaner.image ? (
-                                    <img
-                                        src={cleaner.image}
-                                        alt={cleaner.name}
-                                        className="w-14 h-14 rounded-full object-cover border-2 border-gray-100 shadow-sm"
-                                    />
+                                    <img src={cleaner.image} alt={cleaner.name} className="w-14 h-14 rounded-full object-cover border-2 border-gray-100 shadow-sm" />
                                 ) : (
                                     <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#5DB7AE] to-[#4a9d91] text-white flex items-center justify-center shadow-lg text-xl font-bold">
                                         {cleaner.name.charAt(0).toUpperCase()}
@@ -512,7 +436,7 @@ const CleanerDetails = () => {
                                     <div className="flex items-center gap-3 flex-wrap">
                                         <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">{cleaner.name}</h1>
                                         <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold ring-1 ring-inset ${getStatusStyles(cleaner.status)}`}>
-                                            {cleaner.status}
+                                            {cleaner.isActive?"Active":"Inactive"}
                                         </span>
                                     </div>
                                     <div className="flex items-center gap-3 mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -523,11 +447,7 @@ const CleanerDetails = () => {
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3">
-                                <button className="px-4 py-2.5 bg-[#5DB7AE] dark:bg-[#5DB7AE] border border-[#5DB7AE] text-white font-medium rounded-xl hover:bg-[#4a9d91] dark:hover:bg-[#4a9d91] transition-colors text-sm shadow-sm">
-                                    Edit Profile
-                                </button>
-                            </div>
+                         
                         </div>
 
                         {/* Statistics Cards */}
@@ -574,4 +494,3 @@ const CleanerDetails = () => {
 };
 
 export default CleanerDetails;
-

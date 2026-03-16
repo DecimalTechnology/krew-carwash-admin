@@ -45,3 +45,33 @@ export const getBuildingById = async (buildingId:string) => {
         throw new Error(message);
     }
 };
+export const deleteBuildingById = async (buildingId:string) => {
+    try {
+        const result = await baseUrl.delete(`/admin/buildings/${buildingId}` );
+        return result?.data;
+    } catch (error) {
+        const message = errorHandler(error);
+        toast.error(message);
+        throw new Error(message);
+    }
+};
+export const getAllPackagesUnderBuilding = async (buildingId:string) => {
+    try {
+        const result = await baseUrl.get(`/admin/buildings/${buildingId}/packages` );
+        return result?.data;
+    } catch (error) {
+        const message = errorHandler(error);
+        toast.error(message);
+        throw new Error(message);
+    }
+};
+export const updatePackageInBuilding = async (buildingId:string,packages:any) => {
+    try {
+        const result = await baseUrl.put(`/admin/buildings/${buildingId}/packages`,{packages:packages} );
+        return result?.data;
+    } catch (error) {
+        const message = errorHandler(error);
+        toast.error(message);
+        throw new Error(message);
+    }
+};

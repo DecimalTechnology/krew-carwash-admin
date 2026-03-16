@@ -21,4 +21,13 @@ export const updateUser = async (payload: Record<string,any>,userId:string) => {
         toast.error(message);
     }
 };
+export const deleteUser = async (userId:string) => {
+    try {
+        const result = await baseUrl.delete(`/admin/users/${userId}`);
+        return result?.data;
+    } catch (error) {
+        const message = errorHandler(error);
+        toast.error(message);
+    }
+};
 
