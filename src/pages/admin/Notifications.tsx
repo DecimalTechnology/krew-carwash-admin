@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Bell, Search, Settings, X, Package, Filter, CheckCircle, AlertCircle, Info, Clock } from "lucide-react";
+import { Bell, Search, X, Package, Filter, Clock } from "lucide-react";
 import { getAllNotifications, getNotificationTypes, markAllAsReadNotification } from "../../api/admin/notificationService";
 import { NotificationType } from "../../interface/INotification";
-import NotificationStories from "../../components/notification/NotificationStories";
-import StatsBar from "../../components/notification/StatusBar";
 import InstagramNotificationItem from "../../components/notification/NotificationItem";
 import { useSocket } from "../../context/SocketProvider";
 
@@ -14,9 +12,7 @@ const AdminNotificationsPage: React.FC = () => {
     const [unreadCount, setUnreadCount] = useState(0);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
-    const [showSettings, setShowSettings] = useState(false);
     const { socket } = useSocket();
-
     const themeColor = "#4A9D91";
 
     useEffect(() => {
@@ -49,6 +45,7 @@ const AdminNotificationsPage: React.FC = () => {
 
     const markAllAsRead = async () => {
         setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+
         setUnreadCount(0);
         await markAllAsReadNotification();
     };
@@ -62,7 +59,7 @@ const AdminNotificationsPage: React.FC = () => {
         (notification) =>
             notification.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
             notification.message?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            notification.bookingId?.toLowerCase().includes(searchQuery.toLowerCase())
+            notification.bookingId?.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
     useEffect(() => {
@@ -86,9 +83,9 @@ const AdminNotificationsPage: React.FC = () => {
             <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
                 <div className="flex items-center justify-between px-6 py-4">
                     <div className="flex items-center gap-4">
-                        <div 
+                        <div
                             className="w-10 h-10 rounded-full flex items-center justify-center shadow-lg"
-                            style={{ backgroundColor: themeColor, backgroundImage: 'linear-gradient(135deg, #4A9D91 0%, #3a7c72 100%)' }}
+                            style={{ backgroundColor: themeColor, backgroundImage: "linear-gradient(135deg, #4A9D91 0%, #3a7c72 100%)" }}
                         >
                             <Bell className="text-white" size={20} />
                         </div>
@@ -115,18 +112,8 @@ const AdminNotificationsPage: React.FC = () => {
                             )}
                         </div> */}
 
-                        <button 
-                            onClick={fetchNotifications} 
-                            disabled={isRefreshing} 
-                            className="p-2.5 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors" 
-                            title="Refresh"
-                        >
-                            <svg 
-                                className={`w-5 h-5 ${isRefreshing ? "text-[#4A9D91] animate-spin" : "text-gray-600"}`} 
-                                fill="none" 
-                                viewBox="0 0 24 24" 
-                                stroke="currentColor"
-                            >
+                        <button onClick={fetchNotifications} disabled={isRefreshing} className="p-2.5 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors" title="Refresh">
+                            <svg className={`w-5 h-5 ${isRefreshing ? "text-[#4A9D91] animate-spin" : "text-gray-600"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
@@ -140,9 +127,9 @@ const AdminNotificationsPage: React.FC = () => {
                             <button
                                 onClick={markAllAsRead}
                                 className="px-4 py-2.5 text-white text-sm font-medium rounded-xl hover:shadow-lg transition-all"
-                                style={{ 
+                                style={{
                                     backgroundColor: themeColor,
-                                    backgroundImage: 'linear-gradient(135deg, #4A9D91 0%, #3a7c72 100%)'
+                                    backgroundImage: "linear-gradient(135deg, #4A9D91 0%, #3a7c72 100%)",
                                 }}
                             >
                                 Mark all read
@@ -169,9 +156,7 @@ const AdminNotificationsPage: React.FC = () => {
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
                                 className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
-                                    activeTab === tab
-                                        ? "text-white"
-                                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                                    activeTab === tab ? "text-white" : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                                 }`}
                                 style={activeTab === tab ? { backgroundColor: themeColor } : {}}
                             >
@@ -186,12 +171,12 @@ const AdminNotificationsPage: React.FC = () => {
                     <div className="flex flex-wrap items-center justify-between gap-4">
                         <div className="flex items-center gap-6">
                             <div className="flex items-center gap-2">
-                                <div 
-                                    className="w-3 h-3 rounded-full" 
-                                    style={{ backgroundColor: themeColor }}
-                                ></div>
+                                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: themeColor }}></div>
                                 <span className="text-sm font-medium text-gray-700">
-                                    <span className="text-lg font-bold" style={{ color: themeColor }}>{unreadCount}</span> Unread
+                                    <span className="text-lg font-bold" style={{ color: themeColor }}>
+                                        {unreadCount}
+                                    </span>{" "}
+                                    Unread
                                 </span>
                             </div>
                             <div className="flex items-center gap-2">
@@ -241,10 +226,7 @@ const AdminNotificationsPage: React.FC = () => {
                             <div className="flex items-center gap-3">
                                 <h2 className="text-xl font-bold text-gray-900">Recent Activity</h2>
                                 {unreadCount > 0 && (
-                                    <span 
-                                        className="px-2 py-1 text-xs font-bold text-white rounded-full"
-                                        style={{ backgroundColor: themeColor }}
-                                    >
+                                    <span className="px-2 py-1 text-xs font-bold text-white rounded-full" style={{ backgroundColor: themeColor }}>
                                         {unreadCount} NEW
                                     </span>
                                 )}
@@ -261,21 +243,16 @@ const AdminNotificationsPage: React.FC = () => {
                         {filteredNotifications.length > 0 ? (
                             filteredNotifications.map((notification) => (
                                 <div key={notification._id} className="border-b border-gray-100 last:border-b-0">
-                                    <InstagramNotificationItem 
-                                        key={notification._id} 
-                                        notification={notification} 
-                                        onMarkAsRead={handleMarkAsRead}
-                                        themeColor={themeColor}
-                                    />
+                                    <InstagramNotificationItem key={notification._id} notification={notification} onMarkAsRead={handleMarkAsRead} themeColor={themeColor} />
                                 </div>
                             ))
                         ) : (
                             <div className="text-center py-20 px-6">
-                                <div 
+                                <div
                                     className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center"
-                                    style={{ 
+                                    style={{
                                         backgroundColor: `${themeColor}20`,
-                                        border: `2px dashed ${themeColor}80`
+                                        border: `2px dashed ${themeColor}80`,
                                     }}
                                 >
                                     <Bell size={32} style={{ color: themeColor }} />
@@ -288,9 +265,9 @@ const AdminNotificationsPage: React.FC = () => {
                                     <button
                                         onClick={() => setSearchQuery("")}
                                         className="px-6 py-3 text-white font-medium rounded-xl hover:shadow-lg transition-all"
-                                        style={{ 
+                                        style={{
                                             backgroundColor: themeColor,
-                                            backgroundImage: 'linear-gradient(135deg, #4A9D91 0%, #3a7c72 100%)'
+                                            backgroundImage: "linear-gradient(135deg, #4A9D91 0%, #3a7c72 100%)",
                                         }}
                                     >
                                         Clear search
@@ -318,17 +295,13 @@ const AdminNotificationsPage: React.FC = () => {
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                         <div className="text-sm text-gray-500">
                             <p>
-                                Showing <span className="font-medium">{filteredNotifications.length}</span> of{" "}
-                                <span className="font-medium">{notifications.length}</span> notifications
+                                Showing <span className="font-medium">{filteredNotifications.length}</span> of <span className="font-medium">{notifications.length}</span> notifications
                             </p>
                         </div>
                         <div className="flex items-center gap-6">
                             <div className="flex items-center gap-4 text-sm text-gray-500">
                                 <div className="flex items-center gap-2">
-                                    <div 
-                                        className="w-3 h-3 rounded-full" 
-                                        style={{ backgroundColor: themeColor }}
-                                    ></div>
+                                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: themeColor }}></div>
                                     <span>Unread</span>
                                 </div>
                                 <div className="flex items-center gap-2">
@@ -340,10 +313,7 @@ const AdminNotificationsPage: React.FC = () => {
                                     <span>Read</span>
                                 </div>
                             </div>
-                            <button 
-                                className="text-sm font-medium hover:underline transition-colors"
-                                style={{ color: themeColor }}
-                            >
+                            <button className="text-sm font-medium hover:underline transition-colors" style={{ color: themeColor }}>
                                 Notification settings
                             </button>
                         </div>

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
-import { Eye, Trash, Edit } from "lucide-react";
+import { Eye, Trash, Edit, Package } from "lucide-react";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 import SearchBox from "../../components/ui/SearchBox";
 import TableLoading from "../../components/ui/table/TableLoading";
@@ -14,9 +14,11 @@ import BuildingViewModal from "../../components/building/BuildingViewModal";
 import BuildingEditModal from "../../components/building/BuildingEditModal";
 import { useNavigate } from "react-router-dom";
 
-import { getAllBuildings, updateBuilding } from "../../api/admin/buildingService";
+import { deleteBuildingById, getAllBuildings, updateBuilding } from "../../api/admin/buildingService";
 import { IBuilding } from "../../interface/IBuilding";
 import ExportAndFilter from "../../components/package/ExportAndFilter";
+import EmptyDataPlaceholderComponent from "../../components/common/EmptyDataPlaceholderComponent";
+import EdiPackageUnderBuildingModal from "../../components/building/EdiPackageModal";
 
 export default function Buildings() {
     const [search, setSearch] = useState("");
@@ -34,8 +36,8 @@ export default function Buildings() {
     const [buildings, setBuildings] = useState<IBuilding[]>([]);
     const [fetch, setFetch] = useState(false);
     const [selectedBuildingId, setSelectedBuildingId] = useState("");
-    const [buildingId,setBuildingId] = useState('')
-
+    const [buildingId, setBuildingId] = useState("");
+    const [packageModal,setPackageModal] = useState(false)
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -50,14 +52,13 @@ export default function Buildings() {
                     page,
                     limit,
                 });
-                
+
                 setBuildings(res?.data?.data || res?.data || []);
                 setTotalPages(res?.pagination?.totalPages || res?.pagination?.totalPages || 1);
-                console.log(res)
+                console.log(res);
                 setLoading(false);
             } catch (error) {
                 setLoading(false);
-                
             }
         };
         fetchData();
@@ -69,7 +70,7 @@ export default function Buildings() {
             const updatedBuilding = res?.data;
             setBuildings((prev) => prev.map((b) => (b._id === buildingId ? updatedBuilding : b)));
             toast.success("Building updated successfully");
-        } catch (err:any) {
+        } catch (err: any) {
             toast.error("Failed to update building");
         }
     };
@@ -91,9 +92,7 @@ export default function Buildings() {
                             key={tab}
                             onClick={() => setStatusFilter(tab.toLowerCase())}
                             className={`px-4 py-2 rounded-lg font-medium ${
-                                statusFilter === tab.toLowerCase()
-                                    ? "bg-brand-500 text-white"
-                                    : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                                statusFilter === tab.toLowerCase() ? "bg-brand-500 text-white" : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
                             }`}
                         >
                             {tab}
@@ -103,32 +102,22 @@ export default function Buildings() {
 
                 <SearchBox search={search} setSearch={setSearch} className="h-10 w-48" />
 
-                <button
-                  
-                    onClick={() => navigate("/add-building")}
-                    className="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg transition"
-                >
+                <button onClick={() => navigate("/add-building")} className="bg-brand-500 hover:bg-brand-600 text-white px-4 py-2 rounded-lg transition">
                     Add New Building
                 </button>
             </div>
 
-
-             <div className="flex w-full flex-row justify-between mt-8 mb-8">
+            <div className="flex w-full flex-row justify-between mt-8 mb-8">
                 <div>
-                    <select value={buildingId} onChange={(e:any)=>setBuildingId(e.target.value)} className="px-3 py-2 border rounded-lg text-sm bg-white dark:bg-gray-900">
+                    <select value={buildingId} onChange={(e: any) => setBuildingId(e.target.value)} className="px-3 py-2 border rounded-lg text-sm bg-white dark:bg-gray-900">
                         <option value="">All</option>
-                        {
-                          buildings?.map((obj:any)=>{
-                            return (
-                              <option value={obj?._id}>{obj?.buildingName}</option>
-                            )
-                          })
-                        }
-                   
+                        {buildings?.map((obj: any) => {
+                            return <option value={obj?._id}>{obj?.buildingName}</option>;
+                        })}
                     </select>
                 </div>
 
-                <ExportAndFilter buildingId={buildingId}/>
+                <ExportAndFilter buildingId={buildingId} />
             </div>
 
             <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
@@ -139,78 +128,43 @@ export default function Buildings() {
                         <Table>
                             <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                                 <TableRow>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        No
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        Name
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        City
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        Area
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        Packages
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        Contact Numbers
-                                    </TableCell>
-                                    
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        {" "}
-                                        Active
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        Created At
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        Updated At
-                                    </TableCell>
-                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">
-                                        Actions
-                                    </TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">No</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Name</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">City</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Area</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Packages</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Contact Numbers</TableCell>
+
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none"> Active</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Created At</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Updated At</TableCell>
+                                    <TableCell className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400 select-none">Actions</TableCell>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {buildings.map((b: any, index) => (
                                     <TableRow key={b._id}>
+                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{index + 1}</TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{b?.buildingName}</TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{b?.city}</TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{b?.area}</TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{b?.packages?.length} Packages</TableCell>
                                         <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
-                                            {index + 1}
+                                            <div className="flex flex-col">
+                                                {b?.contactNumbers.map((obj: any) => {
+                                                    return <span>{obj}</span>;
+                                                })}
+                                            </div>
                                         </TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
-                                            {b?.buildingName}
-                                        </TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
-                                            {b?.city}
-                                        </TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
-                                            {b?.area}
-                                        </TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
-                                            {b?.packages?.length} Packages
-                                        </TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
-                                           <div className="flex flex-col">
-                                               {b?.contactNumbers.map((obj:any)=>{
-                                                return <span>{obj}</span>
-                                               })}
-                                           </div>
-                                        </TableCell>
-                                     
 
                                         <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
                                             <Switch checked={b.isActive} onChange={() => handleUpdate({ isActive: !b?.isActive }, b?._id)} />
                                         </TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
-                                            {new Date(b.createdAt).toLocaleDateString()}
-                                        </TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
-                                            {new Date(b.updatedAt).toLocaleDateString()}
-                                        </TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{new Date(b.createdAt).toLocaleDateString()}</TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">{new Date(b.updatedAt).toLocaleDateString()}</TableCell>
                                         <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-white/90">
                                             <div className="flex items-center gap-2">
+                                                {/* View */}
                                                 <button
                                                     onClick={() => {
                                                         setSelectedBuilding(b);
@@ -221,21 +175,29 @@ export default function Buildings() {
                                                 >
                                                     <Eye size={18} />
                                                 </button>
+
+                                                {/* Edit Building */}
                                                 <button
-                                                    onClick={() => {
-                                                        // setSelectedBuilding(b);
-                                                        // setEditModalOpen(true);
-                                                        navigate(`/edit-building/${b?._id}`)
-                                                        
-                                                    }}
+                                                    onClick={() => navigate(`/edit-building/${b?._id}`)}
                                                     className="p-2 text-brand-500 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
-                                                    title="Edit"
+                                                    title="Edit Building"
                                                 >
                                                     <Edit size={18} />
                                                 </button>
+
+                                                {/* Edit Packages */}
+                                                <button
+                                                    onClick={()=>{setBuildingId(b?._id);setPackageModal(true)}}
+                                                    className="p-2 text-purple-500 hover:text-purple-600 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
+                                                    title="Edit Packages"
+                                                >
+                                                    <Package size={18} />
+                                                </button>
+
+                                                {/* Delete */}
                                                 <button
                                                     onClick={() => {
-                                                        setSelectedBuildingId(b._id);
+                                                        setSelectedBuildingId(b?._id);
                                                         setDeleteModalOpen(true);
                                                     }}
                                                     className="p-2 text-red-500 hover:text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition"
@@ -253,12 +215,14 @@ export default function Buildings() {
                 </div>
             </div>
 
-            <Pagination currentPage={page} totalPages={Math.ceil(Number(totalPages)/10)} onPageChange={(p) => setPage(p)} />
+            {buildings?.length == 0 && <EmptyDataPlaceholderComponent type={"Buildings"} />}
+
+            <Pagination currentPage={page} totalPages={Math.ceil(Number(totalPages) / 10)} onPageChange={(p) => setPage(p)} />
 
             {viewModalOpen && selectedBuilding && <BuildingViewModal building={selectedBuilding} onClose={() => setViewModalOpen(false)} />}
 
             {editModalOpen && selectedBuilding && (
-                <BuildingEditModal 
+                <BuildingEditModal
                     isOpen={editModalOpen}
                     building={selectedBuilding}
                     onClose={() => setEditModalOpen(false)}
@@ -269,13 +233,15 @@ export default function Buildings() {
                 />
             )}
 
+            {packageModal&&<EdiPackageUnderBuildingModal onClose={()=>{setPackageModal(false)}} buildingId={buildingId}/>}
+
             {deleteModalOpen && (
                 <DeleteModal
                     isOpen={deleteModalOpen}
                     type="Building"
                     handleDelete={async (confirmed: boolean) => {
                         if (confirmed) {
-                            await updateBuilding({ isDeleted: true }, selectedBuildingId);
+                            const res = await deleteBuildingById(selectedBuildingId);
                             setFetch(!fetch);
                         }
                         setDeleteModalOpen(false);

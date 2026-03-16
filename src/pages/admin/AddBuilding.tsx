@@ -24,6 +24,10 @@ function AddBuildingPage() {
     const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
     const [selectedPackages,setSelectedPackages] = useState<any>()
 
+
+    console.log(selectedPackages);
+
+    
     const [formData, setFormData] = useState({
         buildingName: "",
         address: "",

@@ -111,7 +111,7 @@ const PaymentTab: React.FC<PaymentTabProps> = ({ booking }: any) => {
                         <div style="text-align: right;">
                             <h2 style="font-size: 24px; font-weight: bold; color: #333; margin: 0;">Krew Car Wash</h2>
                             <p style="font-size: 12px; color: #666; margin: 5px 0 0 0;">Professional Car Wash Services</p>
-                            <p style="font-size: 12px; color: #666; margin: 2px 0;">TRN: 100248955500003</p>
+                         
                         </div>
                     </div>
                     

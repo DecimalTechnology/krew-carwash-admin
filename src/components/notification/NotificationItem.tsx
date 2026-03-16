@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar, DollarSign, AlertCircle, MoreHorizontal, CheckCircle, Clock, Bookmark, Send, ChevronRight, X } from "lucide-react";
 import { InstagramNotificationItemProps, NotificationTypeInfo } from "../../interface/INotification";
 import { markRead } from "../../api/admin/notificationService";
@@ -8,7 +8,12 @@ const InstagramNotificationItem: React.FC<any> = ({ notification, onMarkAsRead }
     const [isRead, setIsRead] = useState(notification.isRead);
     const [isSaved, setIsSaved] = useState(false);
     const [showOptions, setShowOptions] = useState(false);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
+    // Sync with parent when notification.isRead changes
+    useEffect(() => {
+        setIsRead(notification.isRead);
+    }, [notification.isRead]);
 
     const getNotificationDetails = () => {
         const type = notification.type || "BOOKING";
@@ -62,7 +67,6 @@ const InstagramNotificationItem: React.FC<any> = ({ notification, onMarkAsRead }
         return {
             timeAgo,
             typeInfo,
-
             isUrgent: diffMins < 30,
         };
     };
@@ -73,25 +77,24 @@ const InstagramNotificationItem: React.FC<any> = ({ notification, onMarkAsRead }
         const newStatus = !isRead;
         setIsRead(newStatus);
         if (onMarkAsRead) {
-            onMarkAsRead(notification._id, isRead);
+            onMarkAsRead(notification._id, notification.isRead);
         }
-       await markRead(notification?._id);
-
-
+        await markRead(notification?._id);
     };
 
-
     const navigateFn = ()=>{
-         navigate(`/bookings/${notification?.bookingId?._id}`)
-    }
+        navigate(`/bookings/${notification?.bookingId?._id}`);
+    };
 
     return (
-        <div  className={` relative group px-6 py-5 border-b border-gray-100 hover:bg-gray-50/50 transition-all duration-300 ${!isRead ? "bg-gradient-to-r from-blue-50/30 to-transparent" : ""}`}>
+        <div className={`relative group px-6 py-5 border-b border-gray-100 hover:bg-gray-50/50 transition-all duration-300 ${!isRead ? "bg-gradient-to-r from-blue-50/30 to-transparent" : ""}`}>
             {!isRead && <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 to-cyan-500"></div>}
 
             <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 relative">
-                    <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${details.typeInfo.iconBg} flex items-center justify-center text-white shadow-lg`}>{details.typeInfo.icon}</div>
+                    <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${details.typeInfo.iconBg} flex items-center justify-center text-white shadow-lg`}>
+                        {details.typeInfo.icon}
+                    </div>
                     {details.isUrgent && !isRead && (
                         <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full border-2 border-white flex items-center justify-center">
                             <AlertCircle size={8} className="text-white" />
@@ -106,7 +109,6 @@ const InstagramNotificationItem: React.FC<any> = ({ notification, onMarkAsRead }
                                 <span className="font-bold text-gray-900 text-lg">System Alert</span>
                                 <span className="text-gray-400">•</span>
                                 <span className="text-gray-500 text-sm">{details.timeAgo}</span>
-                              
                             </div>
 
                             <p className="text-gray-800 mb-3 text-base">
@@ -120,7 +122,9 @@ const InstagramNotificationItem: React.FC<any> = ({ notification, onMarkAsRead }
                                     <span>{details.typeInfo.label}</span>
                                 </div>
                                 <span className="text-gray-400">•</span>
-                                <span onClick={navigateFn} className=" cursor-pointer text-gray-600 text-sm font-medium">ID: {notification?.bookingId?.bookingId}</span>
+                                <span onClick={navigateFn} className="cursor-pointer text-gray-600 text-sm font-medium">
+                                    ID: {notification?.bookingId?.bookingId}
+                                </span>
                             </div>
                         </div>
 
@@ -196,8 +200,8 @@ const InstagramNotificationItem: React.FC<any> = ({ notification, onMarkAsRead }
                             disabled={isRead}
                             onClick={handleMarkAsRead}
                             className={`flex items-center gap-2 text-sm font-medium transition-colors
-    ${isRead ? "text-gray-400 cursor-not-allowed" : "text-blue-600 hover:text-blue-700 cursor-pointer"}
-  `}
+                                ${isRead ? "text-gray-400 cursor-not-allowed" : "text-blue-600 hover:text-blue-700 cursor-pointer"}
+                            `}
                         >
                             <CheckCircle size={16} />
                             {isRead ? "Read" : "Mark as read"}

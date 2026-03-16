@@ -111,13 +111,7 @@ const ServicesTab: React.FC<ServicesTabProps> = ({ booking }) => {
                         </div>
                     </div>
                     <div className="p-6">
-                        <div className="flex items-center justify-between mb-6">
-                            <h4 className="text-base font-semibold text-gray-900 dark:text-white">Session Schedule</h4>
-                            <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
-                                <div className="w-2 h-2 rounded-full bg-emerald-500"></div> Completed
-                                <div className="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600 ml-2"></div> Pending
-                            </div>
-                        </div>
+                    
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             {booking.package?.sessions.map((session, index) => (
                                 <SessionCard
@@ -138,11 +132,11 @@ const ServicesTab: React.FC<ServicesTabProps> = ({ booking }) => {
                 </div>
 
                 {/* Addons */}
-                {booking.addons && booking.addons.length > 0 && (
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
                         <div className="p-6 border-b border-gray-100 dark:border-gray-700">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white">Add-on Services</h3>
                         </div>
+                {booking.addons && booking.addons.length > 0 && (
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
                         <div className="divide-y divide-gray-100 dark:divide-white/5">
                             {booking.addons.map((addon, index) => (
                                 <div key={addon._id} className="p-6">
@@ -150,7 +144,7 @@ const ServicesTab: React.FC<ServicesTabProps> = ({ booking }) => {
                                         <div className="p-2 bg-purple-100 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 rounded-lg">
                                             <Layers className="w-5 h-5" />
                                         </div>
-                                        <span className="font-semibold text-gray-900 dark:text-white">Add-on Package {index + 1}</span>
+                                        <span className="font-semibold text-gray-900 dark:text-white">{addon?.addonId?.name}</span>
                                     </div>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                                         {addon.sessions.map((session, sIndex) => (

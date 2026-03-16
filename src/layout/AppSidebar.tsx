@@ -17,6 +17,9 @@ import {
 
 import { UserIcon } from "../icons";
 import { getUnresolvedReportCount } from "../api/admin/chatService";
+import { useDispatch, useSelector } from "react-redux";
+import { IRootState } from "../app/store";
+import { setIssueReportsCount } from "../features/issueSlice";
 
 type NavItem = {
   name: string;
@@ -40,7 +43,8 @@ const navItems: NavItem[] = [
 const AppSidebar: React.FC = () => {
   const { socket } = useSocket();
   const [count, setCount] = useState(0);
-
+  const {issueReportsCount}=  useSelector((data:IRootState)=>data?.issueReports);
+  const dispatch = useDispatch()
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
 
@@ -53,6 +57,7 @@ const AppSidebar: React.FC = () => {
     const fetchData = async () => {
       const res = await getUnresolvedReportCount();
       setCount(res?.data);
+      dispatch(setIssueReportsCount(res?.data))
     };
 
     fetchData();
@@ -110,9 +115,9 @@ const AppSidebar: React.FC = () => {
                   {nav.name}
 
                   {/* count badge */}
-                  {showNumberBadge && (
+                  {showNumberBadge &&issueReportsCount!==0&& (
                     <span className="ml-auto text-[10px] bg-red-500 dark:bg-red-600 text-white font-semibold px-2 py-0.5 rounded-full">
-                      {count}
+                      {issueReportsCount}
                     </span>
                   )}
                 </span>

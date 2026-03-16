@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import ExportParent from "../dashboard/ExportParent";
 
@@ -6,10 +6,36 @@ function ExportAndFilter({ packageId, buildingId, cleanerId }: any) {
     const [filter, setFilter] = useState("");
     const [toDate, setToDate] = useState<any>();
     const [fromDate, setFromDate] = useState<any>();
+
+    // Reset filter when dates are selected
+    useEffect(() => {
+        if (fromDate || toDate) {
+            setFilter("");
+        }
+    }, [fromDate, toDate]);
+
+    // Reset dates when filter is selected
+    useEffect(() => {
+        if (filter) {
+            setFromDate(null);
+            setToDate(null);
+        }
+    }, [filter]);
+
+    // Determine if date pickers should be shown
+    const showDatePickers = !filter;
+
     return (
         <div className="flex flex-wrap items-center gap-3">
             {/* Filter Dropdown */}
-            <select value={filter} onChange={(e) => setFilter(e.target.value)} className="px-3 py-2 border rounded-lg text-sm bg-white dark:bg-gray-900">
+            <select 
+                value={filter} 
+                onChange={(e) => setFilter(e.target.value)} 
+                className={`px-3 py-2 border rounded-lg text-sm bg-white dark:bg-gray-900 ${
+                    fromDate || toDate ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                disabled={!!fromDate || !!toDate}
+            >
                 <option value="">All</option>
                 <option value="today">Today</option>
                 <option value="thisWeek">This Week</option>
@@ -20,41 +46,59 @@ function ExportAndFilter({ packageId, buildingId, cleanerId }: any) {
                 <option value="lastYear">Last Year</option>
             </select>
 
-            {/* Date Pickers using react-datepicker */}
-            <div className="flex items-center gap-2">
-                {/* From Date Picker */}
-                <div className="relative">
-                    <DatePicker
-                        selected={toDate}
-                        onChange={(date: Date | null) => setToDate(date)}
-                        customInput={<CustomDateInput placeholder="To" disabled={!fromDate} />}
-                        dateFormat="MMM d, yyyy"
-                        className="react-datepicker-custom"
-                        wrapperClassName="date-picker-wrapper"
-                        popperClassName="react-datepicker-popper"
-                        popperPlacement="bottom-end"
-                    />
-                </div>
+            {/* Date Pickers using react-datepicker - only show when no filter is selected */}
+            {showDatePickers && (
+                <div className="flex items-center gap-2">
+                    {/* From Date Picker */}
+                    <div className="relative">
+                        <DatePicker
+                            selected={fromDate}
+                            onChange={(date: Date | null) => setFromDate(date)}
+                            selectsStart
+                            startDate={fromDate}
+                            endDate={toDate}
+                            customInput={<CustomDateInput placeholder="From" />}
+                            dateFormat="MMM d, yyyy"
+                            className="react-datepicker-custom"
+                            wrapperClassName="date-picker-wrapper"
+                            popperClassName="react-datepicker-popper"
+                            popperPlacement="bottom-end"
+                            isClearable={true}
+                        />
+                    </div>
 
-                <span className="text-gray-400">to</span>
+                    <span className="text-gray-400">to</span>
 
-                {/* To Date Picker */}
-                <div className="relative">
-                    <DatePicker
-                        selected={fromDate}
-                        onChange={(date: Date | null) => setFromDate(date)}
-                        customInput={<CustomDateInput placeholder="To" disabled={!fromDate} />}
-                        dateFormat="MMM d, yyyy"
-                        className="react-datepicker-custom"
-                        wrapperClassName="date-picker-wrapper"
-                        popperClassName="react-datepicker-popper"
-                        popperPlacement="bottom-end"
-                    />
+                    {/* To Date Picker */}
+                    <div className="relative">
+                        <DatePicker
+                            selected={toDate}
+                            onChange={(date: Date | null) => setToDate(date)}
+                            selectsEnd
+                            startDate={fromDate}
+                            endDate={toDate}
+                            minDate={fromDate}
+                            customInput={<CustomDateInput placeholder="To" disabled={!fromDate} />}
+                            dateFormat="MMM d, yyyy"
+                            className="react-datepicker-custom"
+                            wrapperClassName="date-picker-wrapper"
+                            popperClassName="react-datepicker-popper"
+                            popperPlacement="bottom-end"
+                            isClearable={true}
+                        />
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Export Button */}
-            <ExportParent filter={filter} fromDate={fromDate} toDate={toDate} packageId={packageId} buildingId={buildingId} cleanerId={cleanerId} />
+            <ExportParent 
+                filter={filter} 
+                fromDate={fromDate} 
+                toDate={toDate} 
+                packageId={packageId} 
+                buildingId={buildingId} 
+                cleanerId={cleanerId} 
+            />
         </div>
     );
 }

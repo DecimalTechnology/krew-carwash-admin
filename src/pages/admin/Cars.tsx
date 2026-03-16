@@ -115,13 +115,13 @@ function Cars() {
                                     
                                     {/* Status Badge */}
                                     <div className="absolute top-3 right-3">
-                                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                        {/* <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                                             vehicle.isActive 
                                                 ? "bg-green-500 text-white" 
                                                 : "bg-gray-500 text-white"
                                         }`}>
                                             {vehicle.isActive ? "Active" : "Inactive"}
-                                        </span>
+                                        </span> */}
                                     </div>
                                 </div>
 
@@ -145,16 +145,16 @@ function Cars() {
                                     {/* Action Buttons */}
                                     <div className="flex items-center gap-2">
                                         {/* Status Toggle */}
-                                        <div className="flex-1 flex items-center gap-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2">
+                                        {/* <div className="flex-1 flex items-center gap-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg px-3 py-2">
                                             <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Status:</span>
                                             <Switch
                                                 checked={vehicle?.isActive}
                                                 onChange={(checked: boolean) => changeVehicleStatus(vehicle?._id, checked)}
                                             />
-                                        </div>
+                                        </div> */}
 
                                         {/* Edit Button */}
-                                        <button
+                                        {/* <button
                                             onClick={() => {
                                                 setSelectedVehicle(vehicle);
                                                 setIsOpen(true);
@@ -163,10 +163,10 @@ function Cars() {
                                             title="Edit Vehicle Type"
                                         >
                                             <Edit size={18} />
-                                        </button>
+                                        </button> */}
 
                                         {/* Delete Button */}
-                                        <button
+                                        {/* <button
                                             onClick={() => {
                                                 setSelectedVehicleId(vehicle._id);
                                                 setDeleteModalOpen(true);
@@ -175,7 +175,7 @@ function Cars() {
                                             title="Delete Vehicle Type"
                                         >
                                             <Trash2 size={18} />
-                                        </button>
+                                        </button> */}
                                     </div>
                                 </div>
                             </div>

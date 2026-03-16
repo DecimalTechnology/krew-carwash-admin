@@ -21,6 +21,23 @@ export default function EditProfileModal({ isOpen, onClose, adminData }: EditPro
     const [imagePreview, setImagePreview] = useState(adminData?.image || "");
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [phoneError, setPhoneError] = useState("");
+
+    const validatePhone = (phoneNumber: string) => {
+        const phoneRegex = /^[0-9]{10}$/;
+        if (phoneNumber && !phoneRegex.test(phoneNumber)) {
+            setPhoneError("Please enter a valid 10-digit phone number");
+            return false;
+        }
+        setPhoneError("");
+        return true;
+    };
+
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setPhone(value);
+        validatePhone(value);
+    };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -36,6 +53,11 @@ export default function EditProfileModal({ isOpen, onClose, adminData }: EditPro
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
+        
+        if (phone && !validatePhone(phone)) {
+            return;
+        }
+        
         setIsLoading(true);
 
         try {
@@ -179,10 +201,13 @@ export default function EditProfileModal({ isOpen, onClose, adminData }: EditPro
                             id="phone"
                             type="tel"
                             value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                            className="w-full border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200"
+                            onChange={handlePhoneChange}
+                            className={`w-full border ${phoneError ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-lg px-4 py-3 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200`}
                             placeholder="Enter your phone number"
                         />
+                        {phoneError && (
+                            <p className="mt-1 text-sm text-red-500">{phoneError}</p>
+                        )}
                     </div>
                 </form>
 
@@ -200,7 +225,7 @@ export default function EditProfileModal({ isOpen, onClose, adminData }: EditPro
                         <button
                             type="submit"
                             onClick={handleSubmit}
-                            disabled={isLoading}
+                            disabled={isLoading || !!phoneError}
                             className="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2"
                         >
                             {isLoading ? (
@@ -221,4 +246,3 @@ export default function EditProfileModal({ isOpen, onClose, adminData }: EditPro
         </div>
     );
 }
-

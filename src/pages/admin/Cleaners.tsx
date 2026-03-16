@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 import Pagination from "../../components/ui/pagination/Pagination";
 // import CleanerViewModal from "../../components/cleaners/CleanerViewModal";
 import CleanerAddEditModal from "../../components/cleaner/CleanerEditModal";
-import { createCleaner, getAllCleaners, getPassword, updateCleaner } from "../../api/admin/cleanerService";
+import { createCleaner, deleteCleaner, getAllCleaners, getPassword, updateCleaner } from "../../api/admin/cleanerService";
 import DeleteModal from "../../components/ui/modals/common/DeleteModal";
 import ExportAndFilter from "../../components/package/ExportAndFilter";
 export default function Cleaners() {
@@ -28,13 +28,13 @@ export default function Cleaners() {
     const [loading, setLoading] = useState(false);
     const [cleaners, setCleaners] = useState<any[]>([]);
     const [refresh, setRefresh] = useState(false);
-
+    const [passwords, setPasswords] = useState({});
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [selectedCleanerId, setSelectedCleanerId] = useState("");
 
     const [addEditModalOpen, setAddEditModalOpen] = useState(false);
     const [selectedCleaner, setSelectedCleaner] = useState<any>(null);
-    const [cleanerId, setCleanerId] = useState("");
+    const [cleanerId, setCleanerId] = useState<any>("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -213,13 +213,22 @@ export default function Cleaners() {
                                             className="px-2.5 py-1 bg-brand-500 text-white rounded-md hover:bg-brand-600 text-xs"
                                             onClick={async () => {
                                                 const res = await getPassword(cl?._id);
-                                                const text = `Cleaner ID: ${cl.cleanerId}\nPassword: ${res?.data?.password}`;
-                                                navigator.clipboard.writeText(text);
-                                                toast.success("Credentials copied!");
+                                                const password = res?.data?.password;
+
+                                                navigator.clipboard.writeText(`Cleaner ID: ${cl?.cleanerId} password: ${password}`);
+
+                                                setPasswords((prev) => ({
+                                                    ...prev,
+                                                    [cl._id]: password,
+                                                }));
+
+                                                toast.success("Password copied!");
                                             }}
                                         >
                                             Copy
                                         </button>
+
+                                        {passwords[cl._id] && <div className="text-xs mt-1 text-gray-600">{passwords[cl._id]}</div>}
                                     </TableCell>
 
                                     <TableCell className="px-1.5 py-2.5 text-center">
@@ -268,7 +277,7 @@ export default function Cleaners() {
                 isOpen={deleteModalOpen}
                 handleDelete={async (confirm: boolean) => {
                     if (confirm) {
-                        await updateCleaner({ isDeleted: true }, selectedCleanerId);
+                        await deleteCleaner( selectedCleanerId);
                         setCleaners((prev: any) => prev.filter((obj: any) => obj?._id !== selectedCleanerId));
                     }
                     setDeleteModalOpen(false);

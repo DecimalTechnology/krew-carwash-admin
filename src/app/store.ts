@@ -1,21 +1,29 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from '../features/userSlice'
-import adminReducer from '../features/adminSlice'
-import chatReducer from '../features/chatSlice'
+import userReducer from "../features/userSlice";
+import adminReducer from "../features/adminSlice";
+import chatReducer from "../features/chatSlice";
+import issueReportsReducer from "../features/issueSlice";
 
-export interface IRootState{
-    users: Record<string,any>
+export interface IRootState {
+    users: Record<string, any>;
     chat: {
-        chats: any[]
-    }
+        chats: any[];
+    };
     admin: {
-        adminData: any
-        isLoading: boolean
+        adminData: any;
+        isLoading: boolean;
     }
+    issueReports:any 
+   
 }
 
-export const store = configureStore({reducer:{
-    users: userReducer,
-    admin: adminReducer,
-    chat: chatReducer
-}})
+
+
+export const store = configureStore({
+    reducer: {
+        users: userReducer,
+        admin: adminReducer,
+        chat: chatReducer,
+        issueReports:issueReportsReducer
+    },
+});

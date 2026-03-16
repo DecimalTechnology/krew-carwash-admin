@@ -23,6 +23,7 @@ interface ExportPdfProps {
 
 const ExportPdf: React.FC<ExportPdfProps> = ({ bookings }) => {
 
+
     const generatePDF = () => {
         if (!bookings || bookings.length === 0) {
             alert("No bookings to export");

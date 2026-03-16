@@ -33,6 +33,7 @@ export const updateCleaner = async (data: Record<string, any>, cleanerId: string
 
 export const deleteCleaner = async (cleanerId: string) => {
     try {
+        alert(cleanerId)
         const result = await baseUrl.delete(`/admin/cleaners/${cleanerId}`);
         return result?.data;
     } catch (error) {

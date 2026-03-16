@@ -21,10 +21,9 @@ function Bookings() {
     const [selectedBookingId, setSelectedBookingId] = useState("");
     const [bookingId, setBookingId] = useState("");
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    
+
     // New filter states
     const [paymentStatusFilter, setPaymentStatusFilter] = useState("COMPLETED");
-    
 
     const navigate = useNavigate();
 
@@ -40,8 +39,6 @@ function Bookings() {
             if (paymentStatusFilter !== "ALL") {
                 filters.paymentStatus = paymentStatusFilter;
             }
-
-         
 
             const res = await getAllBooking(filters);
             setBooking(res?.data);
@@ -95,7 +92,7 @@ function Bookings() {
                             focus:border-black dark:focus:border-white
                             focus:outline-none"
                         >
-                            <option value="ALL">ALL  </option>
+                            <option value="ALL">ALL </option>
                             <option value="PENDING">PENDING</option>
                             <option value="COMPLETED">COMPLETED</option>
                             <option value="FAILED">FAILED</option>
@@ -104,11 +101,10 @@ function Bookings() {
                     </div>
 
                     {/* Booking Status Dropdown */}
-                    
                 </div>
 
                 <div className="flex items-center gap-2 text-xs font-medium select-none">
-                    {["ALL",'CANCELLED','FAILED', "PENDING", "ASSIGNED", "IN PROGRESS", "COMPLETED"].map((item) => (
+                    {["ALL", "CANCELLED", "FAILED", "PENDING", "ASSIGNED", "IN PROGRESS", "COMPLETED"].map((item) => (
                         <button
                             key={item}
                             onClick={() => {
@@ -128,7 +124,7 @@ function Bookings() {
             <Table className="bg-white dark:bg-gray-900 mt-4 rounded-xl overflow-hidden">
                 <TableHeader className="border-b border-gray-100 dark:border-gray-700">
                     <TableRow>
-                        {["Booking ID", "Customer", "Package", "Vehicle", "Building", "Assigned To", "Booking Status", "Payment Status", "Date", "Total", "Actions"].map((head) => (
+                        {["No","Booking ID", "Customer", "Package", "Vehicle", "Building", "Assigned To", "Booking Status", "Payment Status", "Date", "Total", "Actions"].map((head) => (
                             <TableCell key={head} className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-theme-xs select-none">
                                 {head}
                             </TableCell>
@@ -137,8 +133,9 @@ function Bookings() {
                 </TableHeader>
 
                 <TableBody>
-                    {booking?.map((obj: any) => (
+                    {booking?.map((obj: any,index:number) => (
                         <TableRow key={obj?._id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+                            <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">{(index+1)*1}</TableCell>
                             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">{obj?.bookingId}</TableCell>
 
                             <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">{obj?.userId?.name}</TableCell>
@@ -188,12 +185,12 @@ function Bookings() {
           obj?.payment?.status === "COMPLETED"
               ? "bg-green-100 text-green-700"
               : obj?.payment?.status === "PENDING"
-              ? "bg-yellow-100 text-yellow-700"
-              : obj?.payment?.status === "FAILED"
-              ? "bg-red-100 text-red-700"
-              : obj?.payment?.status === "CANCELLED"
-              ? "bg-gray-200 text-gray-700"
-              : "bg-slate-100 text-slate-600"
+                ? "bg-yellow-100 text-yellow-700"
+                : obj?.payment?.status === "FAILED"
+                  ? "bg-red-100 text-red-700"
+                  : obj?.payment?.status === "CANCELLED"
+                    ? "bg-gray-200 text-gray-700"
+                    : "bg-slate-100 text-slate-600"
       }
     `}
                                 >
@@ -216,7 +213,7 @@ function Bookings() {
                                         <Eye size={18} />
                                     </button>
 
-                                    <button
+                                    {/* <button
                                         onClick={() => {
                                             setBookingId(obj?._id);
                                             setIsDeleteModalOpen(true);
@@ -226,7 +223,7 @@ function Bookings() {
                                         rounded-lg transition"
                                     >
                                         <Trash size={18} />
-                                    </button>
+                                    </button> */}
                                 </div>
                             </TableCell>
                         </TableRow>

@@ -4,13 +4,15 @@ import { getMessages, resolveIssue } from "../../api/admin/chatService";
 import { useSocket } from "../../context/SocketProvider";
 import SendMessage from "./SendMessage";
 import { IRootState } from "../../app/store";
-import { setChats, setSelectedChat } from "../../features/chatSlice";
+import { setChats } from "../../features/chatSlice";
 import { useNavigate } from "react-router";
+import { setIssueReportsCount } from "../../features/issueSlice";
 
 function RightChatPannel() {
     const selectedChat = useSelector((state: any) => state?.chat?.selectedChat);
-  
+
     const allChats = useSelector((data: IRootState) => data.chat.chats);
+    const {issueReportsCount} = useSelector((data:IRootState)=>data?.issueReports)
     const admin = useSelector((state: IRootState) => state.admin.adminData);
     const [messages, setMessages] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
@@ -100,12 +102,13 @@ function RightChatPannel() {
         };
     }, [socket]);
 
-    const resolve = async (chatId: string) => {
+    const resolve = async (chatId: string,arg:any) => {
         try {
             const res = await resolveIssue(selectedChat?._id as string);
 
             const newChats = allChats.map((obj: any) => (obj?._id == selectedChat?._id ? { ...obj, issueResolved: !issueResolved } : obj));
             dispatch(setChats(newChats));
+            dispatch(setIssueReportsCount(arg=='resolved'?issueReportsCount+1:issueReportsCount-1))
             //  dispatch(setSelectedChat({ ...selectedChat, issueResolved: !selectedChat?.issueResolved }));
             setIssueResolved(!issueResolved);
         } catch (error) {}
@@ -125,14 +128,12 @@ function RightChatPannel() {
                 <div className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 shadow-sm flex-shrink-0">
                     {/* Left Side: Profile Info */}
                     <div className="flex items-center">
-                        {
-                            <img
-                                onClick={() => navigate(`/cleaners/${selectedChat?.cleaner?._id}`)}
-                                src="https://i.pravatar.cc/150?u=jsmith"
-                                alt="John Smith"
-                                className="cursor-pointer w-10 h-10 rounded-full object-cover mr-3"
-                            />
-                        }
+                        <div
+                            onClick={() => navigate(`/cleaners/${selectedChat?.cleaner?._id}`)}
+                            className="cursor-pointer w-10 h-10 rounded-full bg-brand-500 flex items-center justify-center text-white font-semibold text-lg mr-3"
+                        >
+                            {selectedChat?.cleaner?.name?.charAt(0).toUpperCase()}
+                        </div>
                         <div>
                             <h3 className="font-bold text-gray-800 text-sm">{selectedChat?.cleaner?.name || "Select a chat"}</h3>
 
@@ -150,13 +151,12 @@ function RightChatPannel() {
                     </div>
 
                     {/* Center: Compact Issue Report */}
+
                     {selectedChat && (
                         <div className="flex-1 mx-6">
                             <div className="relative group flex items-center justify-center bg-red-50 border border-red-200 rounded-lg px-4 py-2 max-w-md mx-auto cursor-pointer">
                                 <div className="flex items-center gap-2">
-                                    <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-600 uppercase tracking-wide">
-                                        Issue
-                                    </span>
+                                    <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-600 uppercase tracking-wide">Issue</span>
 
                                     <span className="text-xs text-gray-700 font-medium">{chat?.issue}</span>
 
@@ -177,7 +177,7 @@ function RightChatPannel() {
                     {/* Right Side: Action Button */}
                     <div>
                         <div
-                            onClick={() => resolve(selectedChat?._id)}
+                            onClick={() => resolve(selectedChat?._id,issueResolved?'resolved':"notResolved")}
                             className={`
       cursor-pointer text-xs font-bold px-4 py-2 rounded-lg 
       ${issueResolved ? "bg-white border border-green-500 text-green-600" : "bg-white border border-red-500 text-red-600"}
@@ -202,12 +202,7 @@ function RightChatPannel() {
                 <div className="flex-1 flex flex-col items-center justify-center">
                     <div className="text-red-500 mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
                     <p className="text-gray-800 font-medium mb-2">Oops! Something went wrong</p>
@@ -256,18 +251,14 @@ function RightChatPannel() {
                                         <div className="flex justify-start">
                                             <div className="max-w-[70%] rounded-2xl px-4 py-3 shadow-sm bg-white text-gray-800 rounded-bl-none border border-gray-100">
                                                 <p className="text-sm leading-relaxed">{message?.content}</p>
-                                                <p className="text-[10px] mt-1 text-right text-gray-400">
-                                                    {message?.createdAt ? formatTime(message.createdAt) : "Just now"}
-                                                </p>
+                                                <p className="text-[10px] mt-1 text-right text-gray-400">{message?.createdAt ? formatTime(message.createdAt) : "Just now"}</p>
                                             </div>
                                         </div>
                                     ) : (
                                         <div className="flex justify-end">
                                             <div className="max-w-[70%] rounded-2xl px-4 py-3 shadow-sm bg-teal-500 text-white rounded-br-none border border-teal-600">
                                                 <p className="text-sm leading-relaxed">{message?.content}</p>
-                                                <p className="text-[10px] mt-1 text-right text-teal-100">
-                                                    {message?.createdAt ? formatTime(message.createdAt) : "Just now"}
-                                                </p>
+                                                <p className="text-[10px] mt-1 text-right text-teal-100">{message?.createdAt ? formatTime(message.createdAt) : "Just now"}</p>
                                             </div>
                                         </div>
                                     )}
@@ -275,7 +266,7 @@ function RightChatPannel() {
                             );
                         })}
 
-                        {/* 👇 stick this at the bottom */}
+                    
                         <div ref={bottomRef} />
                     </div>
 
