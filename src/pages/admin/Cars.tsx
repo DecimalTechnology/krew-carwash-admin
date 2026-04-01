@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 import { changeStatus, getAllVehicles, updateVehicle, deleteVehicle as deleteVehicleApi } from "../../api/admin/vehicleTypeServices";
 import { IVehicle } from "../../interface/IVehicle";
-import Switch from "../../components/ui/switch/Switch";
-import { Edit, Trash2 } from "lucide-react";
+
 import VehicleEditModal from "../../components/vehicle/VehicleEditModal";
 import DeleteModal from "../../components/ui/modals/common/DeleteModal";
 

@@ -150,7 +150,7 @@ const ServicesTab: React.FC<ServicesTabProps> = ({ booking }) => {
                                         {addon.sessions.map((session, sIndex) => (
                                             <SessionCard
                                                 onClick={() => {
-                                                    
+
                                                     handleSessionImage(session?._id, "addon", addon?.addonId as any);
                                                 }}
                                                 key={session._id}
@@ -159,7 +159,7 @@ const ServicesTab: React.FC<ServicesTabProps> = ({ booking }) => {
                                                 total={addon.totalSessions}
                                                 bookingId={booking?._id}
                                                 type="ADDON"
-                                                addonId={addon?.addonId}
+                                                addonId={addon?.addonId?._id}
                                             />
                                         ))}
                                     </div>

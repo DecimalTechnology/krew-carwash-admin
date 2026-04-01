@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import { getBuildingById, updateBuilding } from "../../api/admin/buildingService";
 import Switch from "../../components/ui/switch/Switch";
-import PackageSelector from "../../components/building/PackageSelector";
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 import toast from "react-hot-toast";
 
@@ -34,6 +33,7 @@ interface Building {
 function EditBuildingPage() {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
+
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -261,7 +261,7 @@ function EditBuildingPage() {
                 packages: formData?.packages,
             };
 
-            const res = await updateBuilding(id, payload);
+            const res = await updateBuilding(payload,id);
             if (res?.success) {
                 // Show success message
                 toast.success("Building updated successfully!");

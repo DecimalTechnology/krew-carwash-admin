@@ -244,6 +244,7 @@ function RightChatPannel() {
                     <div className="flex-1 overflow-y-auto p-6 space-y-4">
                         {messages.map((message: any) => {
                             const isAdmin = message?.senderType === "Admin";
+                            console.log(isAdmin)
 
                             return (
                                 <div key={message._id || message.id}>

@@ -107,8 +107,8 @@ export default function Buildings() {
                 </button>
             </div>
 
-            <div className="flex w-full flex-row justify-between mt-8 mb-8">
-                <div>
+            <div className="flex w-full flex-row justify-end mt-8 mb-8 mr-8">
+                <div className="mr-5">
                     <select value={buildingId} onChange={(e: any) => setBuildingId(e.target.value)} className="px-3 py-2 border rounded-lg text-sm bg-white dark:bg-gray-900">
                         <option value="">All</option>
                         {buildings?.map((obj: any) => {

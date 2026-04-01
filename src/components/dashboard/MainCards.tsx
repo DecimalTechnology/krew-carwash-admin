@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getOverview } from "../../api/admin/dashboardService";
+import { useNavigate } from "react-router";
 
 interface MainCardsProps {
     filter: string;
@@ -20,6 +21,7 @@ interface OverviewData {
 }
 
 function MainCards({ filter, fromDate, toDate }: any) {
+    const navigate = useNavigate()
     const [data, setData] = useState<OverviewData>({
         totalBookings: 0,
         completedBookings: 0,
@@ -139,7 +141,7 @@ function MainCards({ filter, fromDate, toDate }: any) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Card 1: Total Bookings */}
-            <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+            <div onClick={()=>navigate("/bookings")} className="cursor-pointer bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                     <div>
                         <p className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Bookings</p>
@@ -179,7 +181,7 @@ function MainCards({ filter, fromDate, toDate }: any) {
             </div>
 
             {/* Card 3: Total Customers */}
-            <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
+            <div onClick={()=>navigate("/users")} className="cursor-pointer bg-white dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                     <div>
                         <p className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Customers</p>

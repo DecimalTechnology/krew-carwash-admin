@@ -277,8 +277,11 @@ export default function Cleaners() {
                 isOpen={deleteModalOpen}
                 handleDelete={async (confirm: boolean) => {
                     if (confirm) {
-                        await deleteCleaner( selectedCleanerId);
-                        setCleaners((prev: any) => prev.filter((obj: any) => obj?._id !== selectedCleanerId));
+                      const res =   await deleteCleaner( selectedCleanerId);
+                      if(res?.data?.success){
+
+                          setCleaners((prev: any) => prev.filter((obj: any) => obj?._id !== selectedCleanerId));
+                      }
                     }
                     setDeleteModalOpen(false);
                 }}

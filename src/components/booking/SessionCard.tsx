@@ -201,10 +201,14 @@ const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({ isOpen, onClo
 };
 
 const SessionCard: React.FC<SessionCardProps> = ({ session, index, total, onClick, bookingId, type, addonId }) => {
+
+
     const isCompleted = session.isCompleted;
     const [sessionData, setSessionData] = useState<any>(null);
     const [modalOpen, setModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    console.log(addonId)
 
     const handleSelect = async () => {
         setLoading(true);

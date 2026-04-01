@@ -1,4 +1,4 @@
-import { Eye, Trash } from "lucide-react";
+import { Eye } from "lucide-react";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../../components/ui/table";
 import { useEffect, useState } from "react";
 import { deleteBooking, getAllBooking } from "../../api/admin/bookingServie";

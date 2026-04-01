@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 
-export const BACKEND_URL = "https://krewcarwashapp.com";
-// export const  BACKEND_URL = 'http://localhost:5000'
-export const BASE_URL = `${BACKEND_URL}/api/v1`;
+const BASE_URL = `${import.meta.env.VITE_MODE === "development" ? import.meta.env.VITE_DEV_API_URL : import.meta.env.VITE_PROD_API_URL}/api/v1`;
 
-
+export default axios.create({
+    baseURL: BASE_URL,
+});
 
 export const baseUrl = axios.create({
     baseURL: BASE_URL,
