@@ -9,6 +9,9 @@ function BookingAssignComponent({
 }: any) {
     const hasCleaners = cleaners.length > 0;
 
+
+    const status = booking?.status;
+
     const letterColors = [
         "text-purple-600",
         "text-blue-600",
@@ -24,15 +27,15 @@ function BookingAssignComponent({
     };
 
     useEffect(() => {
-            const id = localStorage.getItem("bookingId");
-            if (id) {
-                  setCleanerModal(true);
-        setSelectedCleaners(cleaners);
-        setSelectedBookingId(booking?._id);
-    
-                localStorage.removeItem("bookingId");
-            }
-        }, []);
+        const id = localStorage.getItem("bookingId");
+        if (id) {
+            setCleanerModal(true);
+            setSelectedCleaners(cleaners);
+            setSelectedBookingId(booking?._id);
+
+            localStorage.removeItem("bookingId");
+        }
+    }, []);
 
     const openAssignModal = () => {
         setCleanerModal(true);
@@ -73,7 +76,7 @@ function BookingAssignComponent({
                     {/* PLUS BUTTON */}
                     <button
                         onClick={openAssignModal}
-                        
+                       disabled={booking?.payment?.status !== "COMPLETED"||status=="COMPLETED"}
                         className="w-8 h-8 rounded-full 
                         bg-gray-100 dark:bg-gray-800
                         border border-gray-300 dark:border-gray-600
@@ -89,29 +92,28 @@ function BookingAssignComponent({
             ) : (
                 /* Assign button */
                 <button
-    disabled={booking?.payment?.status !== "COMPLETED"}
-    onClick={openAssignModal}
-    className={`
+                    disabled={booking?.payment?.status !== "COMPLETED"||status=="COMPLETED"}
+                    onClick={openAssignModal}
+                    className={`
         flex items-center gap-1.5
         px-3 py-1.5 rounded-full
         text-sm font-medium transition
         border
 
-        ${
-            booking?.payment?.status !== "COMPLETED"
-                ? "bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-400 cursor-not-allowed opacity-60"
-                : "bg-[#5DB7AE] border-[#5DB7AE] text-white hover:bg-[#4a9d91] shadow-md"
-        }
+        ${booking?.payment?.status !== "COMPLETED"
+                            ? "bg-gray-200 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-400 cursor-not-allowed opacity-60"
+                            : "bg-[#5DB7AE] border-[#5DB7AE] text-white hover:bg-[#4a9d91] shadow-md"
+                        }
     `}
-    title={
-        booking?.payment?.status !== "COMPLETED"
-            ? "Complete payment to assign"
-            : "Assign team"
-    }
->
-    Assign
-    <span className="text-lg leading-none">+</span>
-</button>
+                    title={
+                        booking?.payment?.status !== "COMPLETED"
+                            ? "Complete payment to assign"
+                            : "Assign team"
+                    }
+                >
+                    Assign
+                    <span className="text-lg leading-none">+</span>
+                </button>
 
             )}
         </div>

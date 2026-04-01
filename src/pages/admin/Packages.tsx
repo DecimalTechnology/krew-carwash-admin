@@ -121,8 +121,8 @@ export default function Packages() {
                 </button>
             </div>
 
-            <div className="flex w-full flex-row justify-between mt-8 mb-8">
-                <div>
+            <div className="flex w-full flex-row justify-end mt-8 mb-8">
+                <div className="mr-8">
                     <select value={packageId} onChange={(e:any)=>setPackageId(e.target.value)} className="px-3 py-2 border rounded-lg text-sm bg-white dark:bg-gray-900">
                         <option value="">All</option>
                         {

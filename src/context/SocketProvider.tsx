@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { io, Socket } from "socket.io-client";
 import { IRootState } from "../app/store";
-import { BACKEND_URL } from "../api/baseUrl";
+const BACKEND_URL = `${import.meta.env.MODE === "development" ? import.meta.env.VITE_DEV_API_URL : import.meta.env.VITE_PROD_API_URL}/api/v1`;
 
 interface ISocketContext {
     socket: Socket | null;
