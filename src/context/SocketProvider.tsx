@@ -4,7 +4,6 @@ import React, { createContext, useContext, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { io, Socket } from "socket.io-client";
 import { IRootState } from "../app/store";
-const BACKEND_URL = `${import.meta.env.MODE === "development" ? import.meta.env.VITE_DEV_API_URL : import.meta.env.VITE_PROD_API_URL}/api/v1`;
 
 interface ISocketContext {
     socket: Socket | null;
@@ -22,12 +21,16 @@ interface Props {
     children: React.ReactNode;
 }
 
+
+const BASE_URL =
+  import.meta.env.VITE_MODE === "development"
+    ? import.meta.env.VITE_DEV_API_URL
+    : import.meta.env.VITE_PROD_API_URL;
 export default function SocketProvider({ children }: Props) {
     const admin = useSelector((state: IRootState) => state.admin.adminData);
 
-
     const socket = useMemo(() => {
-        return io(BACKEND_URL, {
+        return io(BASE_URL, {
             autoConnect: false,
             withCredentials: true,
             transports: ["websocket"],
